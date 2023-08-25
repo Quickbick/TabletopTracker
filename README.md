@@ -8,6 +8,6 @@ This project is a GUI Desktop Application that tracks information for game maste
     [] Automatic Math for subtracting and adding health.
 
   Created By:
-    Nathanael Ostheller
-    Darin Hardie
-    William Walker
+    Nathanael Ostheller, 
+    Darin Hardie, 
+    and William Walker
