@@ -2,6 +2,7 @@ package com.cs422.fxproject.creatures;
 
 import javafx.scene.image.Image;
 
+import java.util.Arrays;
 import java.util.List;
 
 abstract class Creature {
@@ -13,12 +14,16 @@ abstract class Creature {
     private int currentBonusHealth;
     private final int initiative;
     private Status currentStatus;
-    private List<Short> conditions;
+    private List<Conditions> currentConditions = Arrays.asList(new Conditions[Conditions.values().length]);
 
-    public String getName() {
-        return name;
-    }
-
+    /**
+     * Creates a new Creature with image, name, health, and initiative.
+     * @param image Image of Creature
+     * @param name Name of Creature
+     * @param maxHealth Max Health of Creature
+     * @param maxBonusHealth Max Bonus Health of Creature
+     * @param initiative Initiative Number
+     */
     Creature(Image image, String name, int maxHealth, int maxBonusHealth, int initiative) {
         this.image = image;
         this.name = name;
@@ -34,7 +39,7 @@ abstract class Creature {
     /**
      * This function adds health to the creature. Any over healing is lost.
      * Sets the status to Alive.
-     * @param healthPoints
+     * @param healthPoints Points to heal
      */
     public void addHealth(int healthPoints) {
         if (this.currentHealth + healthPoints > this.maxHealth) {
@@ -50,7 +55,7 @@ abstract class Creature {
     /**
      * This function sets the bonus health of a creature.
      * If the new bonus health is lower than the old, we do not update it.
-     * @param newBonusHealth
+     * @param newBonusHealth new Max Bonus health
      */
     public void addBonusHealth(int newBonusHealth) {
         // If the new bonus health is greater than the current bonus health,
@@ -62,7 +67,7 @@ abstract class Creature {
 
     /**
      * This function removes health from the creature. Sets the creature to Unconscious if HP goes to 0.
-     * @param healthPoints
+     * @param healthPoints Damage to take
      */
     public void removeHealth(int healthPoints) {
         // Remove health from bonus health first.
