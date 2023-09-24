@@ -16,6 +16,10 @@ abstract class Creature {
     private Status currentStatus;
     private List<Conditions> currentConditions = Arrays.asList(new Conditions[Conditions.values().length]);
 
+    public int getInitiative() {
+        return initiative;
+    }
+
     /**
      * Creates a new Creature with image, name, health, and initiative.
      * @param image Image of Creature
