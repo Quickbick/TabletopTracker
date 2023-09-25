@@ -2,7 +2,7 @@ package com.cs422.fxproject.creatures;
 
 import javafx.scene.image.Image;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 abstract class Creature {
@@ -14,7 +14,7 @@ abstract class Creature {
     private int currentBonusHealth;
     private final int initiative;
     private Status currentStatus;
-    private List<Conditions> currentConditions = Arrays.asList(new Conditions[Conditions.values().length]);
+    private List<Boolean> currentConditions = new ArrayList<>(Conditions.values().length);
 
     public int getInitiative() {
         return initiative;
@@ -67,6 +67,23 @@ abstract class Creature {
         if (newBonusHealth > this.currentBonusHealth) {
             this.currentBonusHealth = this.maxBonusHealth = newBonusHealth;
         }
+    }
+
+    /**
+     * Adds a condition to the creature.
+     * @param condition Health Condition to Add.
+     */
+    public void addCondition(Conditions condition) {
+        this.currentConditions.set(condition.ordinal(), true);
+    }
+
+
+    /**
+     * Remove the condition from the creature.
+     * @param condition Health Condition to remove.
+     */
+    public void removeCondition(Conditions condition) {
+        this.currentConditions.set(condition.ordinal(), false);
     }
 
     /**
