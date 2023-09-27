@@ -1,5 +1,6 @@
 package com.cs422.fxproject.creatures;
 
 public enum Status {
-    Alive, Unconscious, Stable, Dead
+    Blinded, Charmed, Deafened, Frightened, Grappled, Incapacitated, Invisible, Paralyzed, Petrified, Poisioned, Prone,
+    Restrained, Stunned, Unconcious
 }

@@ -8,32 +8,46 @@ abstract class Creature {
     private final Image image;
     private final String name;
     private final int maxHealth;
-    private int maxBonusHealth;
     private int currentHealth;
-    private int currentBonusHealth;
+    private int BonusHealth;
     private final int initiative;
-    private Status currentStatus;
-    private List<Short> conditions;
+    private List<Status> conditions;
 
     public String getName() {
         return name;
     }
 
-    Creature(Image image, String name, int maxHealth, int maxBonusHealth, int initiative) {
+    Creature(Image image, String name, int maxHealth, int initiative) {
         this.image = image;
         this.name = name;
         this.maxHealth = maxHealth;
-        this.maxBonusHealth = maxBonusHealth;
         this.initiative = initiative;
-        // Set creature to alive and give full health
-        this.currentStatus = Status.Alive;
         this.currentHealth = this.maxHealth;
-        this.currentBonusHealth = this.maxBonusHealth;
+        this.currentBonusHealth = 0;
+        this.conditions = new List<Status>;
     }
 
     /**
-     * This function adds health to the creature. Any over healing is lost.
-     * Sets the status to Alive.
+     * This function adds a status to the creature's condition list
+     * @param status
+     */
+    private void addStatus(Status status){
+        if (!this.conditions.stream().anyMatch(c -> c.equals(status))){
+            this.conditions.add(status);
+        }
+    }
+
+    /**
+     * This function removes a status from a creature's condition list.
+     * @param status
+     */
+    private  void removeStatus(Status status){
+        int removeMe = this.conditions.indexOf(status);
+        this.conditions.remove(removeMe);
+    }
+
+    /**
+     * This function adds health to the creature.
      * @param healthPoints
      */
     public void addHealth(int healthPoints) {
@@ -43,7 +57,6 @@ abstract class Creature {
         else {
             this.currentHealth += healthPoints;
         }
-        this.currentStatus = Status.Alive;
     }
 
 
@@ -77,7 +90,7 @@ abstract class Creature {
         if (this.currentHealth <= 0) {
             // Creature has died.
             this.currentHealth = 0;
-            this.currentStatus = Status.Unconscious;
+            //add unconcious to status list
         }
     }
 }
