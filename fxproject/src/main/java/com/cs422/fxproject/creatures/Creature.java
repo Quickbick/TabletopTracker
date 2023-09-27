@@ -2,6 +2,7 @@ package com.cs422.fxproject.creatures;
 
 import javafx.scene.image.Image;
 
+import java.util.ArrayList;
 import java.util.List;
 
 abstract class Creature {
@@ -11,13 +12,21 @@ abstract class Creature {
     private int currentHealth;
     private int BonusHealth;
     private final int initiative;
-    private List<Status> conditions;
-
-    public String getName() {
-        return name;
+    private List<Boolean> currentConditions = new ArrayList<>(Conditions.values().length);
+  
+    public int getInitiative() {
+        return initiative;
     }
 
+    /**
+     * Creates a new Creature with image, name, health, and initiative.
+     * @param image Image of Creature
+     * @param name Name of Creature
+     * @param maxHealth Max Health of Creature
+     * @param initiative Initiative Number
+     */
     Creature(Image image, String name, int maxHealth, int initiative) {
+
         this.image = image;
         this.name = name;
         this.maxHealth = maxHealth;
@@ -48,7 +57,7 @@ abstract class Creature {
 
     /**
      * This function adds health to the creature.
-     * @param healthPoints
+     * @param healthPoints Points to heal
      */
     public void addHealth(int healthPoints) {
         if (this.currentHealth + healthPoints > this.maxHealth) {
@@ -63,7 +72,7 @@ abstract class Creature {
     /**
      * This function sets the bonus health of a creature.
      * If the new bonus health is lower than the old, we do not update it.
-     * @param newBonusHealth
+     * @param newBonusHealth new Max Bonus health
      */
     public void addBonusHealth(int newBonusHealth) {
         // If the new bonus health is greater than the current bonus health,
@@ -74,8 +83,25 @@ abstract class Creature {
     }
 
     /**
+     * Adds a condition to the creature.
+     * @param condition Health Condition to Add.
+     */
+    public void addCondition(Conditions condition) {
+        this.currentConditions.set(condition.ordinal(), true);
+    }
+
+
+    /**
+     * Remove the condition from the creature.
+     * @param condition Health Condition to remove.
+     */
+    public void removeCondition(Conditions condition) {
+        this.currentConditions.set(condition.ordinal(), false);
+    }
+
+    /**
      * This function removes health from the creature. Sets the creature to Unconscious if HP goes to 0.
-     * @param healthPoints
+     * @param healthPoints Damage to take
      */
     public void removeHealth(int healthPoints) {
         // Remove health from bonus health first.
