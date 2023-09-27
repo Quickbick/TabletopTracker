@@ -33,27 +33,25 @@ abstract class Creature {
         this.initiative = initiative;
         this.currentHealth = this.maxHealth;
         this.currentBonusHealth = 0;
-        this.conditions = new List<Status>;
     }
 
     /**
      * This function adds a status to the creature's condition list
      * @param status
-     */
+
     private void addStatus(Status status){
-        if (!this.conditions.stream().anyMatch(c -> c.equals(status))){
-            this.conditions.add(status);
-        }
+        this.currentConditions[stat]
     }
 
     /**
      * This function removes a status from a creature's condition list.
      * @param status
-     */
+
     private  void removeStatus(Status status){
         int removeMe = this.conditions.indexOf(status);
         this.conditions.remove(removeMe);
     }
+    */
 
     /**
      * This function adds health to the creature.
@@ -117,6 +115,7 @@ abstract class Creature {
             // Creature has died.
             this.currentHealth = 0;
             //add unconcious to status list
+            this.addCondition(Unconcious);
         }
     }
 }

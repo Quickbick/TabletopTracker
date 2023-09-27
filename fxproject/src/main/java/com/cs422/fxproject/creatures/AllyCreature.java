@@ -11,11 +11,10 @@ public class AllyCreature extends Creature{
      * @param image          Image of Creature
      * @param name           Name of Creature
      * @param maxHealth      Max Health of Creature
-     * @param maxBonusHealth Max Bonus Health of Creature
      * @param initiative     Initiative Number
      */
-    AllyCreature(Image image, String name, int maxHealth, int maxBonusHealth, int initiative) {
-        super(image, name, maxHealth, maxBonusHealth, initiative);
+    AllyCreature(Image image, String name, int maxHealth, int initiative) {
+        super(image, name, maxHealth, initiative);
     }
 
     /**
