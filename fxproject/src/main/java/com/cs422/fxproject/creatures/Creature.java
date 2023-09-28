@@ -10,7 +10,7 @@ abstract class Creature {
     private final String name;
     private final int maxHealth;
     private int currentHealth;
-    private int BonusHealth;
+    private int bonusHealth;
     private final int initiative;
     private List<Boolean> currentConditions = new ArrayList<>(Conditions.values().length);
   
@@ -32,7 +32,7 @@ abstract class Creature {
         this.maxHealth = maxHealth;
         this.initiative = initiative;
         this.currentHealth = this.maxHealth;
-        this.currentBonusHealth = 0;
+        this.bonusHealth = 0;
     }
 
     /**
@@ -75,8 +75,8 @@ abstract class Creature {
     public void addBonusHealth(int newBonusHealth) {
         // If the new bonus health is greater than the current bonus health,
         // replace the bonus health with the new value. Otherwise, do not replace it
-        if (newBonusHealth > this.currentBonusHealth) {
-            this.currentBonusHealth = this.maxBonusHealth = newBonusHealth;
+        if (newBonusHealth > this.bonusHealth) {
+            this.bonusHealth = newBonusHealth;
         }
     }
 
@@ -103,19 +103,19 @@ abstract class Creature {
      */
     public void removeHealth(int healthPoints) {
         // Remove health from bonus health first.
-        if (this.currentBonusHealth - healthPoints > 0) {
-            this.currentBonusHealth -= healthPoints;
-        } else if (this.currentBonusHealth - healthPoints <= 0) {
-            this.currentBonusHealth = 0;
-            int dmg = healthPoints - this.currentBonusHealth;
+        if (this.bonusHealth - healthPoints > 0) {
+            this.bonusHealth -= healthPoints;
+        } else if (this.bonusHealth - healthPoints <= 0) {
+            this.bonusHealth = 0;
+            int dmg = healthPoints - this.bonusHealth;
             this.currentHealth -= dmg;
         }
 
         if (this.currentHealth <= 0) {
             // Creature has died.
             this.currentHealth = 0;
-            //add unconcious to status list
-            this.addCondition(Unconcious);
+            //add unconscious to status list
+            this.addCondition(Conditions.Unconcious);
         }
     }
 }
