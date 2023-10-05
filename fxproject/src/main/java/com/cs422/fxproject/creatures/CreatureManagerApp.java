@@ -1,21 +1,31 @@
 package com.cs422.fxproject.creatures;
 
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
+
 public class CreatureManagerApp extends Application {
-    private List<Creature> creatures = new ArrayList<>();
+    private final List<Creature> creatures = new ArrayList<>();
     private FlowPane creaturePane;
 
     public static void main(String[] args) {
@@ -30,12 +40,15 @@ public class CreatureManagerApp extends Application {
         creaturePane = new FlowPane(10, 10);
         creaturePane.setAlignment(Pos.CENTER);
         creaturePane.setMinWidth(800);
+        ScrollPane sp = new ScrollPane(creaturePane);
+        sp.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        sp.setFitToWidth(true);
 
         Button addButton = new Button("Add Creature");
         addButton.setOnAction(e -> showCreatureDialog());
 
         root.setTop(addButton);
-        root.setCenter(creaturePane);
+        root.setCenter(sp);
 
         Scene scene = new Scene(root, 800, 600);
         primaryStage.setScene(scene);
@@ -46,6 +59,7 @@ public class CreatureManagerApp extends Application {
         Dialog<Creature> dialog = new Dialog<>();
         dialog.setTitle("Add Creature");
         dialog.setHeaderText("Enter Creature Details");
+        final File[] files = new File[1];
 
         Label nameLabel = new Label("Name:");
         TextField nameTextField = new TextField();
@@ -53,14 +67,29 @@ public class CreatureManagerApp extends Application {
         TextField healthTextField = new TextField();
         Label initiativeLabel = new Label("Initiative:");
         TextField initiativeTextField = new TextField();
+        Label imageLabel = new Label("Image:");
+        Button selectImage = new Button("Browse");
+        selectImage.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                FileChooser fileChooser = new FileChooser();
+                fileChooser.setTitle("Open Image File");
+                fileChooser.getExtensionFilters().add(
+                        new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif")
+                );
+                files[0] = fileChooser.showOpenDialog(dialog.getOwner());
+
+            }
+        });
 
         ChoiceBox<String> creatureTypeChoiceBox = new ChoiceBox<>();
         creatureTypeChoiceBox.getItems().addAll("ALLY", "NEUTRAL", "ENEMY");
         creatureTypeChoiceBox.setValue("ALLY");
 
-        VBox dialogContent = new VBox(10);
+        VBox dialogContent = new VBox();
         dialogContent.getChildren().addAll(
                 nameLabel, nameTextField,
+                imageLabel, selectImage,
                 healthLabel, healthTextField,
                 initiativeLabel, initiativeTextField,
                 creatureTypeChoiceBox
@@ -79,8 +108,9 @@ public class CreatureManagerApp extends Application {
                     int health = Integer.parseInt(healthTextField.getText());
                     int initiative = Integer.parseInt(initiativeTextField.getText());
                     String selectedCreatureType = creatureTypeChoiceBox.getValue();
+                    File selectedFile = files[0];
 
-                    Creature creature = createCreature(selectedCreatureType, name, health, initiative);
+                    Creature creature = createCreature(selectedCreatureType, name, health, initiative, selectedFile);
 
                     if (creature != null) {
                         // Add the created creature to the list
@@ -106,20 +136,16 @@ public class CreatureManagerApp extends Application {
         dialog.showAndWait();
     }
 
-    private Creature createCreature(String creatureType, String name, int health, int initiative) {
-        switch (creatureType) {
-            case "ALLY":
-                return new AllyCreature(name, health, initiative);
-            case "NEUTRAL":
-                return new NeutralCreature(name, health, initiative);
-            case "ENEMY":
-                return new EnemyCreature(name, health, initiative);
-            default:
-                return null;
-        }
+    private Creature createCreature(String creatureType, String name, int health, int initiative, File image) {
+        return switch (creatureType) {
+            case "ALLY" -> new AllyCreature(name, health, initiative, image);
+            case "NEUTRAL" -> new NeutralCreature(name, health, initiative, image);
+            case "ENEMY" -> new EnemyCreature(name, health, initiative, image);
+            default -> null;
+        };
     }
 
-    private void updateCreatureDisplay() {
+    private void updateCreatureDisplay(){
         creaturePane.getChildren().clear();
         for (Creature creature : creatures) {
             VBox creatureInfoBox = new VBox(10);
@@ -128,19 +154,20 @@ public class CreatureManagerApp extends Application {
             Button deleteButton = new Button("DELETE");
             Button deleteConditionButton = new Button("DELETE CONDITION");
 
-            Rectangle blackSquare = new Rectangle(100, 100);
-            blackSquare.setFill(Color.BLACK);
+            Rectangle portrait = new Rectangle(100, 100);
+            portrait.setFill(new ImagePattern(new Image(String.valueOf(creature.getImage()))));
+
 
             // Set the border color based on creature type
             if (creature instanceof AllyCreature) {
-                blackSquare.setStroke(AllyCreature.border);
-                blackSquare.setStrokeWidth(5);
+                portrait.setStroke(AllyCreature.border);
+                portrait.setStrokeWidth(5);
             } else if (creature instanceof NeutralCreature) {
-                blackSquare.setStroke(NeutralCreature.border);
-                blackSquare.setStrokeWidth(5);
+                portrait.setStroke(NeutralCreature.border);
+                portrait.setStrokeWidth(5);
             } else if (creature instanceof EnemyCreature) {
-                blackSquare.setStroke(EnemyCreature.border);
-                blackSquare.setStrokeWidth(5);
+                portrait.setStroke(EnemyCreature.border);
+                portrait.setStrokeWidth(5);
             }
 
             Label nameLabel = new Label("| " + creature.getName());
@@ -279,8 +306,7 @@ public class CreatureManagerApp extends Application {
                 });
             });
 
-            creatureInfoBox.getChildren().addAll(buttonsTopRow, buttonsBottomRow, blackSquare, characterInfo);
-
+            creatureInfoBox.getChildren().addAll(buttonsTopRow, buttonsBottomRow, portrait, characterInfo);
             creaturePane.getChildren().add(creatureInfoBox);
 
             deleteButton.setOnAction(event -> {

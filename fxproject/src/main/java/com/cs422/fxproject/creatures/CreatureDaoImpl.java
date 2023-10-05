@@ -1,27 +1,28 @@
 package com.cs422.fxproject.creatures;
 
+import java.io.File;
 import java.util.*;
 
 public abstract class CreatureDaoImpl implements CreatureDao {
     private List<Creature> creatureInventory = new ArrayList<>();
 
     @Override
-    public Creature createAllyCreature(String name, int maxHealth, int initiative) {
-        Creature new_creature = new AllyCreature(name, maxHealth, initiative);
+    public Creature createAllyCreature(String name, int maxHealth, int initiative, File image) {
+        Creature new_creature = new AllyCreature(name, maxHealth, initiative, image);
         creatureInventory.add(new_creature);
         return new_creature;
     }
 
     @Override
-    public Creature createNeutralCreature(String name, int maxHealth, int initiative) {
-        Creature new_creature = new NeutralCreature(name, maxHealth, initiative);
+    public Creature createNeutralCreature(String name, int maxHealth, int initiative, File image) {
+        Creature new_creature = new NeutralCreature(name, maxHealth, initiative, image);
         creatureInventory.add(new_creature);
         return new_creature;
     }
 
     @Override
-    public Creature createEnemyCreature(String name, int maxHealth, int initiative) {
-        Creature new_creature = new EnemyCreature(name, maxHealth, initiative);
+    public Creature createEnemyCreature(String name, int maxHealth, int initiative, File image) {
+        Creature new_creature = new EnemyCreature(name, maxHealth, initiative, image);
         creatureInventory.add(new_creature);
         return new_creature;
     }

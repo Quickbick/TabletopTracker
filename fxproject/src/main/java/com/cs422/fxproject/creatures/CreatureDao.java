@@ -1,17 +1,14 @@
 package com.cs422.fxproject.creatures;
 
+import java.io.File;
+
 public interface CreatureDao {
-    Creature createAllyCreature(String name, int maxHealth, int maxBonusHealth, int initiative);
 
-    Creature createAllyCreature(String name, int maxHealth, int initiative);
+    Creature createAllyCreature(String name, int maxHealth, int initiative, File image);
 
-    Creature createNeutralCreature(String name, int maxHealth, int maxBonusHealth, int initiative);
+    Creature createNeutralCreature(String name, int maxHealth, int initiative, File image);
 
-    Creature createEnemyCreature(String name, int maxHealth, int maxBonusHealth, int initiative);
-
-    Creature createNeutralCreature(String name, int maxHealth, int initiative);
-
-    Creature createEnemyCreature(String name, int maxHealth, int initiative);
+    Creature createEnemyCreature(String name, int maxHealth, int initiative, File image);
 
     void deleteCreature(Creature creature);
 

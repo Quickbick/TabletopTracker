@@ -1,10 +1,12 @@
 package com.cs422.fxproject.creatures;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 class Creature {
     private final String name;
+    private final File image;
     private final int maxHealth;
     private int currentHealth;
     private int bonusHealth;
@@ -21,13 +23,15 @@ class Creature {
      * @param name        Name of Creature
      * @param maxHealth   Max Health of Creature
      * @param initiative  Initiative Number
+     * @param image       Creature Image
      */
-    Creature(String name, int maxHealth, int initiative) {
+    Creature(String name, int maxHealth, int initiative, File image) {
         this.name = name;
         this.maxHealth = maxHealth;
         this.initiative = initiative;
         this.currentHealth = this.maxHealth;
         this.bonusHealth = 0;
+        this.image = image;
     }
 
     /**
@@ -135,5 +139,7 @@ class Creature {
     public int getBonusHealth(){ return this.bonusHealth; }
 
     public int getMaxHealth(){return this.maxHealth; }
+
+    public File getImage(){return this.image;}
 
 }
