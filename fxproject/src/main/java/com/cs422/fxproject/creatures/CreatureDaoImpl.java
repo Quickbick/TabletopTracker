@@ -4,7 +4,7 @@ import java.io.*;
 import java.util.*;
 
 public class CreatureDaoImpl implements CreatureDao {
-    private final List<Creature> creatureInventory = new ArrayList<>();
+    private List<Creature> creatureInventory = new ArrayList<>();
 
     @Override
     public Creature createCreature(String creatureType, String name, int health, int initiative, File image) {
@@ -41,7 +41,7 @@ public class CreatureDaoImpl implements CreatureDao {
 
     @Override
     public void sortByInitiative() {
-        this.creatureInventory.sort(Comparator.comparing(creature -> creature.getInitiative()));
+        this.creatureInventory.sort(Comparator.comparing(Creature::getInitiative).reversed());
     }
 
     @Override
@@ -60,12 +60,10 @@ public class CreatureDaoImpl implements CreatureDao {
 
     @Override
     public void loadCreatures(File file) throws IOException, ClassNotFoundException {
-        FileInputStream fileInputStream
-                = new FileInputStream(file);
-        ObjectInputStream objectInputStream
-                = new ObjectInputStream(fileInputStream);
-        Creature e2 = (Creature) objectInputStream.readObject();
+        FileInputStream fileInputStream = new FileInputStream(file);
+        ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+        List<Creature> e2 = (List<Creature>) objectInputStream.readObject();
         objectInputStream.close();
-        int a = 2;
+        this.creatureInventory = e2;
     }
 }
