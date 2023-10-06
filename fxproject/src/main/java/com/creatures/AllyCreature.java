@@ -1,4 +1,4 @@
-package com.cs422.fxproject.creatures;
+package com.creatures;
 
 import javafx.scene.paint.Color;
 

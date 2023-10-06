@@ -1,10 +1,10 @@
-package com.cs422.fxproject.creatures;
+package com.creatures;
 
 import javafx.scene.paint.Color;
 
 import java.io.File;
 
-public class EnemyCreature extends Creature {
+public class NeutralCreature extends Creature {
     /**
      * Creates a new Creature with a name, health, and initiative.
      *
@@ -13,12 +13,12 @@ public class EnemyCreature extends Creature {
      * @param initiative Initiative Number
      * @param image      Creature Image
      */
-    EnemyCreature(String name, int maxHealth, int initiative, File image) {
+    NeutralCreature(String name, int maxHealth, int initiative, File image) {
         super(name, maxHealth, initiative, image);
     }
 
     /**
-     * Border color for Enemy creatures.
+     * Border color for Neutral creatures.
      */
-    public static Color border = Color.RED;
+    public static Color border = Color.GRAY;
 }

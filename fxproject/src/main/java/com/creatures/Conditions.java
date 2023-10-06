@@ -1,4 +1,4 @@
-package com.cs422.fxproject.creatures;
+package com.creatures;
 
 public enum Conditions {
     Blinded, Charmed, Deafened, Frightened, Grappled,
