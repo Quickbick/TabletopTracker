@@ -14,13 +14,11 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 public class CreatureManagerApp extends Application {
-    private final List<Creature> creatures = new ArrayList<>();
+    private final static CreatureDao creatureDao = new CreatureDaoImpl();
     private FlowPane creaturePane;
 
     public static void main(String[] args) {
@@ -63,19 +61,7 @@ public class CreatureManagerApp extends Application {
         Label initiativeLabel = new Label("Initiative:");
         TextField initiativeTextField = new TextField();
         Label imageLabel = new Label("Image:");
-        Button selectImage = new Button("Browse");
-        selectImage.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                FileChooser fileChooser = new FileChooser();
-                fileChooser.setTitle("Open Image File");
-                fileChooser.getExtensionFilters().add(
-                        new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif")
-                );
-                files[0] = fileChooser.showOpenDialog(dialog.getOwner());
-
-            }
-        });
+        Button selectImage = getSelectImage(files, dialog);
 
         ChoiceBox<String> creatureTypeChoiceBox = new ChoiceBox<>();
         creatureTypeChoiceBox.getItems().addAll("ALLY", "NEUTRAL", "ENEMY");
@@ -105,18 +91,13 @@ public class CreatureManagerApp extends Application {
                     String selectedCreatureType = creatureTypeChoiceBox.getValue();
                     File selectedFile = files[0];
 
-                    Creature creature = createCreature(selectedCreatureType, name, health, initiative, selectedFile);
+                    // Add creature to inventory
+                    creatureDao.createCreature(selectedCreatureType, name, health, initiative, selectedFile);
+                    // Sort the inventory
+                    creatureDao.sortByInitiative();
+                    // Update the display
+                    updateCreatureDisplay();
 
-                    if (creature != null) {
-                        // Add the created creature to the list
-                        creatures.add(creature);
-
-                        // Sort the creatures based on initiative
-                        Collections.sort(creatures, (c1, c2) -> Integer.compare(c2.getInitiative(), c1.getInitiative()));
-
-                        // Update the display
-                        updateCreatureDisplay();
-                    }
                 } catch (NumberFormatException e) {
                     Alert alert = new Alert(Alert.AlertType.ERROR);
                     alert.setTitle("Error");
@@ -131,18 +112,26 @@ public class CreatureManagerApp extends Application {
         dialog.showAndWait();
     }
 
-    private Creature createCreature(String creatureType, String name, int health, int initiative, File image) {
-        return switch (creatureType) {
-            case "ALLY" -> new AllyCreature(name, health, initiative, image);
-            case "NEUTRAL" -> new NeutralCreature(name, health, initiative, image);
-            case "ENEMY" -> new EnemyCreature(name, health, initiative, image);
-            default -> null;
-        };
+    private static Button getSelectImage(File[] files, Dialog<Creature> dialog) {
+        Button selectImage = new Button("Browse");
+        selectImage.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                FileChooser fileChooser = new FileChooser();
+                fileChooser.setTitle("Open Image File");
+                fileChooser.getExtensionFilters().add(
+                        new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif")
+                );
+                files[0] = fileChooser.showOpenDialog(dialog.getOwner());
+
+            }
+        });
+        return selectImage;
     }
 
     private void updateCreatureDisplay(){
         creaturePane.getChildren().clear();
-        for (Creature creature : creatures) {
+        for (Creature creature : creatureDao.getCreatureInventory()) {
             VBox creatureInfoBox = new VBox(10);
             creatureInfoBox.setAlignment(Pos.CENTER);
 
@@ -307,7 +296,7 @@ public class CreatureManagerApp extends Application {
             deleteButton.setOnAction(event -> {
                 boolean deleteConfirmed = showDeleteConfirmationDialog();
                 if (deleteConfirmed) {
-                    creatures.remove(creature);
+                    creatureDao.deleteCreature(creature);
                     updateCreatureDisplay();
                 }
             });
