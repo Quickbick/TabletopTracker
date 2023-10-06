@@ -7,14 +7,13 @@ public class CreatureDaoImpl implements CreatureDao {
     private final List<Creature> creatureInventory = new ArrayList<>();
 
     @Override
-    public void createCreature(String creatureType, String name, int health, int initiative, File image) {
-        switch (creatureType) {
+    public Creature createCreature(String creatureType, String name, int health, int initiative, File image) {
+        return switch (creatureType) {
             case "ALLY" -> createAllyCreature(name, health, initiative, image);
             case "NEUTRAL" -> createNeutralCreature(name, health, initiative, image);
             case "ENEMY" -> createEnemyCreature(name, health, initiative, image);
-            default -> {
-            }
-        }
+            default -> null;
+        };
     }
 
     private Creature createAllyCreature(String name, int maxHealth, int initiative, File image) {

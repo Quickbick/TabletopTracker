@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface CreatureDao {
 
-    public void createCreature(String creatureType, String name, int health, int initiative, File image);
+    public Creature createCreature(String creatureType, String name, int health, int initiative, File image);
 
     void deleteCreature(Creature creature);
 
