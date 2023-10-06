@@ -1,10 +1,12 @@
 package com.cs422.fxproject.creatures;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-abstract class Creature {
+abstract class Creature implements Serializable {
+    private static final long serializableUID = 1L;
     private final String name;
     private final File image;
     private final int maxHealth;

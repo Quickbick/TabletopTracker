@@ -1,19 +1,20 @@
 package com.cs422.fxproject.creatures;
 
-import java.io.File;
+import java.io.*;
 import java.util.*;
 
 public class CreatureDaoImpl implements CreatureDao {
     private final List<Creature> creatureInventory = new ArrayList<>();
 
     @Override
-    public Creature createCreature(String creatureType, String name, int health, int initiative, File image) {
-        return switch (creatureType) {
+    public void createCreature(String creatureType, String name, int health, int initiative, File image) {
+        switch (creatureType) {
             case "ALLY" -> createAllyCreature(name, health, initiative, image);
             case "NEUTRAL" -> createNeutralCreature(name, health, initiative, image);
             case "ENEMY" -> createEnemyCreature(name, health, initiative, image);
-            default -> null;
-        };
+            default -> {
+            }
+        }
     }
 
     private Creature createAllyCreature(String name, int maxHealth, int initiative, File image) {
@@ -47,5 +48,25 @@ public class CreatureDaoImpl implements CreatureDao {
     @Override
     public List<Creature> getCreatureInventory() {
         return creatureInventory;
+    }
+
+    @Override
+    public void saveCreatures() throws IOException {
+        FileOutputStream fileOutputStream = new FileOutputStream("yourfile2.txt");
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+        objectOutputStream.writeObject(creatureInventory);
+        objectOutputStream.flush();
+        objectOutputStream.close();
+    }
+
+    @Override
+    public void loadCreatures(File file) throws IOException, ClassNotFoundException {
+        FileInputStream fileInputStream
+                = new FileInputStream(file);
+        ObjectInputStream objectInputStream
+                = new ObjectInputStream(fileInputStream);
+        Creature e2 = (Creature) objectInputStream.readObject();
+        objectInputStream.close();
+        int a = 2;
     }
 }
