@@ -38,7 +38,16 @@ public class CreatureManagerApp extends Application {
         Button addButton = new Button("Add Creature");
         addButton.setOnAction(e -> showCreatureDialog());
 
-        root.setTop(addButton);
+        // Save Button
+        Button saveButton = new Button("Save");
+
+        // Load Button
+        Button loadButton = new Button("Load");
+
+        HBox hbox = new HBox();
+        hbox.getChildren().addAll(addButton, saveButton, loadButton);
+
+        root.setTop(hbox);
         root.setCenter(sp);
 
         Scene scene = new Scene(root, 800, 600);

@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-class Creature {
+abstract class Creature {
     private final String name;
     private final File image;
     private final int maxHealth;
