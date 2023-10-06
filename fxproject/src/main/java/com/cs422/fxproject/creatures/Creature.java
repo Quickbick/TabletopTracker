@@ -35,25 +35,6 @@ class Creature {
     }
 
     /**
-     * This function adds a status to the creature's condition list
-     *
-     * @param status
-     */
-    /*private void addStatus(Status status) {
-        this.currentConditions[stat]
-    }*/
-
-    /**
-     * This function removes a status from a creature's condition list.
-     *
-     * @param status
-     */
-    /*private void removeStatus(Status status) {
-        int removeMe = this.conditions.indexOf(status);
-        this.conditions.remove(removeMe);
-    }*/
-
-    /**
      * This function adds health to the creature.
      *
      * @param healthPoints Points to heal
