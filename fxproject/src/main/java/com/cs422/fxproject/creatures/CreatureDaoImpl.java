@@ -50,8 +50,8 @@ public class CreatureDaoImpl implements CreatureDao {
     }
 
     @Override
-    public void saveCreatures() throws IOException {
-        FileOutputStream fileOutputStream = new FileOutputStream("yourfile2.txt");
+    public void saveCreatures(File file) throws IOException {
+        FileOutputStream fileOutputStream = new FileOutputStream(file);
         ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
         objectOutputStream.writeObject(creatureInventory);
         objectOutputStream.flush();
