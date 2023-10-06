@@ -1,8 +1,6 @@
 package com.cs422.fxproject.creatures;
 
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -61,7 +59,15 @@ public class CreatureManagerApp extends Application {
         Label initiativeLabel = new Label("Initiative:");
         TextField initiativeTextField = new TextField();
         Label imageLabel = new Label("Image:");
-        Button selectImage = getSelectImage(files, dialog);
+        Button selectImage = new Button("Browse");
+        selectImage.setOnAction(actionEvent -> {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Open Image File");
+            fileChooser.getExtensionFilters().add(
+                    new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif")
+            );
+            files[0] = fileChooser.showOpenDialog(dialog.getOwner());
+        });
 
         ChoiceBox<String> creatureTypeChoiceBox = new ChoiceBox<>();
         creatureTypeChoiceBox.getItems().addAll("ALLY", "NEUTRAL", "ENEMY");
@@ -90,6 +96,7 @@ public class CreatureManagerApp extends Application {
                     int initiative = Integer.parseInt(initiativeTextField.getText());
                     String selectedCreatureType = creatureTypeChoiceBox.getValue();
                     File selectedFile = files[0];
+                    System.out.println(selectedFile);
 
                     // Add creature to inventory
                     creatureDao.createCreature(selectedCreatureType, name, health, initiative, selectedFile);
@@ -112,23 +119,6 @@ public class CreatureManagerApp extends Application {
         dialog.showAndWait();
     }
 
-    private static Button getSelectImage(File[] files, Dialog<Creature> dialog) {
-        Button selectImage = new Button("Browse");
-        selectImage.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                FileChooser fileChooser = new FileChooser();
-                fileChooser.setTitle("Open Image File");
-                fileChooser.getExtensionFilters().add(
-                        new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif")
-                );
-                files[0] = fileChooser.showOpenDialog(dialog.getOwner());
-
-            }
-        });
-        return selectImage;
-    }
-
     private void updateCreatureDisplay(){
         creaturePane.getChildren().clear();
         for (Creature creature : creatureDao.getCreatureInventory()) {
@@ -139,7 +129,7 @@ public class CreatureManagerApp extends Application {
             Button deleteConditionButton = new Button("DELETE CONDITION");
 
             Rectangle portrait = new Rectangle(100, 100);
-            portrait.setFill(new ImagePattern(new Image(String.valueOf(creature.getImage()))));
+            portrait.setFill(new ImagePattern(new Image("file:" + creature.getImage().getAbsolutePath())));
 
 
             // Set the border color based on creature type
