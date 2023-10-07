@@ -15,10 +15,6 @@ abstract class Creature implements Serializable {
     private final int initiative;
     private List<Conditions> currentConditions = new ArrayList<>();
 
-    public int getInitiative() {
-        return initiative;
-    }
-
     /**
      * Creates a new Creature with name, health, and initiative.
      *
@@ -46,6 +42,29 @@ abstract class Creature implements Serializable {
             this.currentHealth = this.maxHealth;
         } else {
             this.currentHealth += healthPoints;
+        }
+    }
+
+    /**
+     * This function removes health from the creature. Sets the creature to Unconscious if HP goes to 0.
+     *
+     * @param healthPoints Damage to take
+     */
+    public void removeHealth(int healthPoints) {
+        // Remove health from bonus health first.
+        if (this.bonusHealth - healthPoints > 0) {
+            this.bonusHealth -= healthPoints;
+        } else if (this.bonusHealth - healthPoints <= 0) {
+            int dmg = healthPoints - this.bonusHealth;
+            this.bonusHealth = 0;
+            this.currentHealth -= dmg;
+        }
+
+        if (this.currentHealth <= 0) {
+            // Creature has died.
+            this.currentHealth = 0;
+            //add unconscious to status list
+            this.addCondition(Conditions.Unconscious);
         }
     }
 
@@ -83,46 +102,20 @@ abstract class Creature implements Serializable {
         currentConditions.remove(condition);
     }
 
-    public List<Conditions> getCurrentConditions() {
-        return currentConditions;
-    }
-
-
-    /**
-     * This function removes health from the creature. Sets the creature to Unconscious if HP goes to 0.
-     *
-     * @param healthPoints Damage to take
-     */
-    public void removeHealth(int healthPoints) {
-        // Remove health from bonus health first.
-        if (this.bonusHealth - healthPoints > 0) {
-            this.bonusHealth -= healthPoints;
-        } else if (this.bonusHealth - healthPoints <= 0) {
-            int dmg = healthPoints - this.bonusHealth;
-            this.bonusHealth = 0;
-            this.currentHealth -= dmg;
-        }
-
-        if (this.currentHealth <= 0) {
-            // Creature has died.
-            this.currentHealth = 0;
-            //add unconscious to status list
-            this.addCondition(Conditions.Unconcious);
-        }
-    }
-
     public String getName() {
         return this.name;
     }
-
+    public File getImage(){return this.image;}
+    public int getMaxHealth(){return this.maxHealth; }
     public int getCurrentHealth() {
         return this.currentHealth;
     }
-
     public int getBonusHealth(){ return this.bonusHealth; }
-
-    public int getMaxHealth(){return this.maxHealth; }
-
-    public File getImage(){return this.image;}
+    public int getInitiative() {
+        return initiative;
+    }
+    public List<Conditions> getCurrentConditions() {
+        return currentConditions;
+    }
 
 }
