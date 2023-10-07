@@ -1,8 +1,6 @@
 package com.creatures;
 
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -14,8 +12,6 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
@@ -208,9 +204,7 @@ public class CreatureManagerApp extends Application {
                 try {
                     creatureDao.loadCreatures(files[0]);
                     creatureDao.sortByInitiative();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                } catch (ClassNotFoundException e) {
+                } catch (IOException | ClassNotFoundException e) {
                     throw new RuntimeException(e);
                 }
             }
@@ -239,9 +233,7 @@ public class CreatureManagerApp extends Application {
                     // Update the display
                     updateCreatureDisplay();
 
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                } catch (ClassNotFoundException e) {
+                } catch (IOException | ClassNotFoundException e) {
                     throw new RuntimeException(e);
                 }
             }
@@ -261,8 +253,12 @@ public class CreatureManagerApp extends Application {
             Button deleteConditionButton = new Button("DELETE CONDITION");
 
             Rectangle portrait = new Rectangle(100, 100);
-            portrait.setFill(new ImagePattern(new Image("file:" + creature.getImage().getAbsolutePath())));
 
+            if (creature.getImage() != null) {
+                portrait.setFill(new ImagePattern(new Image("file:" + creature.getImage().getAbsolutePath())));
+            } else {
+                portrait.setFill(new ImagePattern(new Image("file:" + new File("./src/main/resources/com/cs422/fxproject/Default_Image.png"))));
+            }
 
             // Set the border color based on creature type
             if (creature instanceof AllyCreature) {
