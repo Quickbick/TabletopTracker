@@ -1,13 +1,20 @@
 # 422TabletopTracker
 
-This project is a GUI Desktop Application that tracks information for game masters of tabletop games.
-  Intended Features:
-    [] Health Tracking, including ranges that can be set for things such as temporary hit points.
-    [] Condition Tracking
-    [] User Picture Upload for Entities
-    [] Automatic Math for subtracting and adding health.
+This project is a GUI Desktop Application that tracks information for game masters of tabletop games. It includes:
+- Health Tracking (Standard and Temporary Hit Points)
+- Condition Tracking
+- Entity Creation with Names and Pictures
+- Automatic Math for Damage and Healing
+- Saving and Loading of Active Combats
 
-  Created By:
-    Nathanael Ostheller, 
-    Darin Hardie, 
-    and William Walker
+## Installation Instructions
+- Download the Repo
+- Install Java
+- Run the .jar file in the Tabletop Tracker folder
+
+The jar should be standalone, but we are currently not entirely sure that it works like that?
+
+### Created By:
+  * Nathanael Ostheller
+  * Darin Hardie
+  * William Walker
