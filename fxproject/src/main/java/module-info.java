@@ -6,4 +6,5 @@ module com.cs422.fxproject {
 
     opens com.cs422.fxproject to javafx.fxml;
     exports com.creatures to javafx.graphics;
+    exports com to javafx.graphics;
 }
