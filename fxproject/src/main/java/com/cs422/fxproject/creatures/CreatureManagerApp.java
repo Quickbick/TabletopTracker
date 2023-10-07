@@ -41,6 +41,7 @@ public class CreatureManagerApp extends Application {
 
         // Save Button
         Button saveButton = new Button("Save");
+        saveButton.setOnAction(e -> showSaveDialog());
 
         // Load Button
         Button loadButton = new Button("Load");
@@ -55,6 +56,59 @@ public class CreatureManagerApp extends Application {
         Scene scene = new Scene(root, 800, 600);
         primaryStage.setScene(scene);
         primaryStage.show();
+    }
+
+    private void showSaveDialog() {
+        Dialog<Creature> dialog = new Dialog<>();
+        dialog.setTitle("Save File");
+        dialog.setHeaderText("Select file to save as.");
+        final File[] files = new File[1];
+
+        Label fileLabel = new Label("File:");
+        Button selectFile = new Button("Browse");
+        selectFile.setOnAction(actionEvent -> {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Save Data");
+            fileChooser.getExtensionFilters().add(
+                    new FileChooser.ExtensionFilter("Serialized File", "*.ser")
+            );
+            files[0] = fileChooser.showSaveDialog(dialog.getOwner());
+            if (files[0] != null) {
+                fileLabel.setText("File: " + files[0].getName());
+                // Process the file immediately after it's selected
+                try {
+                    creatureDao.saveCreatures(files[0]);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+
+        VBox dialogContent = new VBox();
+        dialogContent.getChildren().addAll(
+                fileLabel, selectFile
+        );
+        dialogContent.setAlignment(Pos.CENTER);
+
+        dialog.getDialogPane().setContent(dialogContent);
+
+        ButtonType saveButton = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(saveButton, ButtonType.CANCEL);
+
+        dialog.setResultConverter(buttonType -> {
+            if (buttonType == saveButton) {
+                try {
+
+                    File selectedFile = files[0];
+                    creatureDao.saveCreatures(selectedFile);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            return null;
+        });
+
+        dialog.showAndWait();
     }
 
     private void showCreatureDialog() {
@@ -181,12 +235,6 @@ public class CreatureManagerApp extends Application {
                     // Update the display
                     updateCreatureDisplay();
 
-                } catch (NumberFormatException e) {
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("Error");
-                    alert.setHeaderText("Invalid Input");
-                    alert.setContentText("Please enter valid initiative and health values.");
-                    alert.showAndWait();
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 } catch (ClassNotFoundException e) {
