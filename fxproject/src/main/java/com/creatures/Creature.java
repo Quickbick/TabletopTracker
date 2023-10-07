@@ -1,10 +1,12 @@
 package com.creatures;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-class Creature {
+abstract class Creature implements Serializable {
+    private static final long serializableUID = 1L;
     private final String name;
     private final File image;
     private final int maxHealth;
@@ -33,25 +35,6 @@ class Creature {
         this.bonusHealth = 0;
         this.image = image;
     }
-
-    /**
-     * This function adds a status to the creature's condition list
-     *
-     * @param status
-     */
-    /*private void addStatus(Status status) {
-        this.currentConditions[stat]
-    }*/
-
-    /**
-     * This function removes a status from a creature's condition list.
-     *
-     * @param status
-     */
-    /*private void removeStatus(Status status) {
-        int removeMe = this.conditions.indexOf(status);
-        this.conditions.remove(removeMe);
-    }*/
 
     /**
      * This function adds health to the creature.

@@ -16,11 +16,12 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
 public class CreatureManagerApp extends Application {
-    private final List<Creature> creatures = new ArrayList<>();
+    private final static CreatureDao creatureDao = new CreatureDaoImpl();
     private FlowPane creaturePane;
 
     public static void main(String[] args) {
@@ -42,12 +43,76 @@ public class CreatureManagerApp extends Application {
         Button addButton = new Button("Add Creature");
         addButton.setOnAction(e -> showCreatureDialog());
 
-        root.setTop(addButton);
+        // Save Button
+        Button saveButton = new Button("Save");
+        saveButton.setOnAction(e -> showSaveDialog());
+
+        // Load Button
+        Button loadButton = new Button("Load");
+        loadButton.setOnAction(e -> showLoadDialog());
+
+        HBox hbox = new HBox();
+        hbox.getChildren().addAll(addButton, saveButton, loadButton);
+
+        root.setTop(hbox);
         root.setCenter(sp);
 
         Scene scene = new Scene(root, 800, 600);
         primaryStage.setScene(scene);
         primaryStage.show();
+    }
+
+    private void showSaveDialog() {
+        Dialog<Creature> dialog = new Dialog<>();
+        dialog.setTitle("Save File");
+        dialog.setHeaderText("Select file to save as.");
+        final File[] files = new File[1];
+
+        Label fileLabel = new Label("File:");
+        Button selectFile = new Button("Browse");
+        selectFile.setOnAction(actionEvent -> {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Save Data");
+            fileChooser.getExtensionFilters().add(
+                    new FileChooser.ExtensionFilter("Serialized File", "*.ser")
+            );
+            files[0] = fileChooser.showSaveDialog(dialog.getOwner());
+            if (files[0] != null) {
+                fileLabel.setText("File: " + files[0].getName());
+                // Process the file immediately after it's selected
+                try {
+                    creatureDao.saveCreatures(files[0]);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+
+        VBox dialogContent = new VBox();
+        dialogContent.getChildren().addAll(
+                fileLabel, selectFile
+        );
+        dialogContent.setAlignment(Pos.CENTER);
+
+        dialog.getDialogPane().setContent(dialogContent);
+
+        ButtonType saveButton = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(saveButton, ButtonType.CANCEL);
+
+        dialog.setResultConverter(buttonType -> {
+            if (buttonType == saveButton) {
+                try {
+
+                    File selectedFile = files[0];
+                    creatureDao.saveCreatures(selectedFile);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            return null;
+        });
+
+        dialog.showAndWait();
     }
 
     private void showCreatureDialog() {
@@ -64,17 +129,13 @@ public class CreatureManagerApp extends Application {
         TextField initiativeTextField = new TextField();
         Label imageLabel = new Label("Image:");
         Button selectImage = new Button("Browse");
-        selectImage.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                FileChooser fileChooser = new FileChooser();
-                fileChooser.setTitle("Open Image File");
-                fileChooser.getExtensionFilters().add(
-                        new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif")
-                );
-                files[0] = fileChooser.showOpenDialog(dialog.getOwner());
-
-            }
+        selectImage.setOnAction(actionEvent -> {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Open Image File");
+            fileChooser.getExtensionFilters().add(
+                    new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif")
+            );
+            files[0] = fileChooser.showOpenDialog(dialog.getOwner());
         });
 
         ChoiceBox<String> creatureTypeChoiceBox = new ChoiceBox<>();
@@ -105,18 +166,13 @@ public class CreatureManagerApp extends Application {
                     String selectedCreatureType = creatureTypeChoiceBox.getValue();
                     File selectedFile = files[0];
 
-                    Creature creature = createCreature(selectedCreatureType, name, health, initiative, selectedFile);
+                    // Add creature to inventory
+                    creatureDao.createCreature(selectedCreatureType, name, health, initiative, selectedFile);
+                    // Sort the inventory
+                    creatureDao.sortByInitiative();
+                    // Update the display
+                    updateCreatureDisplay();
 
-                    if (creature != null) {
-                        // Add the created creature to the list
-                        creatures.add(creature);
-
-                        // Sort the creatures based on initiative
-                        Collections.sort(creatures, (c1, c2) -> Integer.compare(c2.getInitiative(), c1.getInitiative()));
-
-                        // Update the display
-                        updateCreatureDisplay();
-                    }
                 } catch (NumberFormatException e) {
                     Alert alert = new Alert(Alert.AlertType.ERROR);
                     alert.setTitle("Error");
@@ -131,18 +187,73 @@ public class CreatureManagerApp extends Application {
         dialog.showAndWait();
     }
 
-    private Creature createCreature(String creatureType, String name, int health, int initiative, File image) {
-        return switch (creatureType) {
-            case "ALLY" -> new AllyCreature(name, health, initiative, image);
-            case "NEUTRAL" -> new NeutralCreature(name, health, initiative, image);
-            case "ENEMY" -> new EnemyCreature(name, health, initiative, image);
-            default -> null;
-        };
+    private void showLoadDialog() {
+        Dialog<Creature> dialog = new Dialog<>();
+        dialog.setTitle("Load Old Save");
+        dialog.setHeaderText("Select file to upload from.");
+        final File[] files = new File[1];
+
+        Label fileLabel = new Label("File:");
+        Button selectFile = new Button("Browse");
+        selectFile.setOnAction(actionEvent -> {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Open Save File");
+            fileChooser.getExtensionFilters().add(
+                    new FileChooser.ExtensionFilter("Load File", "*.ser")
+            );
+            files[0] = fileChooser.showOpenDialog(dialog.getOwner());
+            if (files[0] != null) {
+                fileLabel.setText("File: " + files[0].getName());
+                // Process the file immediately after it's selected
+                try {
+                    creatureDao.loadCreatures(files[0]);
+                    creatureDao.sortByInitiative();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                } catch (ClassNotFoundException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+
+
+        VBox dialogContent = new VBox();
+        dialogContent.getChildren().addAll(
+                fileLabel, selectFile
+        );
+        dialogContent.setAlignment(Pos.CENTER);
+
+        dialog.getDialogPane().setContent(dialogContent);
+
+        ButtonType loadButton = new ButtonType("Load", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(loadButton, ButtonType.CANCEL);
+
+        dialog.setResultConverter(buttonType -> {
+            if (buttonType == loadButton) {
+                try {
+
+                    File selectedFile = files[0];
+                    creatureDao.loadCreatures(selectedFile);
+                    // Sort the inventory
+                    creatureDao.sortByInitiative();
+                    // Update the display
+                    updateCreatureDisplay();
+
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                } catch (ClassNotFoundException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            return null;
+        });
+
+        dialog.showAndWait();
     }
 
     private void updateCreatureDisplay(){
         creaturePane.getChildren().clear();
-        for (Creature creature : creatures) {
+        for (Creature creature : creatureDao.getCreatureInventory()) {
             VBox creatureInfoBox = new VBox(10);
             creatureInfoBox.setAlignment(Pos.CENTER);
 
@@ -150,7 +261,7 @@ public class CreatureManagerApp extends Application {
             Button deleteConditionButton = new Button("DELETE CONDITION");
 
             Rectangle portrait = new Rectangle(100, 100);
-            portrait.setFill(new ImagePattern(new Image(String.valueOf(creature.getImage()))));
+            portrait.setFill(new ImagePattern(new Image("file:" + creature.getImage().getAbsolutePath())));
 
 
             // Set the border color based on creature type
@@ -307,7 +418,7 @@ public class CreatureManagerApp extends Application {
             deleteButton.setOnAction(event -> {
                 boolean deleteConfirmed = showDeleteConfirmationDialog();
                 if (deleteConfirmed) {
-                    creatures.remove(creature);
+                    creatureDao.deleteCreature(creature);
                     updateCreatureDisplay();
                 }
             });
