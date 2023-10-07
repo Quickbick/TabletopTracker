@@ -12,6 +12,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -43,6 +44,7 @@ public class CreatureManagerApp extends Application {
 
         // Load Button
         Button loadButton = new Button("Load");
+        loadButton.setOnAction(e -> showLoadDialog());
 
         HBox hbox = new HBox();
         hbox.getChildren().addAll(addButton, saveButton, loadButton);
@@ -105,7 +107,6 @@ public class CreatureManagerApp extends Application {
                     int initiative = Integer.parseInt(initiativeTextField.getText());
                     String selectedCreatureType = creatureTypeChoiceBox.getValue();
                     File selectedFile = files[0];
-                    System.out.println(selectedFile);
 
                     // Add creature to inventory
                     creatureDao.createCreature(selectedCreatureType, name, health, initiative, selectedFile);
@@ -120,6 +121,76 @@ public class CreatureManagerApp extends Application {
                     alert.setHeaderText("Invalid Input");
                     alert.setContentText("Please enter valid initiative and health values.");
                     alert.showAndWait();
+                }
+            }
+            return null;
+        });
+
+        dialog.showAndWait();
+    }
+
+    private void showLoadDialog() {
+        Dialog<Creature> dialog = new Dialog<>();
+        dialog.setTitle("Load Old Save");
+        dialog.setHeaderText("Select file to upload from.");
+        final File[] files = new File[1];
+
+        Label fileLabel = new Label("File:");
+        Button selectFile = new Button("Browse");
+        selectFile.setOnAction(actionEvent -> {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Open Save File");
+            fileChooser.getExtensionFilters().add(
+                    new FileChooser.ExtensionFilter("Load File", "*.ser")
+            );
+            files[0] = fileChooser.showOpenDialog(dialog.getOwner());
+            if (files[0] != null) {
+                fileLabel.setText("File: " + files[0].getName());
+                // Process the file immediately after it's selected
+                try {
+                    creatureDao.loadCreatures(files[0]);
+                    creatureDao.sortByInitiative();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                } catch (ClassNotFoundException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+
+
+        VBox dialogContent = new VBox();
+        dialogContent.getChildren().addAll(
+                fileLabel, selectFile
+        );
+        dialogContent.setAlignment(Pos.CENTER);
+
+        dialog.getDialogPane().setContent(dialogContent);
+
+        ButtonType loadButton = new ButtonType("Load", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(loadButton, ButtonType.CANCEL);
+
+        dialog.setResultConverter(buttonType -> {
+            if (buttonType == loadButton) {
+                try {
+
+                    File selectedFile = files[0];
+                    creatureDao.loadCreatures(selectedFile);
+                    // Sort the inventory
+                    creatureDao.sortByInitiative();
+                    // Update the display
+                    updateCreatureDisplay();
+
+                } catch (NumberFormatException e) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Error");
+                    alert.setHeaderText("Invalid Input");
+                    alert.setContentText("Please enter valid initiative and health values.");
+                    alert.showAndWait();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                } catch (ClassNotFoundException e) {
+                    throw new RuntimeException(e);
                 }
             }
             return null;
