@@ -12,7 +12,11 @@ public interface CreatureDao {
 
     void sortByInitiative();
 
+    void advanceTurn();
+
     List<Creature> getCreatureInventory();
+
+    List<Creature> getCurrentTurnCreatures();
 
     void saveCreatures(File file) throws IOException;
 
