@@ -47,8 +47,12 @@ public class CreatureManagerApp extends Application {
         Button loadButton = new Button("Load");
         loadButton.setOnAction(e -> showLoadDialog());
 
+        // Next Turn Button
+        Button nextTurnButton = new Button("Next Turn");
+        nextTurnButton.setOnAction(e -> creatureDao.advanceTurn());
+
         HBox hbox = new HBox();
-        hbox.getChildren().addAll(addButton, saveButton, loadButton);
+        hbox.getChildren().addAll(addButton, saveButton, loadButton, nextTurnButton);
 
         root.setTop(hbox);
         root.setCenter(sp);

@@ -4,11 +4,7 @@ import java.io.*;
 import java.util.*;
 
 public class CreatureDaoImpl implements CreatureDao {
-
-    // Only creatures in current turn can make attacks. Any creatures can be healed. Any creatures can take damage.
-    // When all creatures in creature Inventory have been given a
-
-    private int roundNumber;
+    private int roundNumber = 0;
     private List<List<Creature>> groupedByTurnCreatures;
     private List<Creature> currentTurnCreatures;
     private List<Creature> creatureInventory = new ArrayList<>();
@@ -41,11 +37,10 @@ public class CreatureDaoImpl implements CreatureDao {
         return new_creature;
     }
 
-
     /**
      * Group Creatures based on affiliation. Any same affiliation creatures next to each other share a turn.
      */
-    private void groupCreatures() {
+    private List<List<Creature>> groupCreatures() {
         List<List<Creature>> groupedListList = new ArrayList<>();
 
         // Group the creatures based on their neighbors affiliation class.
@@ -63,6 +58,7 @@ public class CreatureDaoImpl implements CreatureDao {
         }
 
         this.groupedByTurnCreatures = groupedListList;
+        return groupedListList;
     }
 
     @Override
@@ -77,8 +73,27 @@ public class CreatureDaoImpl implements CreatureDao {
         this.groupCreatures();
     }
 
+    /**
+     * Advance Turn by updating the current turn creatures.
+     * COULD ALSO UPDATE THE DURATION OF CONDITIONS HERE.
+     */
     @Override
     public void advanceTurn() {
+        if (this.groupedByTurnCreatures == null) {
+            return;
+        }
+        if (this.currentTurnCreatures == null) {
+            this.currentTurnCreatures = this.groupedByTurnCreatures.get(0);
+        }
+        // If the current turn creatures are the last to go, update round # and set current creatures to beginning.
+        // Otherwise, just set current creatures to next in turn list.
+        int ind = this.groupedByTurnCreatures.indexOf(this.currentTurnCreatures);
+        if (ind == this.groupedByTurnCreatures.size() - 1) {
+            ++this.roundNumber;
+            this.currentTurnCreatures = this.groupedByTurnCreatures.get(0);
+        } else {
+            this.currentTurnCreatures = this.groupedByTurnCreatures.get(ind+1);
+        }
     }
 
     @Override
