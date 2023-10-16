@@ -9,14 +9,13 @@ import java.io.Serializable;
 import java.util.List;
 
 abstract class Creature implements Serializable {
-    private static final long serializableUID = 1L;
     private final String name;
     private final File image;
     private final int maxHealth;
     private int currentHealth;
     private int bonusHealth;
     private final int initiative;
-    private ConditionDao conditionDao = new ConditionDaoImpl();
+    private final ConditionDao conditionDao = new ConditionDaoImpl();
 
     /**
      * Creates a new Creature with name, health, and initiative.

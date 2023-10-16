@@ -53,13 +53,12 @@ public class ConditionDaoImpl implements ConditionDao {
 
     @Override
     public List<String> getAvailableConditions() {
-        List<String> availableConditions = allConditions.stream()
+        return allConditions.stream()
                 .filter(condition -> !currentConditions.stream()
                         .map(Condition::toString)
-                        .collect(Collectors.toList())
+                        .toList()
                         .contains(condition))
                 .collect(Collectors.toList());
-        return availableConditions;
     }
 
     @Override
