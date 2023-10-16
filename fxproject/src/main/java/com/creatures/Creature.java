@@ -1,8 +1,11 @@
 package com.creatures;
 
+import com.condition_manager.Condition;
+import com.condition_manager.ConditionDao;
+import com.condition_manager.ConditionDaoImpl;
+
 import java.io.File;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 abstract class Creature implements Serializable {
@@ -13,7 +16,7 @@ abstract class Creature implements Serializable {
     private int currentHealth;
     private int bonusHealth;
     private final int initiative;
-    private List<Conditions> currentConditions = new ArrayList<>();
+    private ConditionDao conditionDao = new ConditionDaoImpl();
 
     /**
      * Creates a new Creature with name, health, and initiative.
@@ -87,9 +90,9 @@ abstract class Creature implements Serializable {
      *
      * @param condition Health Condition to Add.
      */
-    public void addCondition(Conditions condition) {
-        if (!currentConditions.contains(condition)) {
-            currentConditions.add(condition);
+    public void addCondition(Condition condition) {
+        if (!conditionDao.getCurrentConditions().contains(condition)) {
+            conditionDao.addCurrentCondition(condition);
         }
     }
 
@@ -98,8 +101,8 @@ abstract class Creature implements Serializable {
      *
      * @param condition Health Condition to remove.
      */
-    public void removeCondition(Conditions condition) {
-        currentConditions.remove(condition);
+    public void removeCondition(Condition condition) {
+        conditionDao.removeCurrentCondition(condition);
     }
 
     public String getName() {
@@ -114,8 +117,8 @@ abstract class Creature implements Serializable {
     public int getInitiative() {
         return initiative;
     }
-    public List<Conditions> getCurrentConditions() {
-        return currentConditions;
+    public List<Condition> getCurrentConditions() {
+        return conditionDao.getCurrentConditions();
     }
 
 }
