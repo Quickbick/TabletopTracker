@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.util.List;
 
 abstract class Creature implements Serializable {
+    private static final long serialVersionUID = 1L;
     private final String name;
     private final File image;
     private final int maxHealth;

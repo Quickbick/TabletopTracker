@@ -1,12 +1,15 @@
 package com.condition_manager;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ConditionDaoImpl implements ConditionDao {
-    private List<Condition> currentConditions = new ArrayList<>();
+public class ConditionDaoImpl implements ConditionDao, Serializable {
+    private static final long serialVersionUID = 1L;
+
+    private final List<Condition> currentConditions = new ArrayList<>();
 
     private final List<String> allConditions = Arrays.asList(
             "Blinded",
