@@ -76,7 +76,12 @@ public class ConditionDaoImpl implements ConditionDao {
     @Override
     public void decreaseAllConditionDurations() {
         for (Condition currCondition: this.currentConditions) {
-            currCondition.decrementDuration();
+            if (currCondition.getDuration() == 1) {
+                this.removeCurrentCondition(currCondition);
+                break;
+            } else {
+                currCondition.decrementDuration();
+            }
         }
     }
 }

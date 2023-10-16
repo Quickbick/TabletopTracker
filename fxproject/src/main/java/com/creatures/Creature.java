@@ -93,7 +93,14 @@ abstract class Creature implements Serializable {
      */
     public void addCondition(String conditionType, int duration) {
         Condition newCondition = this.conditionDao.createCondition(conditionType, duration);
-        this.conditionDao.addCurrentCondition(newCondition);
+
+        // Check if an object of the same class type as newCondition already exists
+        boolean exists = this.conditionDao.getCurrentConditions().stream()
+                .anyMatch(existingCondition -> existingCondition.getClass().equals(newCondition.getClass()));
+
+        if (!exists) {
+            this.conditionDao.addCurrentCondition(newCondition);
+        }
     }
 
     /**
@@ -103,6 +110,13 @@ abstract class Creature implements Serializable {
      */
     public void removeCondition(Condition condition) {
         conditionDao.removeCurrentCondition(condition);
+    }
+
+    /**
+     * Lower condition count by 1 round.
+     */
+    public void decrementConditions() {
+        this.conditionDao.decreaseAllConditionDurations();
     }
 
     public String getName() {

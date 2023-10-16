@@ -1,7 +1,5 @@
 package com.condition_manager;
 
-import com.condition_manager.rollModifierEnum;
-
 public abstract class Condition {
     /**
      * Duration of condition.
@@ -23,7 +21,7 @@ public abstract class Condition {
 
     /**
      * This function decides if the creature should skip their turn if they have appropriate conditions.
-     * @return True if should skip turn, False if otherwise.
+     * @return True if creature should skip turn, False if otherwise.
      */
     public abstract boolean getSkipTurn();
 

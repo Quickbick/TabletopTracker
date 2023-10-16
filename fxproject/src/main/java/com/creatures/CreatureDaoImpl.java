@@ -90,6 +90,10 @@ public class CreatureDaoImpl implements CreatureDao {
         if (ind == this.groupedByTurnCreatures.size() - 1) {
             ++this.roundNumber;
             this.currentTurnCreatures = this.groupedByTurnCreatures.get(0);
+            // Lower condition duration
+            for (Creature cr: this.creatureInventory) {
+                cr.decrementConditions();
+            }
         } else {
             this.currentTurnCreatures = this.groupedByTurnCreatures.get(ind+1);
         }
