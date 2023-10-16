@@ -1,6 +1,7 @@
 package com.creatures;
 
 import javafx.application.Application;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -20,6 +21,8 @@ import java.util.Optional;
 public class CreatureManagerApp extends Application {
     private final static CreatureDao creatureDao = new CreatureDaoImpl();
     private FlowPane creaturePane;
+
+    private Label roundLabel;
 
     public static void main(String[] args) {
         launch(args);
@@ -55,10 +58,19 @@ public class CreatureManagerApp extends Application {
             updateCreatureDisplay();
         });
 
+        roundLabel = new Label("Round: " + creatureDao.getRoundNumber());
+        roundLabel.setPadding(new Insets(5, 10, 5, 10));
+        roundLabel.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, new CornerRadii(5), Insets.EMPTY)));
+        roundLabel.setBorder(new Border(new BorderStroke(Color.DARKGRAY, BorderStrokeStyle.SOLID, new CornerRadii(5), new BorderWidths(2))));
+
         HBox hbox = new HBox();
         hbox.getChildren().addAll(addButton, saveButton, loadButton, nextTurnButton);
 
-        root.setTop(hbox);
+        BorderPane topPane = new BorderPane();
+        topPane.setLeft(hbox);
+        topPane.setRight(roundLabel);
+
+        root.setTop(topPane);
         root.setCenter(sp);
 
         Scene scene = new Scene(root, 800, 600);
@@ -253,6 +265,7 @@ public class CreatureManagerApp extends Application {
 
     private void updateCreatureDisplay(){
         creaturePane.getChildren().clear();
+        this.roundLabel.setText("Round: " + creatureDao.getRoundNumber());
         for (Creature creature : creatureDao.getCreatureInventory()) {
             VBox creatureInfoBox = new VBox(10);
             creatureInfoBox.setAlignment(Pos.CENTER);

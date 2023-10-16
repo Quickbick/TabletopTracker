@@ -121,9 +121,11 @@ public class CreatureDaoImpl implements CreatureDao {
         ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
         List<Creature> e2 = (List<Creature>) objectInputStream.readObject();
         objectInputStream.close();
+        this.roundNumber = 0;
         this.creatureInventory = e2;
     }
 
+    @Override
     public int getRoundNumber() {
         return roundNumber;
     }

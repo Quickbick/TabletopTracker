@@ -18,6 +18,8 @@ public interface CreatureDao {
 
     List<Creature> getCurrentTurnCreatures();
 
+    int getRoundNumber();
+
     void saveCreatures(File file) throws IOException;
 
     void loadCreatures(File file) throws IOException, ClassNotFoundException;
