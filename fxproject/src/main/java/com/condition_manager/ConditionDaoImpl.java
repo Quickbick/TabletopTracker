@@ -1,5 +1,7 @@
 package com.condition_manager;
 
+import com.condition_manager.conditions.Condition;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,5 +22,12 @@ public class ConditionDaoImpl implements ConditionDao {
     @Override
     public void removeCurrentCondition(Condition condition) {
         this.currentConditions.remove(condition);
+    }
+
+    @Override
+    public void decreaseAllConditionDurations() {
+        for (Condition currCondition: this.currentConditions) {
+            currCondition.decrementDuration();
+        }
     }
 }

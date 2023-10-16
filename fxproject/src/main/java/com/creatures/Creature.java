@@ -1,6 +1,6 @@
 package com.creatures;
 
-import com.condition_manager.Condition;
+import com.condition_manager.conditions.Condition;
 import com.condition_manager.ConditionDao;
 import com.condition_manager.ConditionDaoImpl;
 
