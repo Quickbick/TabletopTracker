@@ -1,15 +1,28 @@
 package com.condition_manager;
 
-import com.condition_manager.conditions.Condition;
-
 import java.util.List;
 
 public interface ConditionDao {
+
+    /**
+     * Creates a condition based on a string and a duration.
+     * @param conditionType Type of condition to create.
+     * @param duration Duration of created condition.
+     * @return Return created condition.
+     */
+    Condition createCondition(String conditionType, int duration);
+
     /**
      * Getter for condition list.
      * @return List of all conditions currently held by creature.
      */
     List<Condition> getCurrentConditions();
+
+    /**
+     * Getter for list of all possible conditions.
+     * @return Returns a list of string names of all possible conditions.
+     */
+    List<String> getAvailableConditions();
 
     /**
      * Adds a new condition to condition list.

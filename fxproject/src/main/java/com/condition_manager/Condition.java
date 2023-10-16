@@ -1,4 +1,4 @@
-package com.condition_manager.conditions;
+package com.condition_manager;
 
 import com.condition_manager.rollModifierEnum;
 
@@ -49,5 +49,11 @@ public abstract class Condition {
      */
     public int getDuration() {
         return duration;
+    }
+
+    @Override
+    public String toString() {
+        return '{' + this.getClass().getSimpleName() +
+                ", duration: " + duration + '}';
     }
 }

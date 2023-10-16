@@ -1,13 +1,11 @@
-package com.condition_manager.conditions;
-
-import com.condition_manager.rollModifierEnum;
+package com.condition_manager;
 
 /**
  * Attacks from creature are Disadvantaged,
  * Attacks against creature are Advantaged.
  * Does not skip turn.
  */
-public class Blindness extends Condition {
+public class Blinded extends Condition {
     @Override
     public rollModifierEnum getAttacksFrom() {
         return rollModifierEnum.Disadvantage;
@@ -23,7 +21,7 @@ public class Blindness extends Condition {
         return false;
     }
 
-    protected Blindness(int duration) {
+    protected Blinded(int duration) {
         super(duration);
     }
 }

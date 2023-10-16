@@ -1,6 +1,6 @@
 package com.creatures;
 
-import com.condition_manager.conditions.Condition;
+import com.condition_manager.Condition;
 import com.condition_manager.ConditionDao;
 import com.condition_manager.ConditionDaoImpl;
 
@@ -67,7 +67,7 @@ abstract class Creature implements Serializable {
             // Creature has died.
             this.currentHealth = 0;
             //add unconscious to status list
-            this.addCondition(Conditions.Unconscious);
+//            this.addCondition(Conditions.Unconscious);
         }
     }
 
@@ -85,15 +85,15 @@ abstract class Creature implements Serializable {
         }
     }
 
+
     /**
-     * Adds a condition to the creature.
-     *
-     * @param condition Health Condition to Add.
+     * Adds a condition to the condition Dao.
+     * @param conditionType Type of condition to create.
+     * @param duration Round duration of c
      */
-    public void addCondition(Condition condition) {
-        if (!conditionDao.getCurrentConditions().contains(condition)) {
-            conditionDao.addCurrentCondition(condition);
-        }
+    public void addCondition(String conditionType, int duration) {
+        Condition newCondition = this.conditionDao.createCondition(conditionType, duration);
+        this.conditionDao.addCurrentCondition(newCondition);
     }
 
     /**
@@ -120,5 +120,5 @@ abstract class Creature implements Serializable {
     public List<Condition> getCurrentConditions() {
         return conditionDao.getCurrentConditions();
     }
-
+    public List<String> getAvailableConditions() {return conditionDao.getAvailableConditions(); }
 }
