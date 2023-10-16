@@ -6,7 +6,7 @@ import java.util.*;
 public class CreatureDaoImpl implements CreatureDao {
     private int roundNumber = 0;
     private List<List<Creature>> groupedByTurnCreatures;
-    private List<Creature> currentTurnCreatures;
+    private List<Creature> currentTurnCreatures = new ArrayList<>();
     private List<Creature> creatureInventory = new ArrayList<>();
 
     @Override

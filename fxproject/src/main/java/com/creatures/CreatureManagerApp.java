@@ -6,6 +6,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
@@ -49,7 +50,10 @@ public class CreatureManagerApp extends Application {
 
         // Next Turn Button
         Button nextTurnButton = new Button("Next Turn");
-        nextTurnButton.setOnAction(e -> creatureDao.advanceTurn());
+        nextTurnButton.setOnAction(e -> {
+            creatureDao.advanceTurn();
+            updateCreatureDisplay();
+        });
 
         HBox hbox = new HBox();
         hbox.getChildren().addAll(addButton, saveButton, loadButton, nextTurnButton);
@@ -256,7 +260,12 @@ public class CreatureManagerApp extends Application {
             Button deleteButton = new Button("DELETE");
             Button deleteConditionButton = new Button("DELETE CONDITION");
 
+            StackPane stackPane = new StackPane();
+
             Rectangle portrait = new Rectangle(100, 100);
+
+            Rectangle turnBorder = new Rectangle(108, 108);
+            turnBorder.setFill(Color.TRANSPARENT);
 
             if (creature.getImage() != null) {
                 portrait.setFill(new ImagePattern(new Image("file:" + creature.getImage().getAbsolutePath())));
@@ -267,14 +276,20 @@ public class CreatureManagerApp extends Application {
             // Set the border color based on creature type
             if (creature instanceof AllyCreature) {
                 portrait.setStroke(AllyCreature.border);
-                portrait.setStrokeWidth(5);
             } else if (creature instanceof NeutralCreature) {
                 portrait.setStroke(NeutralCreature.border);
-                portrait.setStrokeWidth(5);
             } else if (creature instanceof EnemyCreature) {
                 portrait.setStroke(EnemyCreature.border);
-                portrait.setStrokeWidth(5);
             }
+            portrait.setStrokeWidth(5);
+
+            // Set a highlight border color for current turn creatures.
+            if (creatureDao.getCurrentTurnCreatures().contains(creature)) {
+                turnBorder.setStroke(Color.YELLOW);
+                turnBorder.setStrokeWidth(5);
+            }
+
+            stackPane.getChildren().addAll(turnBorder, portrait);
 
             Label nameLabel = new Label("| " + creature.getName());
             Label healthLabel = new Label("| " + creature.getCurrentHealth());
@@ -412,7 +427,7 @@ public class CreatureManagerApp extends Application {
                 });
             });
 
-            creatureInfoBox.getChildren().addAll(buttonsTopRow, buttonsBottomRow, portrait, characterInfo);
+            creatureInfoBox.getChildren().addAll(buttonsTopRow, buttonsBottomRow, stackPane, characterInfo);
             creaturePane.getChildren().add(creatureInfoBox);
 
             deleteButton.setOnAction(event -> {
