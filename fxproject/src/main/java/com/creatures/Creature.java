@@ -1,19 +1,21 @@
 package com.creatures;
 
+import com.condition_manager.Condition;
+import com.condition_manager.ConditionDao;
+import com.condition_manager.ConditionDaoImpl;
+
 import java.io.File;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 abstract class Creature implements Serializable {
-    private static final long serializableUID = 1L;
     private final String name;
     private final File image;
     private final int maxHealth;
     private int currentHealth;
     private int bonusHealth;
     private final int initiative;
-    private List<Conditions> currentConditions = new ArrayList<>();
+    private final ConditionDao conditionDao = new ConditionDaoImpl();
 
     /**
      * Creates a new Creature with name, health, and initiative.
@@ -64,7 +66,7 @@ abstract class Creature implements Serializable {
             // Creature has died.
             this.currentHealth = 0;
             //add unconscious to status list
-            this.addCondition(Conditions.Unconscious);
+//            this.addCondition(Conditions.Unconscious);
         }
     }
 
@@ -82,14 +84,21 @@ abstract class Creature implements Serializable {
         }
     }
 
+
     /**
-     * Adds a condition to the creature.
-     *
-     * @param condition Health Condition to Add.
+     * Adds a condition to the condition Dao.
+     * @param conditionType Type of condition to create.
+     * @param duration Round duration of c
      */
-    public void addCondition(Conditions condition) {
-        if (!currentConditions.contains(condition)) {
-            currentConditions.add(condition);
+    public void addCondition(String conditionType, int duration) {
+        Condition newCondition = this.conditionDao.createCondition(conditionType, duration);
+
+        // Check if an object of the same class type as newCondition already exists
+        boolean exists = this.conditionDao.getCurrentConditions().stream()
+                .anyMatch(existingCondition -> existingCondition.getClass().equals(newCondition.getClass()));
+
+        if (!exists) {
+            this.conditionDao.addCurrentCondition(newCondition);
         }
     }
 
@@ -98,8 +107,15 @@ abstract class Creature implements Serializable {
      *
      * @param condition Health Condition to remove.
      */
-    public void removeCondition(Conditions condition) {
-        currentConditions.remove(condition);
+    public void removeCondition(Condition condition) {
+        conditionDao.removeCurrentCondition(condition);
+    }
+
+    /**
+     * Lower condition count by 1 round.
+     */
+    public void decrementConditions() {
+        this.conditionDao.decreaseAllConditionDurations();
     }
 
     public String getName() {
@@ -114,8 +130,8 @@ abstract class Creature implements Serializable {
     public int getInitiative() {
         return initiative;
     }
-    public List<Conditions> getCurrentConditions() {
-        return currentConditions;
+    public List<Condition> getCurrentConditions() {
+        return conditionDao.getCurrentConditions();
     }
-
+    public List<String> getAvailableConditions() {return conditionDao.getAvailableConditions(); }
 }

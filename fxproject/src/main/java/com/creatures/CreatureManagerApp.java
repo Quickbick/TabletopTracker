@@ -1,5 +1,6 @@
 package com.creatures;
 
+import com.condition_manager.Condition;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -338,12 +339,12 @@ public class CreatureManagerApp extends Application {
             characterInfo.add(bonusHealthLabel, 1, 3);
 
             // Display creature conditions
-            final List<Conditions>[] currentConditions = new List[]{creature.getCurrentConditions()};
+            final List<Condition>[] currentConditions = new List[]{creature.getCurrentConditions()};
             if (!currentConditions[0].isEmpty()) {
                 StringBuilder conditionsText = new StringBuilder("Conditions   | ");
                 int conditionCount = 0;
 
-                for (Conditions condition : currentConditions[0]) {
+                for (Condition condition : currentConditions[0]) {
                     conditionsText.append(condition).append(", ");
                     conditionCount++;
 
@@ -396,14 +397,14 @@ public class CreatureManagerApp extends Application {
 
             // Add condition handling
             addConditionButton.setOnAction(event -> {
-                ChoiceDialog<Conditions> conditionDialog = new ChoiceDialog<>(Conditions.values()[0], Conditions.values());
+                ChoiceDialog<String> conditionDialog = new ChoiceDialog<>(creature.getAvailableConditions().get(0), creature.getAvailableConditions());
                 conditionDialog.setTitle("ADD CONDITION");
                 conditionDialog.setHeaderText("Select a condition to add:");
                 conditionDialog.setContentText("Condition:");
 
-                Optional<Conditions> selectedCondition = conditionDialog.showAndWait();
+                Optional<String> selectedCondition = conditionDialog.showAndWait();
                 selectedCondition.ifPresent(condition -> {
-                    creature.addCondition(condition);
+                    creature.addCondition(condition, 3);
                     updateCreatureDisplay(); // Update the display to show the new condition
                 });
             });
@@ -412,12 +413,12 @@ public class CreatureManagerApp extends Application {
             deleteConditionButton.setOnAction(event -> {
                 currentConditions[0] = creature.getCurrentConditions();
                 if (!currentConditions[0].isEmpty()) {
-                    ChoiceDialog<Conditions> deleteConditionDialog = new ChoiceDialog<>(currentConditions[0].get(0), currentConditions[0]);
+                    ChoiceDialog<Condition> deleteConditionDialog = new ChoiceDialog<>(currentConditions[0].get(0), currentConditions[0]);
                     deleteConditionDialog.setTitle("DELETE CONDITION");
                     deleteConditionDialog.setHeaderText("Select a condition to delete:");
                     deleteConditionDialog.setContentText("Condition:");
 
-                    Optional<Conditions> selectedCondition = deleteConditionDialog.showAndWait();
+                    Optional<Condition> selectedCondition = deleteConditionDialog.showAndWait();
                     selectedCondition.ifPresent(condition -> {
                         creature.removeCondition(condition);
                         updateCreatureDisplay(); // Update the display to remove the deleted condition

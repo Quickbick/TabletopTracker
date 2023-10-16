@@ -40,7 +40,7 @@ public class CreatureDaoImpl implements CreatureDao {
     /**
      * Group Creatures based on affiliation. Any same affiliation creatures next to each other share a turn.
      */
-    private List<List<Creature>> groupCreatures() {
+    private void groupCreatures() {
         List<List<Creature>> groupedListList = new ArrayList<>();
 
         // Group the creatures based on their neighbors affiliation class.
@@ -58,7 +58,6 @@ public class CreatureDaoImpl implements CreatureDao {
         }
 
         this.groupedByTurnCreatures = groupedListList;
-        return groupedListList;
     }
 
     @Override
@@ -91,6 +90,10 @@ public class CreatureDaoImpl implements CreatureDao {
         if (ind == this.groupedByTurnCreatures.size() - 1) {
             ++this.roundNumber;
             this.currentTurnCreatures = this.groupedByTurnCreatures.get(0);
+            // Lower condition duration
+            for (Creature cr: this.creatureInventory) {
+                cr.decrementConditions();
+            }
         } else {
             this.currentTurnCreatures = this.groupedByTurnCreatures.get(ind+1);
         }
