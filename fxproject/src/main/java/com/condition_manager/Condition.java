@@ -1,6 +1,9 @@
 package com.condition_manager;
 
 public abstract class Condition {
+
+    private final int MAX_DURATION = 99;
+
     /**
      * Duration of condition.
      */
@@ -28,9 +31,7 @@ public abstract class Condition {
     /**
      * @param duration Round length for condition to last.
      */
-    protected Condition(int duration) {
-        this.duration = duration;
-    }
+    protected Condition(int duration) { this.duration = duration; }
 
 
     /**

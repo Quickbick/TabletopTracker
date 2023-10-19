@@ -375,7 +375,7 @@ public class CreatureManagerApp extends Application {
                 damageResult.ifPresent(damage -> {
                     int damageAmount = Integer.parseInt(damage);
                     // Subtract from current health
-                    creature.removeHealth(damageAmount);
+                    creature.removeHealth(damageAmount, critBox.isSelected());
                     healthLabel.setText("| " + creature.getCurrentHealth() + "/" + creature.getMaxHealth());
 
                     // Recalculate and update bonus health label
@@ -427,7 +427,7 @@ public class CreatureManagerApp extends Application {
                         try {
                             duration = Integer.parseInt(durationTextField.getText());
                         } catch (NumberFormatException e) {
-                            duration = 3;
+                            duration = 99;
                         }
                         return new Pair<>(conditionChoiceBox.getValue(), duration);
                     }

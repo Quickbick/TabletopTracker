@@ -53,21 +53,26 @@ abstract class Creature implements Serializable {
      *
      * @param healthPoints Damage to take
      */
-    public void removeHealth(int healthPoints) {
+    public void removeHealth(int healthPoints, boolean crit) {
+        //Adjust damage to take based on crit
+        int dmg = healthPoints;
+        if (crit){
+            dmg = healthPoints * 2;
+        }
         // Remove health from bonus health first.
-        if (this.bonusHealth - healthPoints > 0) {
-            this.bonusHealth -= healthPoints;
-        } else if (this.bonusHealth - healthPoints <= 0) {
-            int dmg = healthPoints - this.bonusHealth;
+        if (this.bonusHealth - dmg > 0) {
+            this.bonusHealth -= dmg;
+        } else if (this.bonusHealth - dmg <= 0) {
+            dmg = dmg - this.bonusHealth;
             this.bonusHealth = 0;
             this.currentHealth -= dmg;
         }
-
+        //reset HP to zero if it passes and add unconscious condition
         if (this.currentHealth <= 0) {
             // Creature has died.
             this.currentHealth = 0;
-            //add unconscious to status list
-//            this.addCondition(Conditions.Unconscious);
+            this.addCondition("Unconscious", 99);
+
         }
     }
 
