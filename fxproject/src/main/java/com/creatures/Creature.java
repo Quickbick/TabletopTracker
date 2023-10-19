@@ -1,8 +1,6 @@
 package com.creatures;
 
-import com.condition_manager.Condition;
-import com.condition_manager.ConditionDao;
-import com.condition_manager.ConditionDaoImpl;
+import com.condition_manager.*;
 
 import java.io.File;
 import java.io.Serializable;
@@ -56,7 +54,13 @@ abstract class Creature implements Serializable {
     public void removeHealth(int healthPoints, boolean crit) {
         //Adjust damage to take based on crit
         int dmg = healthPoints;
-        if (crit){
+        boolean autocrit1 = this.conditionDao.getCurrentConditions().stream().anyMatch(existingCondition -> existingCondition.getClass()
+                .equals(Paralyzed.class));
+        boolean autocrit2 = this.conditionDao.getCurrentConditions().stream().anyMatch(existingCondition -> existingCondition.getClass()
+                .equals(Unconscious.class));
+        boolean autocrit3 = this.conditionDao.getCurrentConditions().stream().anyMatch(existingCondition -> existingCondition.getClass()
+                .equals(Incapacitated.class));
+        if (crit || autocrit1 || autocrit2 || autocrit3){
             dmg = healthPoints * 2;
         }
         // Remove health from bonus health first.
