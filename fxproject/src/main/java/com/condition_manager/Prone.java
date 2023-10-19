@@ -1,9 +1,9 @@
 package com.condition_manager;
 
 /**
- * Attacks from creature are Disadvantaged, Attacks against creature are Advantaged.
+ * Attacks from creature are Disadvantaged, Attacks against creature are Advantaged if the attacker is within 5 feet and Disadvantaged if the attacker is farther than 5 feet.
  */
-public class Blinded extends Condition {
+public class Prone extends Condition {
     @Override
     public rollModifierEnum getAttacksFrom() {
         return rollModifierEnum.Disadvantage;
@@ -19,7 +19,7 @@ public class Blinded extends Condition {
         return false;
     }
 
-    protected Blinded(int duration) {
+    protected Prone(int duration) {
         super(duration);
     }
 }

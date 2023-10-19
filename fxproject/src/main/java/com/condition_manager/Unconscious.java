@@ -1,12 +1,12 @@
 package com.condition_manager;
 
 /**
- * Attacks from creature are Disadvantaged, Attacks against creature are Advantaged.
+ * Creature can't take actions or reactions. Attacks against creature are Advantaged if the attacker is within 5 feet.
  */
-public class Blinded extends Condition {
+public class Unconscious extends Condition {
     @Override
     public rollModifierEnum getAttacksFrom() {
-        return rollModifierEnum.Disadvantage;
+        return rollModifierEnum.None;
     }
 
     @Override
@@ -16,10 +16,10 @@ public class Blinded extends Condition {
 
     @Override
     public boolean getSkipTurn() {
-        return false;
+        return true;
     }
 
-    protected Blinded(int duration) {
+    protected Unconscious(int duration) {
         super(duration);
     }
 }

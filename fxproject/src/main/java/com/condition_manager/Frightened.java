@@ -1,9 +1,9 @@
 package com.condition_manager;
 
 /**
- * Attacks from creature are Disadvantaged, Attacks against creature are Advantaged.
+ * Attacks from creature are Disadvantaged if the source of fear is in line of sight.
  */
-public class Blinded extends Condition {
+public class Frightened extends Condition {
     @Override
     public rollModifierEnum getAttacksFrom() {
         return rollModifierEnum.Disadvantage;
@@ -11,7 +11,7 @@ public class Blinded extends Condition {
 
     @Override
     public rollModifierEnum getAttacksAgainst() {
-        return rollModifierEnum.Advantage;
+        return rollModifierEnum.None;
     }
 
     @Override
@@ -19,7 +19,7 @@ public class Blinded extends Condition {
         return false;
     }
 
-    protected Blinded(int duration) {
+    protected Frightened(int duration) {
         super(duration);
     }
 }

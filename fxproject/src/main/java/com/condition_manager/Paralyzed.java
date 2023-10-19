@@ -1,12 +1,12 @@
 package com.condition_manager;
 
 /**
- * Attacks from creature are Disadvantaged, Attacks against creature are Advantaged.
+ * Creature can't take actions or reactions. Attacks against creature are Advantaged.
  */
-public class Blinded extends Condition {
+public class Paralyzed extends Condition {
     @Override
     public rollModifierEnum getAttacksFrom() {
-        return rollModifierEnum.Disadvantage;
+        return rollModifierEnum.None;
     }
 
     @Override
@@ -16,10 +16,10 @@ public class Blinded extends Condition {
 
     @Override
     public boolean getSkipTurn() {
-        return false;
+        return true;
     }
 
-    protected Blinded(int duration) {
+    protected Paralyzed(int duration) {
         super(duration);
     }
 }

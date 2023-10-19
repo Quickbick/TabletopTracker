@@ -1,9 +1,9 @@
 package com.condition_manager;
 
 /**
- * Attacks from creature are Disadvantaged, Attacks against creature are Advantaged.
+ * Attacks from creature are Disadvantaged.
  */
-public class Blinded extends Condition {
+public class Poisoned extends Condition {
     @Override
     public rollModifierEnum getAttacksFrom() {
         return rollModifierEnum.Disadvantage;
@@ -11,7 +11,7 @@ public class Blinded extends Condition {
 
     @Override
     public rollModifierEnum getAttacksAgainst() {
-        return rollModifierEnum.Advantage;
+        return rollModifierEnum.None;
     }
 
     @Override
@@ -19,7 +19,7 @@ public class Blinded extends Condition {
         return false;
     }
 
-    protected Blinded(int duration) {
+    protected Poisoned(int duration) {
         super(duration);
     }
 }

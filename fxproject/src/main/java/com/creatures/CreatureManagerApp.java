@@ -2,6 +2,7 @@ package com.creatures;
 
 import com.condition_manager.Condition;
 import javafx.application.Application;
+import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -13,6 +14,7 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.Pair;
 
 import java.io.File;
 import java.io.IOException;
@@ -397,14 +399,45 @@ public class CreatureManagerApp extends Application {
 
             // Add condition handling
             addConditionButton.setOnAction(event -> {
-                ChoiceDialog<String> conditionDialog = new ChoiceDialog<>(creature.getAvailableConditions().get(0), creature.getAvailableConditions());
-                conditionDialog.setTitle("ADD CONDITION");
-                conditionDialog.setHeaderText("Select a condition to add:");
-                conditionDialog.setContentText("Condition:");
+                // Create the custom dialog
+                Dialog<Pair<String, Integer>> dialog = new Dialog<>();
+                dialog.setTitle("Add Condition");
 
-                Optional<String> selectedCondition = conditionDialog.showAndWait();
-                selectedCondition.ifPresent(condition -> {
-                    creature.addCondition(condition, 3);
+                // Set up the buttons
+                ButtonType addButton = new ButtonType("Add", ButtonBar.ButtonData.OK_DONE);
+                dialog.getDialogPane().getButtonTypes().addAll(addButton, ButtonType.CANCEL);
+
+                // Create the choice box and text field
+                ChoiceBox<String> conditionChoiceBox = new ChoiceBox<>(FXCollections.observableArrayList(creature.getAvailableConditions()));
+                conditionChoiceBox.setValue(creature.getAvailableConditions().get(0));
+                TextField durationTextField = new TextField();
+
+                VBox content = new VBox();
+                content.getChildren().addAll(new Label("Condition:"), conditionChoiceBox, new Label("Rounds:"), durationTextField);
+                dialog.getDialogPane().setContent(content);
+
+                // Convert the result to a pair
+                dialog.setResultConverter(dialogButton -> {
+                    if (dialogButton == addButton) {
+                        int duration;
+                        try {
+                            duration = Integer.parseInt(durationTextField.getText());
+                        } catch (NumberFormatException e) {
+                            duration = 3;
+                        }
+                        return new Pair<>(conditionChoiceBox.getValue(), duration);
+                    }
+                    return null;
+                });
+
+                // Get the result and use it
+                Optional<Pair<String, Integer>> result = dialog.showAndWait();
+
+                result.ifPresent(conditionDurationPair -> {
+                    String condition = conditionDurationPair.getKey();
+                        int duration = conditionDurationPair.getValue();
+                        creature.addCondition(condition, duration);
+
                     updateCreatureDisplay(); // Update the display to show the new condition
                 });
             });

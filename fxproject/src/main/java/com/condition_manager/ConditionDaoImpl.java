@@ -32,19 +32,19 @@ public class ConditionDaoImpl implements ConditionDao, Serializable {
     public Condition createCondition(String conditionType, int duration) {
         return switch (conditionType) {
             case "Blinded" -> new Blinded(duration);
-            case "Charmed" -> throw new IllegalStateException("Unexpected value: " + conditionType);
-            case "Deafened" -> throw new IllegalStateException("Unexpected value: " + conditionType);
-            case "Frightened" -> throw new IllegalStateException("Unexpected value: " + conditionType);
-            case "Grappled" -> throw new IllegalStateException("Unexpected value: " + conditionType);
-            case "Incapacitated" -> throw new IllegalStateException("Unexpected value: " + conditionType);
-            case "Invisible" -> throw new IllegalStateException("Unexpected value: " + conditionType);
-            case "Paralyzed" -> throw new IllegalStateException("Unexpected value: " + conditionType);
-            case "Petrified" -> throw new IllegalStateException("Unexpected value: " + conditionType);
-            case "Poisoned" -> throw new IllegalStateException("Unexpected value: " + conditionType);
-            case "Prone" -> throw new IllegalStateException("Unexpected value: " + conditionType);
-            case "Restrained" -> throw new IllegalStateException("Unexpected value: " + conditionType);
-            case "Stunned" -> throw new IllegalStateException("Unexpected value: " + conditionType);
-            case "Unconscious" -> throw new IllegalStateException("Unexpected value: " + conditionType);
+            case "Charmed" -> new Charmed(duration);
+            case "Deafened" -> new Deafened(duration);
+            case "Frightened" -> new Frightened(duration);
+            case "Grappled" -> new Grappled(duration);
+            case "Incapacitated" -> new Incapacitated(duration);
+            case "Invisible" -> new Invisible(duration);
+            case "Paralyzed" -> new Paralyzed(duration);
+            case "Petrified" -> new Petrified(duration);
+            case "Poisoned" -> new Poisoned(duration);
+            case "Prone" -> new Prone(duration);
+            case "Restrained" -> new Restrained(duration);
+            case "Stunned" -> new Stunned(duration);
+            case "Unconscious" -> new Unconscious(duration);
             default -> throw new IllegalStateException("Unexpected value: " + conditionType);
         };
     }
