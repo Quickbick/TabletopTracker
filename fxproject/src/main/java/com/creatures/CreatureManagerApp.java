@@ -362,10 +362,14 @@ public class CreatureManagerApp extends Application {
             }
 
             damageButton.setOnAction(event -> {
+                VBox damageContent = new VBox();
                 TextInputDialog damageDialog = new TextInputDialog();
                 damageDialog.setTitle("Damage Creature");
                 damageDialog.setHeaderText("Enter the damage amount:");
                 damageDialog.setContentText("Amount:");
+                CheckBox critBox = new CheckBox("Crit");
+                damageContent.getChildren().addAll(damageDialog.getDialogPane().getContent(), critBox);
+                damageDialog.getDialogPane().setContent(damageContent);
 
                 Optional<String> damageResult = damageDialog.showAndWait();
                 damageResult.ifPresent(damage -> {
