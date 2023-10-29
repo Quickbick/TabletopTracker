@@ -14,8 +14,7 @@ public class CreatureDaoImpl implements CreatureDao {
         return switch (creatureType) {
             case "ALLY" -> createAllyCreature(name, health, initiative, image);
             case "NEUTRAL" -> createNeutralCreature(name, health, initiative, image);
-            case "ENEMY" -> createEnemyCreature(name, health, initiative, image);
-            default -> null;
+            default -> createEnemyCreature(name, health, initiative, image);
         };
     }
 
