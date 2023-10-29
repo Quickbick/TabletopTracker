@@ -128,7 +128,7 @@ class CreatureTest {
     @Test
     void addCondition() {
         String inputType = "Charmed";
-        Creature creature = new AllyCreature("John Creature", 25, 5, new File("./src/main/resources/com/cs422/fxproject/Default_Image.png"));
+        Creature creature = new EnemyCreature("John Creature", 25, 5, new File("./src/main/resources/com/cs422/fxproject/Default_Image.png"));
         creature.addCondition(inputType, MIN_DURATION);
         creature.addCondition(inputType, MIN_DURATION);
         assertEquals(Charmed.class, creature.getCurrentConditions().get(0).getClass());
@@ -158,7 +158,7 @@ class CreatureTest {
 
     @Test
     void decrementConditions() {
-        Creature creature = new AllyCreature("John Creature", 25, 5, new File("/path/to/image.png"));
+        Creature creature = new NeutralCreature("John Creature", 25, 5, new File("/path/to/image.png"));
 
         // Add a few conditions to the creature
         creature.addCondition("Frightened", 3);
