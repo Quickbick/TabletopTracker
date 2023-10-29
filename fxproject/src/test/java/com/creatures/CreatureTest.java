@@ -14,8 +14,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.*;
 
 class CreatureTest {
 
@@ -97,10 +96,29 @@ class CreatureTest {
 
     @Test
     void addBonusHealth() {
+        int input = 5;
+        int expected = 5;
+        Creature creature = new AllyCreature("John Creature", 25, 5, new File("./src/main/resources/com/cs422/fxproject/Default_Image.png"));
+        creature.addBonusHealth(input);
+        assertEquals(expected, creature.getBonusHealth());
+    }
+
+    @Test
+    void addBonusHealth_no_change() {
+        int input = 3;
+        int expected = 5;
+        Creature creature = new AllyCreature("John Creature", 25, 5, new File("./src/main/resources/com/cs422/fxproject/Default_Image.png"));
+        creature.setBonusHealth(5);
+        creature.addBonusHealth(input);
+        assertEquals(expected, creature.getBonusHealth());
     }
 
     @Test
     void addCondition() {
+        String inputType = "Charmed";
+        Creature creature = new AllyCreature("John Creature", 25, 5, new File("./src/main/resources/com/cs422/fxproject/Default_Image.png"));
+        creature.addCondition(inputType, MIN_DURATION);
+        assertEquals(Charmed.class, creature.getCurrentConditions().get(0).getClass());
     }
 
     @Test
