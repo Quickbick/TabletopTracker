@@ -9,9 +9,8 @@ import org.mockito.Mockito;
 import org.mockito.stubbing.OngoingStubbing;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -123,41 +122,150 @@ class CreatureTest {
 
     @Test
     void removeCondition() {
+        // Create a test creature instance
+        Creature creature = new AllyCreature("John Creature", 25, 5, new File("/path/to/image.png"));
+
+        // Add a condition to the creature
+        String conditionType = "Frightened";
+        creature.addCondition(conditionType, 3); // Replace the duration with an appropriate value
+
+        // Get the initial count of conditions
+        int initialConditionsCount = creature.getCurrentConditions().size();
+
+        // Remove the condition
+        creature.removeCondition(creature.getCurrentConditions().get(0)); // Pass the condition to be removed
+
+        // Get the count of conditions after removal
+        int conditionsCountAfterRemoval = creature.getCurrentConditions().size();
+
+        // Verify that the count is decreased by 1 after the removal
+        assertEquals(initialConditionsCount - 1, conditionsCountAfterRemoval);
     }
 
     @Test
     void decrementConditions() {
+        Creature creature = new AllyCreature("John Creature", 25, 5, new File("/path/to/image.png"));
+
+        // Add a few conditions to the creature
+        creature.addCondition("Frightened", 3);
+        creature.addCondition("Poisoned", 2);
+
+        // Capture the base durations
+        List<Integer> baseDurations = creature.getCurrentConditions().stream()
+                .map(Condition::getDuration)
+                .collect(Collectors.toList());
+
+        // Decrement the conditions
+        creature.decrementConditions();
+
+        // Get the updated conditions list
+        List<Condition> updatedConditions = creature.getCurrentConditions();
+
+        // Check the duration of each condition in the updated list
+        for (int i = 0; i < updatedConditions.size(); i++) {
+            Condition updatedCondition = updatedConditions.get(i);
+            Integer baseDuration = baseDurations.get(i);
+
+            // Compare the updated condition duration with the base condition - 1
+            assertEquals(baseDuration - 1, updatedCondition.getDuration());
+        }
     }
 
     @Test
     void getName() {
+        String expectedName = "John Creature";
+        Creature creature = new AllyCreature(expectedName, 25, 5, new File("./path/to/image.png"));
+
+        // Get the name from the creature object
+        String actualName = creature.getName();
+
+        // Verify if the retrieved name matches the expected name
+        assertEquals(expectedName, actualName);
     }
 
     @Test
     void getImage() {
+        // Create a test file
+        File testImage = new File("/path/to/test_image.png");
+
+        Creature creature = new AllyCreature("John Creature", 25, 5, testImage);
+
+        // Retrieve the image file using the method
+        File retrievedImage = creature.getImage();
+
+        // Assert that the retrieved image matches the expected image
+        assertEquals(testImage, retrievedImage);
     }
 
     @Test
     void getMaxHealth() {
+        int expectedMaxHealth = 25; // Change to your expected maximum health value
+        Creature creature = new AllyCreature("John Creature", expectedMaxHealth, 5, new File("/path/to/image.png"));
+
+        // Retrieve the maximum health using the method
+        int actualMaxHealth = creature.getMaxHealth();
+
+        // Validate the retrieved maximum health
+        assertEquals(expectedMaxHealth, actualMaxHealth);
     }
 
     @Test
     void getCurrentHealth() {
+        int expectedCurrentHealth = 20; // Change to your expected current health value
+        Creature creature = new AllyCreature("John Creature", 25, 5, new File("/path/to/image.png"));
+        creature.setCurrentHealth(expectedCurrentHealth);
+
+        // Retrieve the current health using the method
+        int actualCurrentHealth = creature.getCurrentHealth();
+
+        // Validate the retrieved current health
+        assertEquals(expectedCurrentHealth, actualCurrentHealth);
     }
 
     @Test
     void getBonusHealth() {
+        int expectedBonusHealth = 10; // Change to your expected bonus health value
+        Creature creature = new AllyCreature("John Creature", 25, 5, new File("/path/to/image.png"));
+        creature.setBonusHealth(expectedBonusHealth);
+
+        // Retrieve the bonus health using the method
+        int actualBonusHealth = creature.getBonusHealth();
+
+        // Validate the retrieved bonus health
+        assertEquals(expectedBonusHealth, actualBonusHealth);
     }
 
     @Test
     void getInitiative() {
+        int expectedInitiative = 5; // Change to your expected initiative value
+        Creature creature = new AllyCreature("John Creature", 25, expectedInitiative, new File("/path/to/image.png"));
+
+        // Retrieve the initiative using the method
+        int actualInitiative = creature.getInitiative();
+
+        // Validate the retrieved initiative
+        assertEquals(expectedInitiative, actualInitiative);
     }
 
     @Test
-    void getCurrentConditions() {
+    void getCurrentConditions() { //not finished
+        Creature creature = new AllyCreature("John Creature", 25, 5, new File("/path/to/image.png"));
+
+        // Add a few conditions to the creature
+        creature.addCondition("Frightened", 3);
+        creature.addCondition("Poisoned", 2);
+
+        // Get the current conditions of the creature
+        List<Condition> currentConditions = creature.getCurrentConditions();
+
+        // Assert that the current conditions match the added conditions
+        assertEquals(2, currentConditions.size());
+        assertEquals("Frightened", currentConditions.get(0));
+        assertEquals("Poisoned", currentConditions.get(1));
     }
 
     @Test
     void getAvailableConditions() {
+
     }
 }
