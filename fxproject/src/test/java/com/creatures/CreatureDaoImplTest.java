@@ -37,6 +37,14 @@ class CreatureDaoImplTest {
 
     @Test
     void deleteCreature() {
+        final File mockFile = mock(File.class);
+        final CreatureDao creatureDao = new CreatureDaoImpl();
+        creatureDao.createCreature("ALLY", "creatureName", 100, 10, mockFile);
+        List<Creature> creatureInventory = creatureDao.getCreatureInventory();
+        assertEquals(1, creatureInventory.size());
+        Creature createdCreature = creatureInventory.get(0);
+        creatureDao.deleteCreature(createdCreature);
+        assertEquals(0, creatureInventory.size());
     }
 
     @Test
