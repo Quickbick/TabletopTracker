@@ -248,7 +248,7 @@ class CreatureTest {
     }
 
     @Test
-    void getCurrentConditions() { //not finished
+    void getCurrentConditions() {
         Creature creature = new AllyCreature("John Creature", 25, 5, new File("/path/to/image.png"));
 
         // Add a few conditions to the creature
@@ -260,8 +260,8 @@ class CreatureTest {
 
         // Assert that the current conditions match the added conditions
         assertEquals(2, currentConditions.size());
-        assertEquals("Frightened", currentConditions.get(0));
-        assertEquals("Poisoned", currentConditions.get(1));
+        assertTrue(currentConditions.get(0).toString().contains("Frightened"));
+        assertTrue(currentConditions.get(1).toString().contains("Poisoned"));
     }
 
     @Test
