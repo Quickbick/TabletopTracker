@@ -22,7 +22,7 @@ public interface ConditionDao {
      * Getter for list of all possible conditions.
      * @return Returns a list of string names of all possible conditions.
      */
-    List<String> getAvailableConditions();
+    List<String> getAllConditions();
 
     /**
      * Adds a new condition to condition list.

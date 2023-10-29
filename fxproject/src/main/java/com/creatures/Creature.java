@@ -68,7 +68,7 @@ abstract class Creature implements Serializable {
         // Remove health from bonus health first.
         if (this.bonusHealth - dmg > 0) {
             this.bonusHealth -= dmg;
-        } else if (this.bonusHealth - dmg <= 0) {
+        } else {
             dmg = dmg - this.bonusHealth;
             this.bonusHealth = 0;
             this.currentHealth -= dmg;
@@ -139,5 +139,5 @@ abstract class Creature implements Serializable {
     protected void setBonusHealth(int bonusHealth){ this.bonusHealth = bonusHealth; }
     public int getInitiative() { return initiative; }
     public List<Condition> getCurrentConditions() { return conditionDao.getCurrentConditions(); }
-    public List<String> getAvailableConditions() { return conditionDao.getAvailableConditions(); }
+    public List<String> getAllConditions() { return conditionDao.getAllConditions(); }
 }

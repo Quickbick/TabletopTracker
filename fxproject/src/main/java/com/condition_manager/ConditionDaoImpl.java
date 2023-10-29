@@ -55,13 +55,8 @@ public class ConditionDaoImpl implements ConditionDao, Serializable {
     }
 
     @Override
-    public List<String> getAvailableConditions() {
-        return allConditions.stream()
-                .filter(condition -> !currentConditions.stream()
-                        .map(Condition::toString)
-                        .toList()
-                        .contains(condition))
-                .collect(Collectors.toList());
+    public List<String> getAllConditions() {
+        return allConditions;
     }
 
     @Override

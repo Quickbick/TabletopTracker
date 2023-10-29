@@ -287,6 +287,7 @@ public class CreatureManagerApp extends Application {
                 portrait.setFill(new ImagePattern(new Image("file:" + creature.getImage().getAbsolutePath())));
             } else {
                 portrait.setFill(new ImagePattern(new Image("file:" + new File("./src/main/resources/com/cs422/fxproject/Default_Image.png"))));
+//                getClass().getResourceAsStream("");
             }
 
             // Set the border color based on creature type
@@ -350,8 +351,8 @@ public class CreatureManagerApp extends Application {
                     conditionsText.append(condition).append(", ");
                     conditionCount++;
 
-                    // Check if it's the third condition, and if so, add a new line
-                    if (conditionCount % 3 == 0) {
+//                  Check if it's the second condition, and if so, add a new line
+                    if (conditionCount % 2 == 0) {
                         conditionsText.append("\n"); // Add a new line
                     }
                 }
@@ -412,8 +413,8 @@ public class CreatureManagerApp extends Application {
                 dialog.getDialogPane().getButtonTypes().addAll(addButton, ButtonType.CANCEL);
 
                 // Create the choice box and text field
-                ChoiceBox<String> conditionChoiceBox = new ChoiceBox<>(FXCollections.observableArrayList(creature.getAvailableConditions()));
-                conditionChoiceBox.setValue(creature.getAvailableConditions().get(0));
+                ChoiceBox<String> conditionChoiceBox = new ChoiceBox<>(FXCollections.observableArrayList(creature.getAllConditions()));
+                conditionChoiceBox.setValue(creature.getAllConditions().get(0));
                 TextField durationTextField = new TextField();
 
                 VBox content = new VBox();

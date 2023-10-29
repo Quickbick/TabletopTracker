@@ -1,19 +1,17 @@
 package com.creatures;
 
 import com.condition_manager.*;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.stubbing.OngoingStubbing;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.spy;
 
 class CreatureTest {
 
@@ -61,9 +59,24 @@ class CreatureTest {
         int inputHealthPoints = 10;
         boolean inputCrit = false;
         int expected = 5;
+        ConditionDao critConditions = getCritConditions();
+
         Creature creature = new AllyCreature("John Creature", 25, 5, new File("./src/main/resources/com/cs422/fxproject/Default_Image.png"));
         Creature spyCreature = spy(creature);
-        ConditionDao critConditions = getCritConditions();
+        Mockito.when(spyCreature.getCurrentConditions()).thenReturn(critConditions.getCurrentConditions());
+        spyCreature.removeHealth(inputHealthPoints, inputCrit);
+        assertEquals(expected, spyCreature.getCurrentHealth());
+
+        creature = new AllyCreature("John Creature", 25, 5, new File("./src/main/resources/com/cs422/fxproject/Default_Image.png"));
+        spyCreature = spy(creature);
+        critConditions.removeCurrentCondition(critConditions.getCurrentConditions().get(0));
+        Mockito.when(spyCreature.getCurrentConditions()).thenReturn(critConditions.getCurrentConditions());
+        spyCreature.removeHealth(inputHealthPoints, inputCrit);
+        assertEquals(expected, spyCreature.getCurrentHealth());
+
+        creature = new AllyCreature("John Creature", 25, 5, new File("./src/main/resources/com/cs422/fxproject/Default_Image.png"));
+        spyCreature = spy(creature);
+        critConditions.removeCurrentCondition(critConditions.getCurrentConditions().get(0));
         Mockito.when(spyCreature.getCurrentConditions()).thenReturn(critConditions.getCurrentConditions());
         spyCreature.removeHealth(inputHealthPoints, inputCrit);
         assertEquals(expected, spyCreature.getCurrentHealth());
@@ -117,6 +130,7 @@ class CreatureTest {
         String inputType = "Charmed";
         Creature creature = new AllyCreature("John Creature", 25, 5, new File("./src/main/resources/com/cs422/fxproject/Default_Image.png"));
         creature.addCondition(inputType, MIN_DURATION);
+        creature.addCondition(inputType, MIN_DURATION);
         assertEquals(Charmed.class, creature.getCurrentConditions().get(0).getClass());
     }
 
@@ -153,7 +167,7 @@ class CreatureTest {
         // Capture the base durations
         List<Integer> baseDurations = creature.getCurrentConditions().stream()
                 .map(Condition::getDuration)
-                .collect(Collectors.toList());
+                .toList();
 
         // Decrement the conditions
         creature.decrementConditions();
@@ -266,6 +280,24 @@ class CreatureTest {
 
     @Test
     void getAvailableConditions() {
+        final List<String> allConditions = Arrays.asList(
+                "Blinded",
+                "Charmed",
+                "Deafened",
+                "Frightened",
+                "Grappled",
+                "Incapacitated",
+                "Invisible",
+                "Paralyzed",
+                "Petrified",
+                "Poisoned",
+                "Prone",
+                "Restrained",
+                "Stunned",
+                "Unconscious"
+        );
+        Creature creature = new AllyCreature("John Creature", 25, 5, new File("/path/to/image.png"));
 
+        assertEquals(creature.getAllConditions(), allConditions);
     }
 }
