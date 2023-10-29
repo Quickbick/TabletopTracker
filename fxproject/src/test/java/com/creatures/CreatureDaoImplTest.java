@@ -49,6 +49,19 @@ class CreatureDaoImplTest {
 
     @Test
     void sortByInitiative() {
+        final File mockFile = mock(File.class);
+        final CreatureDao creatureDao = new CreatureDaoImpl();
+        creatureDao.createCreature("ALLY", "creatureName1", 100, 10, mockFile);
+        creatureDao.createCreature("ENEMY", "creatureName2", 100, 100, mockFile);
+        creatureDao.createCreature("NEUTRAL", "creatureName3", 100, 50, mockFile);
+        assertEquals(3, creatureDao.getCreatureInventory().size());
+        assertEquals("creatureName1", creatureDao.getCreatureInventory().get(0).getName());
+        assertEquals("creatureName2", creatureDao.getCreatureInventory().get(1).getName());
+        assertEquals("creatureName3", creatureDao.getCreatureInventory().get(2).getName());
+        creatureDao.sortByInitiative();
+        assertEquals("creatureName1", creatureDao.getCreatureInventory().get(2).getName());
+        assertEquals("creatureName2", creatureDao.getCreatureInventory().get(0).getName());
+        assertEquals("creatureName3", creatureDao.getCreatureInventory().get(1).getName());
     }
 
     @Test
@@ -73,5 +86,7 @@ class CreatureDaoImplTest {
 
     @Test
     void getRoundNumber() {
+        final CreatureDao creatureDao = new CreatureDaoImpl();
+        assertEquals(0, creatureDao.getRoundNumber());
     }
 }
