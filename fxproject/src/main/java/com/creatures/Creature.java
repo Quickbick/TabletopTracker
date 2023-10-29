@@ -3,10 +3,12 @@ package com.creatures;
 import com.condition_manager.*;
 
 import java.io.File;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
 abstract class Creature implements Serializable {
+    @Serial
     private static final long serialVersionUID = 1L;
     private final String name;
     private final File image;
@@ -54,13 +56,13 @@ abstract class Creature implements Serializable {
     public void removeHealth(int healthPoints, boolean crit) {
         //Adjust damage to take based on crit
         int dmg = healthPoints;
-        boolean autocrit1 = this.conditionDao.getCurrentConditions().stream().anyMatch(existingCondition -> existingCondition.getClass()
+        boolean autoCrit1 = this.getCurrentConditions().stream().anyMatch(existingCondition -> existingCondition.getClass()
                 .equals(Paralyzed.class));
-        boolean autocrit2 = this.conditionDao.getCurrentConditions().stream().anyMatch(existingCondition -> existingCondition.getClass()
+        boolean autoCrit2 = this.getCurrentConditions().stream().anyMatch(existingCondition -> existingCondition.getClass()
                 .equals(Unconscious.class));
-        boolean autocrit3 = this.conditionDao.getCurrentConditions().stream().anyMatch(existingCondition -> existingCondition.getClass()
+        boolean autoCrit3 = this.getCurrentConditions().stream().anyMatch(existingCondition -> existingCondition.getClass()
                 .equals(Incapacitated.class));
-        if (crit || autocrit1 || autocrit2 || autocrit3){
+        if (crit || autoCrit1 || autoCrit2 || autoCrit3){
             dmg = healthPoints * 2;
         }
         // Remove health from bonus health first.
@@ -128,20 +130,14 @@ abstract class Creature implements Serializable {
         this.conditionDao.decreaseAllConditionDurations();
     }
 
-    public String getName() {
-        return this.name;
-    }
-    public File getImage(){return this.image;}
-    public int getMaxHealth(){return this.maxHealth; }
-    public int getCurrentHealth() {
-        return this.currentHealth;
-    }
+    public String getName() { return this.name; }
+    public File getImage(){ return this.image; }
+    public int getMaxHealth(){ return this.maxHealth; }
+    public int getCurrentHealth() { return this.currentHealth; }
+    protected void setCurrentHealth(int health) { this.currentHealth = health; }
     public int getBonusHealth(){ return this.bonusHealth; }
-    public int getInitiative() {
-        return initiative;
-    }
-    public List<Condition> getCurrentConditions() {
-        return conditionDao.getCurrentConditions();
-    }
-    public List<String> getAvailableConditions() {return conditionDao.getAvailableConditions(); }
+    protected void setBonusHealth(int bonusHealth){ this.bonusHealth = bonusHealth; }
+    public int getInitiative() { return initiative; }
+    public List<Condition> getCurrentConditions() { return conditionDao.getCurrentConditions(); }
+    public List<String> getAvailableConditions() { return conditionDao.getAvailableConditions(); }
 }
