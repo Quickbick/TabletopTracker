@@ -1,12 +1,9 @@
 package com.creatures;
 
 import com.condition_manager.*;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.stubbing.OngoingStubbing;
 
 import java.io.File;
 import java.util.List;
@@ -94,6 +91,51 @@ class CreatureTest {
     }
 
     @Test
+    void removeHealth_just_paralyzed(){
+        int inputHealthPoints = 10;
+        boolean inputCrit = false;
+        int expected = 5;
+        Creature creature = new AllyCreature("John Creature", 25, 5, new File("./src/main/resources/com/cs422/fxproject/Default_Image.png"));
+        Creature spyCreature = spy(creature);
+        ConditionDao critConditions = new ConditionDaoImpl();
+        Condition paralyzed = critConditions.createCondition("Paralyzed", MIN_DURATION);
+        critConditions.addCurrentCondition(paralyzed);
+        Mockito.when(spyCreature.getCurrentConditions()).thenReturn(critConditions.getCurrentConditions());
+        spyCreature.removeHealth(inputHealthPoints, inputCrit);
+        assertEquals(expected, spyCreature.getCurrentHealth());
+    }
+
+    @Test
+    void removeHealth_just_incapacitated(){
+        int inputHealthPoints = 10;
+        boolean inputCrit = false;
+        int expected = 5;
+        Creature creature = new AllyCreature("John Creature", 25, 5, new File("./src/main/resources/com/cs422/fxproject/Default_Image.png"));
+        Creature spyCreature = spy(creature);
+        ConditionDao critConditions = new ConditionDaoImpl();
+        Condition paralyzed = critConditions.createCondition("Incapacitated", MIN_DURATION);
+        critConditions.addCurrentCondition(paralyzed);
+        Mockito.when(spyCreature.getCurrentConditions()).thenReturn(critConditions.getCurrentConditions());
+        spyCreature.removeHealth(inputHealthPoints, inputCrit);
+        assertEquals(expected, spyCreature.getCurrentHealth());
+    }
+
+    @Test
+    void removeHealth_just_unconscious(){
+        int inputHealthPoints = 10;
+        boolean inputCrit = false;
+        int expected = 5;
+        Creature creature = new AllyCreature("John Creature", 25, 5, new File("./src/main/resources/com/cs422/fxproject/Default_Image.png"));
+        Creature spyCreature = spy(creature);
+        ConditionDao critConditions = new ConditionDaoImpl();
+        Condition paralyzed = critConditions.createCondition("Unconscious", MIN_DURATION);
+        critConditions.addCurrentCondition(paralyzed);
+        Mockito.when(spyCreature.getCurrentConditions()).thenReturn(critConditions.getCurrentConditions());
+        spyCreature.removeHealth(inputHealthPoints, inputCrit);
+        assertEquals(expected, spyCreature.getCurrentHealth());
+    }
+
+    @Test
     void addBonusHealth() {
         int input = 5;
         int expected = 5;
@@ -118,6 +160,16 @@ class CreatureTest {
         Creature creature = new AllyCreature("John Creature", 25, 5, new File("./src/main/resources/com/cs422/fxproject/Default_Image.png"));
         creature.addCondition(inputType, MIN_DURATION);
         assertEquals(Charmed.class, creature.getCurrentConditions().get(0).getClass());
+    }
+
+    @Test
+    void addCondition_more_than_once() {
+        String inputType = "Charmed";
+        int expected = 1;
+        Creature creature = new AllyCreature("John Creature", 25, 5, new File("./src/main/resources/com/cs422/fxproject/Default_Image.png"));
+        creature.addCondition(inputType, MIN_DURATION);
+        creature.addCondition(inputType, MIN_DURATION);
+        assertEquals(1, creature.getCurrentConditions().size());
     }
 
     @Test

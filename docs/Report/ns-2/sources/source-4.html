@@ -1,0 +1,200 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
+  <title>Coverage Report > ConditionDaoImpl</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.condition_manager</a>
+</div>
+
+<h1>Coverage Summary for Class: ConditionDaoImpl (com.condition_manager)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ConditionDaoImpl</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    85.7%
+  </span>
+  <span class="absValue">
+    (6/7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    76.7%
+  </span>
+  <span class="absValue">
+    (46/60)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    96.6%
+  </span>
+  <span class="absValue">
+    (28/29)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.condition_manager;
+&nbsp;
+&nbsp;import java.io.Serializable;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.Arrays;
+&nbsp;import java.util.List;
+&nbsp;import java.util.stream.Collectors;
+&nbsp;
+<b class="fc">&nbsp;public class ConditionDaoImpl implements ConditionDao, Serializable {</b>
+&nbsp;    private static final long serialVersionUID = 1L;
+&nbsp;
+<b class="fc">&nbsp;    private final List&lt;Condition&gt; currentConditions = new ArrayList&lt;&gt;();</b>
+&nbsp;
+<b class="fc">&nbsp;    private final List&lt;String&gt; allConditions = Arrays.asList(</b>
+&nbsp;            &quot;Blinded&quot;,
+&nbsp;            &quot;Charmed&quot;,
+&nbsp;            &quot;Deafened&quot;,
+&nbsp;            &quot;Frightened&quot;,
+&nbsp;            &quot;Grappled&quot;,
+&nbsp;            &quot;Incapacitated&quot;,
+&nbsp;            &quot;Invisible&quot;,
+&nbsp;            &quot;Paralyzed&quot;,
+&nbsp;            &quot;Petrified&quot;,
+&nbsp;            &quot;Poisoned&quot;,
+&nbsp;            &quot;Prone&quot;,
+&nbsp;            &quot;Restrained&quot;,
+&nbsp;            &quot;Stunned&quot;,
+&nbsp;            &quot;Unconscious&quot;
+&nbsp;    );
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public Condition createCondition(String conditionType, int duration) {
+<b class="pc">&nbsp;        return switch (conditionType) {</b>
+<b class="fc">&nbsp;            case &quot;Blinded&quot; -&gt; new Blinded(duration);</b>
+<b class="fc">&nbsp;            case &quot;Charmed&quot; -&gt; new Charmed(duration);</b>
+<b class="fc">&nbsp;            case &quot;Deafened&quot; -&gt; new Deafened(duration);</b>
+<b class="fc">&nbsp;            case &quot;Frightened&quot; -&gt; new Frightened(duration);</b>
+<b class="fc">&nbsp;            case &quot;Grappled&quot; -&gt; new Grappled(duration);</b>
+<b class="fc">&nbsp;            case &quot;Incapacitated&quot; -&gt; new Incapacitated(duration);</b>
+<b class="fc">&nbsp;            case &quot;Invisible&quot; -&gt; new Invisible(duration);</b>
+<b class="fc">&nbsp;            case &quot;Paralyzed&quot; -&gt; new Paralyzed(duration);</b>
+<b class="fc">&nbsp;            case &quot;Petrified&quot; -&gt; new Petrified(duration);</b>
+<b class="fc">&nbsp;            case &quot;Poisoned&quot; -&gt; new Poisoned(duration);</b>
+<b class="fc">&nbsp;            case &quot;Prone&quot; -&gt; new Prone(duration);</b>
+<b class="fc">&nbsp;            case &quot;Restrained&quot; -&gt; new Restrained(duration);</b>
+<b class="fc">&nbsp;            case &quot;Stunned&quot; -&gt; new Stunned(duration);</b>
+<b class="fc">&nbsp;            case &quot;Unconscious&quot; -&gt; new Unconscious(duration);</b>
+<b class="fc">&nbsp;            default -&gt; throw new IllegalStateException(&quot;Unexpected value: &quot; + conditionType);</b>
+&nbsp;        };
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public List&lt;Condition&gt; getCurrentConditions() {
+<b class="fc">&nbsp;        return currentConditions;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public List&lt;String&gt; getAllConditions() {
+<b class="nc">&nbsp;        return allConditions;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void addCurrentCondition(Condition condition) {
+<b class="fc">&nbsp;        this.currentConditions.add(condition);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void removeCurrentCondition(Condition condition) {
+<b class="fc">&nbsp;        this.currentConditions.remove(condition);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void decreaseAllConditionDurations() {
+<b class="fc">&nbsp;        for (Condition currCondition: this.currentConditions) {</b>
+<b class="fc">&nbsp;            if (currCondition.getDuration() == 1) {</b>
+<b class="fc">&nbsp;                this.removeCurrentCondition(currCondition);</b>
+<b class="fc">&nbsp;                break;</b>
+&nbsp;            } else {
+<b class="fc">&nbsp;                currCondition.decrementDuration();</b>
+&nbsp;            }
+<b class="fc">&nbsp;        }</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-10-30 01:25</div>
+</div>
+</body>
+</html>

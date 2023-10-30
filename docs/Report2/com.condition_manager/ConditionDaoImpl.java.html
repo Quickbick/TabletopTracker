@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ConditionDaoImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com in tabletopTracker Coverage Results</a> &gt; <a href="index.source.html" class="el_package">com.condition_manager</a> &gt; <span class="el_source">ConditionDaoImpl.java</span></div><h1>ConditionDaoImpl.java</h1><pre class="source lang-java linenums">package com.condition_manager;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
+<span class="fc" id="L9">public class ConditionDaoImpl implements ConditionDao, Serializable {</span>
+    private static final long serialVersionUID = 1L;
+
+<span class="fc" id="L12">    private final List&lt;Condition&gt; currentConditions = new ArrayList&lt;&gt;();</span>
+
+<span class="fc" id="L14">    private final List&lt;String&gt; allConditions = Arrays.asList(</span>
+            &quot;Blinded&quot;,
+            &quot;Charmed&quot;,
+            &quot;Deafened&quot;,
+            &quot;Frightened&quot;,
+            &quot;Grappled&quot;,
+            &quot;Incapacitated&quot;,
+            &quot;Invisible&quot;,
+            &quot;Paralyzed&quot;,
+            &quot;Petrified&quot;,
+            &quot;Poisoned&quot;,
+            &quot;Prone&quot;,
+            &quot;Restrained&quot;,
+            &quot;Stunned&quot;,
+            &quot;Unconscious&quot;
+    );
+
+    @Override
+    public Condition createCondition(String conditionType, int duration) {
+<span class="fc bfc" id="L33" title="All 15 branches covered.">        return switch (conditionType) {</span>
+<span class="fc" id="L34">            case &quot;Blinded&quot; -&gt; new Blinded(duration);</span>
+<span class="fc" id="L35">            case &quot;Charmed&quot; -&gt; new Charmed(duration);</span>
+<span class="fc" id="L36">            case &quot;Deafened&quot; -&gt; new Deafened(duration);</span>
+<span class="fc" id="L37">            case &quot;Frightened&quot; -&gt; new Frightened(duration);</span>
+<span class="fc" id="L38">            case &quot;Grappled&quot; -&gt; new Grappled(duration);</span>
+<span class="fc" id="L39">            case &quot;Incapacitated&quot; -&gt; new Incapacitated(duration);</span>
+<span class="fc" id="L40">            case &quot;Invisible&quot; -&gt; new Invisible(duration);</span>
+<span class="fc" id="L41">            case &quot;Paralyzed&quot; -&gt; new Paralyzed(duration);</span>
+<span class="fc" id="L42">            case &quot;Petrified&quot; -&gt; new Petrified(duration);</span>
+<span class="fc" id="L43">            case &quot;Poisoned&quot; -&gt; new Poisoned(duration);</span>
+<span class="fc" id="L44">            case &quot;Prone&quot; -&gt; new Prone(duration);</span>
+<span class="fc" id="L45">            case &quot;Restrained&quot; -&gt; new Restrained(duration);</span>
+<span class="fc" id="L46">            case &quot;Stunned&quot; -&gt; new Stunned(duration);</span>
+<span class="fc" id="L47">            case &quot;Unconscious&quot; -&gt; new Unconscious(duration);</span>
+<span class="fc" id="L48">            default -&gt; throw new IllegalStateException(&quot;Unexpected value: &quot; + conditionType);</span>
+        };
+    }
+
+    @Override
+    public List&lt;Condition&gt; getCurrentConditions() {
+<span class="fc" id="L54">        return currentConditions;</span>
+    }
+
+    @Override
+    public List&lt;String&gt; getAllConditions() {
+<span class="nc" id="L59">        return allConditions;</span>
+    }
+
+    @Override
+    public void addCurrentCondition(Condition condition) {
+<span class="fc" id="L64">        this.currentConditions.add(condition);</span>
+<span class="fc" id="L65">    }</span>
+
+
+    @Override
+    public void removeCurrentCondition(Condition condition) {
+<span class="fc" id="L70">        this.currentConditions.remove(condition);</span>
+<span class="fc" id="L71">    }</span>
+
+    @Override
+    public void decreaseAllConditionDurations() {
+<span class="fc bfc" id="L75" title="All 2 branches covered.">        for (Condition currCondition: this.currentConditions) {</span>
+<span class="fc bfc" id="L76" title="All 2 branches covered.">            if (currCondition.getDuration() == 1) {</span>
+<span class="fc" id="L77">                this.removeCurrentCondition(currCondition);</span>
+<span class="fc" id="L78">                break;</span>
+            } else {
+<span class="fc" id="L80">                currCondition.decrementDuration();</span>
+            }
+<span class="fc" id="L82">        }</span>
+<span class="fc" id="L83">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

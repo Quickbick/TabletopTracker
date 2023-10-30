@@ -1,0 +1,111 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
+  <title>Coverage Report > ConditionDao</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.condition_manager</a>
+</div>
+
+<h1>Coverage Summary for Class: ConditionDao (com.condition_manager)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">ConditionDao</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.condition_manager;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;public interface ConditionDao {
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Creates a condition based on a string and a duration.
+&nbsp;     * @param conditionType Type of condition to create.
+&nbsp;     * @param duration Duration of created condition.
+&nbsp;     * @return Return created condition.
+&nbsp;     */
+&nbsp;    Condition createCondition(String conditionType, int duration);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Getter for condition list.
+&nbsp;     * @return List of all conditions currently held by creature.
+&nbsp;     */
+&nbsp;    List&lt;Condition&gt; getCurrentConditions();
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Getter for list of all possible conditions.
+&nbsp;     * @return Returns a list of string names of all possible conditions.
+&nbsp;     */
+&nbsp;    List&lt;String&gt; getAllConditions();
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Adds a new condition to condition list.
+&nbsp;     * @param currentConditions New condition to add.
+&nbsp;     */
+&nbsp;    void addCurrentCondition(Condition currentConditions);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Removes a current condition from condition list.
+&nbsp;     * @param condition Current condition to remove.
+&nbsp;     */
+&nbsp;    void removeCurrentCondition(Condition condition);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Lower the duration of all conditions by 1 round.
+&nbsp;     */
+&nbsp;    void decreaseAllConditionDurations();
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-10-30 01:25</div>
+</div>
+</body>
+</html>

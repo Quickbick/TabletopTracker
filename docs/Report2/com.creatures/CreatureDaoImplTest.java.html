@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CreatureDaoImplTest.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com in tabletopTracker Coverage Results</a> &gt; <a href="index.source.html" class="el_package">com.creatures</a> &gt; <span class="el_source">CreatureDaoImplTest.java</span></div><h1>CreatureDaoImplTest.java</h1><pre class="source lang-java linenums">package com.creatures;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.util.Arrays;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+import static org.mockito.internal.util.io.IOUtil.readLines;
+
+<span class="fc" id="L16">class CreatureDaoImplTest {</span>
+
+    @Test
+    void createCreature() {
+<span class="fc" id="L20">        final File mockFile = mock(File.class);</span>
+<span class="fc" id="L21">        final List&lt;String&gt; creatureTypes = Arrays.asList(&quot;ALLY&quot;, &quot;ENEMY&quot;, &quot;NEUTRAL&quot;);</span>
+<span class="fc" id="L22">        final String creatureName = &quot;creatureName&quot;;</span>
+<span class="fc" id="L23">        final int maxHealth = 100;</span>
+<span class="fc" id="L24">        final int initiative = 10;</span>
+
+<span class="fc bfc" id="L26" title="All 2 branches covered.">        for (String creatureType : creatureTypes) {</span>
+<span class="fc" id="L27">            final CreatureDao creatureDao = new CreatureDaoImpl();</span>
+
+<span class="fc" id="L29">            creatureDao.createCreature(creatureType, creatureName, maxHealth, initiative, mockFile);</span>
+
+<span class="fc" id="L31">            List&lt;Creature&gt; creatureInventory = creatureDao.getCreatureInventory();</span>
+<span class="fc" id="L32">            assertEquals(1, creatureInventory.size());</span>
+<span class="fc" id="L33">            Creature createdCreature = creatureInventory.get(0);</span>
+<span class="fc" id="L34">            assertEquals(creatureName, createdCreature.getName());</span>
+<span class="fc" id="L35">            assertEquals(maxHealth, createdCreature.getMaxHealth());</span>
+<span class="fc" id="L36">            assertEquals(initiative, createdCreature.getInitiative());</span>
+<span class="fc" id="L37">            assertEquals(mockFile, createdCreature.getImage());</span>
+<span class="fc" id="L38">        }</span>
+<span class="fc" id="L39">    }</span>
+
+
+    @Test
+    void deleteCreature() {
+<span class="fc" id="L44">        final File mockFile = mock(File.class);</span>
+<span class="fc" id="L45">        final CreatureDao creatureDao = new CreatureDaoImpl();</span>
+<span class="fc" id="L46">        creatureDao.createCreature(&quot;ALLY&quot;, &quot;creatureName&quot;, 100, 10, mockFile);</span>
+<span class="fc" id="L47">        List&lt;Creature&gt; creatureInventory = creatureDao.getCreatureInventory();</span>
+<span class="fc" id="L48">        assertEquals(1, creatureInventory.size());</span>
+<span class="fc" id="L49">        Creature createdCreature = creatureInventory.get(0);</span>
+<span class="fc" id="L50">        creatureDao.deleteCreature(createdCreature);</span>
+<span class="fc" id="L51">        assertEquals(0, creatureInventory.size());</span>
+<span class="fc" id="L52">    }</span>
+
+    @Test
+    void sortByInitiative() {
+<span class="fc" id="L56">        final File mockFile = mock(File.class);</span>
+<span class="fc" id="L57">        final CreatureDao creatureDao = new CreatureDaoImpl();</span>
+<span class="fc" id="L58">        creatureDao.createCreature(&quot;ALLY&quot;, &quot;creatureName1&quot;, 100, 10, mockFile);</span>
+<span class="fc" id="L59">        creatureDao.createCreature(&quot;ENEMY&quot;, &quot;creatureName2&quot;, 100, 100, mockFile);</span>
+<span class="fc" id="L60">        creatureDao.createCreature(&quot;NEUTRAL&quot;, &quot;creatureName3&quot;, 100, 50, mockFile);</span>
+<span class="fc" id="L61">        assertEquals(3, creatureDao.getCreatureInventory().size());</span>
+<span class="fc" id="L62">        assertEquals(&quot;creatureName1&quot;, creatureDao.getCreatureInventory().get(0).getName());</span>
+<span class="fc" id="L63">        assertEquals(&quot;creatureName2&quot;, creatureDao.getCreatureInventory().get(1).getName());</span>
+<span class="fc" id="L64">        assertEquals(&quot;creatureName3&quot;, creatureDao.getCreatureInventory().get(2).getName());</span>
+<span class="fc" id="L65">        creatureDao.sortByInitiative();</span>
+<span class="fc" id="L66">        assertEquals(&quot;creatureName1&quot;, creatureDao.getCreatureInventory().get(2).getName());</span>
+<span class="fc" id="L67">        assertEquals(&quot;creatureName2&quot;, creatureDao.getCreatureInventory().get(0).getName());</span>
+<span class="fc" id="L68">        assertEquals(&quot;creatureName3&quot;, creatureDao.getCreatureInventory().get(1).getName());</span>
+<span class="fc" id="L69">    }</span>
+
+    @Test
+    void advanceTurn() {
+<span class="fc" id="L73">        String firstExpected = &quot;creatureName1&quot;;</span>
+<span class="fc" id="L74">        String secondExpected = &quot;creatureName2&quot;;</span>
+<span class="fc" id="L75">        String thirdExpected = &quot;creatureName3&quot;;</span>
+<span class="fc" id="L76">        final File mockFile = mock(File.class);</span>
+<span class="fc" id="L77">        final CreatureDao creatureDao = new CreatureDaoImpl();</span>
+<span class="fc" id="L78">        creatureDao.createCreature(&quot;ALLY&quot;, firstExpected, 100, 100, mockFile);</span>
+<span class="fc" id="L79">        creatureDao.createCreature(&quot;ENEMY&quot;, secondExpected, 100, 50, mockFile);</span>
+<span class="fc" id="L80">        creatureDao.createCreature(&quot;NEUTRAL&quot;, thirdExpected, 100, 10, mockFile);</span>
+<span class="fc" id="L81">        creatureDao.sortByInitiative();</span>
+<span class="fc" id="L82">        creatureDao.advanceTurn();</span>
+<span class="fc" id="L83">        assertEquals(creatureDao.getCurrentTurnCreatures().get(0).getName(), firstExpected);</span>
+<span class="fc" id="L84">        creatureDao.advanceTurn();</span>
+<span class="fc" id="L85">        assertEquals(creatureDao.getCurrentTurnCreatures().get(0).getName(), secondExpected);</span>
+<span class="fc" id="L86">        creatureDao.advanceTurn();</span>
+<span class="fc" id="L87">        assertEquals(creatureDao.getCurrentTurnCreatures().get(0).getName(), thirdExpected);</span>
+<span class="fc" id="L88">        creatureDao.advanceTurn();</span>
+<span class="fc" id="L89">        assertEquals(creatureDao.getCurrentTurnCreatures().get(0).getName(), firstExpected);</span>
+<span class="fc" id="L90">    }</span>
+
+    @Test
+    void advanceTurn_no_creatures() {
+<span class="fc" id="L94">        final CreatureDao creatureDao = new CreatureDaoImpl();</span>
+<span class="fc" id="L95">        creatureDao.advanceTurn();</span>
+<span class="fc" id="L96">        assertTrue(creatureDao.getCurrentTurnCreatures().isEmpty());</span>
+<span class="fc" id="L97">    }</span>
+
+    @Test
+    void saveCreatures() throws IOException {
+<span class="fc" id="L101">        final File mockFile = mock(File.class);</span>
+<span class="fc" id="L102">        final CreatureDao creatureDao = new CreatureDaoImpl();</span>
+<span class="fc" id="L103">        creatureDao.createCreature(&quot;ALLY&quot;, &quot;creatureName1&quot;, 100, 10, mockFile);</span>
+<span class="fc" id="L104">        creatureDao.createCreature(&quot;ENEMY&quot;, &quot;creatureName2&quot;, 100, 100, mockFile);</span>
+<span class="fc" id="L105">        creatureDao.createCreature(&quot;NEUTRAL&quot;, &quot;creatureName3&quot;, 100, 50, mockFile);</span>
+<span class="fc" id="L106">        final File file = new File(&quot;path&quot;);</span>
+<span class="fc" id="L107">        creatureDao.saveCreatures(file);</span>
+<span class="pc bpc" id="L108" title="1 of 2 branches missed.">        assertTrue(file.length() &gt; 0);</span>
+<span class="fc" id="L109">    }</span>
+
+    @Test
+    void loadCreatures() throws IOException, ClassNotFoundException {
+<span class="fc" id="L113">        final CreatureDao creatureDao = new CreatureDaoImpl();</span>
+<span class="fc" id="L114">        CreatureDao loadedDao = new CreatureDaoImpl();</span>
+<span class="fc" id="L115">        final File file = new File(&quot;path&quot;);</span>
+<span class="fc" id="L116">        creatureDao.saveCreatures(file);</span>
+<span class="fc" id="L117">        loadedDao.loadCreatures(file);</span>
+<span class="fc" id="L118">        assertEquals(creatureDao.getCreatureInventory(), loadedDao.getCreatureInventory());</span>
+<span class="fc" id="L119">    }</span>
+
+    @Test
+    void getRoundNumber() {
+<span class="fc" id="L123">        final CreatureDao creatureDao = new CreatureDaoImpl();</span>
+<span class="fc" id="L124">        assertEquals(0, creatureDao.getRoundNumber());</span>
+<span class="fc" id="L125">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

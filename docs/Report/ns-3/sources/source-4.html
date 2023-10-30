@@ -1,0 +1,625 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
+  <title>Coverage Report > CreatureManagerApp</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.creatures</a>
+</div>
+
+<h1>Coverage Summary for Class: CreatureManagerApp (com.creatures)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">CreatureManagerApp</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/28)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/38)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/300)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.creatures;
+&nbsp;
+&nbsp;import com.condition_manager.Condition;
+&nbsp;import javafx.application.Application;
+&nbsp;import javafx.collections.FXCollections;
+&nbsp;import javafx.geometry.Insets;
+&nbsp;import javafx.geometry.Pos;
+&nbsp;import javafx.scene.Scene;
+&nbsp;import javafx.scene.control.*;
+&nbsp;import javafx.scene.image.Image;
+&nbsp;import javafx.scene.layout.*;
+&nbsp;import javafx.scene.paint.Color;
+&nbsp;import javafx.scene.paint.ImagePattern;
+&nbsp;import javafx.scene.shape.Rectangle;
+&nbsp;import javafx.stage.FileChooser;
+&nbsp;import javafx.stage.Stage;
+&nbsp;import javafx.util.Pair;
+&nbsp;
+&nbsp;import java.io.File;
+&nbsp;import java.io.IOException;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Optional;
+&nbsp;
+<b class="nc">&nbsp;public class CreatureManagerApp extends Application {</b>
+<b class="nc">&nbsp;    private final static CreatureDao creatureDao = new CreatureDaoImpl();</b>
+&nbsp;    private FlowPane creaturePane;
+&nbsp;
+&nbsp;    private Label roundLabel;
+&nbsp;
+&nbsp;    public static void main(String[] args) {
+<b class="nc">&nbsp;        launch(args);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void start(Stage primaryStage) {
+<b class="nc">&nbsp;        primaryStage.setTitle(&quot;Creature Manager&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;        BorderPane root = new BorderPane();</b>
+<b class="nc">&nbsp;        creaturePane = new FlowPane(10, 10);</b>
+<b class="nc">&nbsp;        creaturePane.setAlignment(Pos.CENTER);</b>
+<b class="nc">&nbsp;        creaturePane.setMinWidth(800);</b>
+<b class="nc">&nbsp;        ScrollPane sp = new ScrollPane(creaturePane);</b>
+<b class="nc">&nbsp;        sp.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);</b>
+<b class="nc">&nbsp;        sp.setFitToWidth(true);</b>
+&nbsp;
+<b class="nc">&nbsp;        Button addButton = new Button(&quot;Add Creature&quot;);</b>
+<b class="nc">&nbsp;        addButton.setOnAction(e -&gt; showCreatureDialog());</b>
+&nbsp;
+&nbsp;        // Save Button
+<b class="nc">&nbsp;        Button saveButton = new Button(&quot;Save&quot;);</b>
+<b class="nc">&nbsp;        saveButton.setOnAction(e -&gt; showSaveDialog());</b>
+&nbsp;
+&nbsp;        // Load Button
+<b class="nc">&nbsp;        Button loadButton = new Button(&quot;Load&quot;);</b>
+<b class="nc">&nbsp;        loadButton.setOnAction(e -&gt; showLoadDialog());</b>
+&nbsp;
+&nbsp;        // Next Turn Button
+<b class="nc">&nbsp;        Button nextTurnButton = new Button(&quot;Next Turn&quot;);</b>
+<b class="nc">&nbsp;        nextTurnButton.setOnAction(e -&gt; {</b>
+<b class="nc">&nbsp;            creatureDao.advanceTurn();</b>
+<b class="nc">&nbsp;            updateCreatureDisplay();</b>
+&nbsp;        });
+&nbsp;
+<b class="nc">&nbsp;        roundLabel = new Label(&quot;Round: &quot; + creatureDao.getRoundNumber());</b>
+<b class="nc">&nbsp;        roundLabel.setPadding(new Insets(5, 10, 5, 10));</b>
+<b class="nc">&nbsp;        roundLabel.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, new CornerRadii(5), Insets.EMPTY)));</b>
+<b class="nc">&nbsp;        roundLabel.setBorder(new Border(new BorderStroke(Color.DARKGRAY, BorderStrokeStyle.SOLID, new CornerRadii(5), new BorderWidths(2))));</b>
+&nbsp;
+<b class="nc">&nbsp;        HBox hbox = new HBox();</b>
+<b class="nc">&nbsp;        hbox.getChildren().addAll(addButton, saveButton, loadButton, nextTurnButton);</b>
+&nbsp;
+<b class="nc">&nbsp;        BorderPane topPane = new BorderPane();</b>
+<b class="nc">&nbsp;        topPane.setLeft(hbox);</b>
+<b class="nc">&nbsp;        topPane.setRight(roundLabel);</b>
+&nbsp;
+<b class="nc">&nbsp;        root.setTop(topPane);</b>
+<b class="nc">&nbsp;        root.setCenter(sp);</b>
+&nbsp;
+<b class="nc">&nbsp;        Scene scene = new Scene(root, 800, 600);</b>
+<b class="nc">&nbsp;        primaryStage.setScene(scene);</b>
+<b class="nc">&nbsp;        primaryStage.show();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private void showSaveDialog() {
+<b class="nc">&nbsp;        Dialog&lt;Creature&gt; dialog = new Dialog&lt;&gt;();</b>
+<b class="nc">&nbsp;        dialog.setTitle(&quot;Save File&quot;);</b>
+<b class="nc">&nbsp;        dialog.setHeaderText(&quot;Select file to save as.&quot;);</b>
+<b class="nc">&nbsp;        final File[] files = new File[1];</b>
+&nbsp;
+<b class="nc">&nbsp;        Label fileLabel = new Label(&quot;File:&quot;);</b>
+<b class="nc">&nbsp;        Button selectFile = new Button(&quot;Browse&quot;);</b>
+<b class="nc">&nbsp;        selectFile.setOnAction(actionEvent -&gt; {</b>
+<b class="nc">&nbsp;            FileChooser fileChooser = new FileChooser();</b>
+<b class="nc">&nbsp;            fileChooser.setTitle(&quot;Save Data&quot;);</b>
+<b class="nc">&nbsp;            fileChooser.getExtensionFilters().add(</b>
+&nbsp;                    new FileChooser.ExtensionFilter(&quot;Serialized File&quot;, &quot;*.ser&quot;)
+&nbsp;            );
+<b class="nc">&nbsp;            files[0] = fileChooser.showSaveDialog(dialog.getOwner());</b>
+<b class="nc">&nbsp;            if (files[0] != null) {</b>
+<b class="nc">&nbsp;                fileLabel.setText(&quot;File: &quot; + files[0].getName());</b>
+&nbsp;                // Process the file immediately after it&#39;s selected
+&nbsp;                try {
+<b class="nc">&nbsp;                    creatureDao.saveCreatures(files[0]);</b>
+<b class="nc">&nbsp;                } catch (IOException e) {</b>
+<b class="nc">&nbsp;                    throw new RuntimeException(e);</b>
+<b class="nc">&nbsp;                }</b>
+&nbsp;            }
+&nbsp;        });
+&nbsp;
+<b class="nc">&nbsp;        VBox dialogContent = new VBox();</b>
+<b class="nc">&nbsp;        dialogContent.getChildren().addAll(</b>
+&nbsp;                fileLabel, selectFile
+&nbsp;        );
+<b class="nc">&nbsp;        dialogContent.setAlignment(Pos.CENTER);</b>
+&nbsp;
+<b class="nc">&nbsp;        dialog.getDialogPane().setContent(dialogContent);</b>
+&nbsp;
+<b class="nc">&nbsp;        ButtonType saveButton = new ButtonType(&quot;Save&quot;, ButtonBar.ButtonData.OK_DONE);</b>
+<b class="nc">&nbsp;        dialog.getDialogPane().getButtonTypes().addAll(saveButton, ButtonType.CANCEL);</b>
+&nbsp;
+<b class="nc">&nbsp;        dialog.setResultConverter(buttonType -&gt; {</b>
+<b class="nc">&nbsp;            if (buttonType == saveButton) {</b>
+&nbsp;                try {
+&nbsp;
+<b class="nc">&nbsp;                    File selectedFile = files[0];</b>
+<b class="nc">&nbsp;                    creatureDao.saveCreatures(selectedFile);</b>
+<b class="nc">&nbsp;                } catch (IOException e) {</b>
+<b class="nc">&nbsp;                    throw new RuntimeException(e);</b>
+<b class="nc">&nbsp;                }</b>
+&nbsp;            }
+<b class="nc">&nbsp;            return null;</b>
+&nbsp;        });
+&nbsp;
+<b class="nc">&nbsp;        dialog.showAndWait();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private void showCreatureDialog() {
+<b class="nc">&nbsp;        Dialog&lt;Creature&gt; dialog = new Dialog&lt;&gt;();</b>
+<b class="nc">&nbsp;        dialog.setTitle(&quot;Add Creature&quot;);</b>
+<b class="nc">&nbsp;        dialog.setHeaderText(&quot;Enter Creature Details&quot;);</b>
+<b class="nc">&nbsp;        final File[] files = new File[1];</b>
+&nbsp;
+<b class="nc">&nbsp;        Label nameLabel = new Label(&quot;Name:&quot;);</b>
+<b class="nc">&nbsp;        TextField nameTextField = new TextField();</b>
+<b class="nc">&nbsp;        Label healthLabel = new Label(&quot;Health:&quot;);</b>
+<b class="nc">&nbsp;        TextField healthTextField = new TextField();</b>
+<b class="nc">&nbsp;        Label initiativeLabel = new Label(&quot;Initiative:&quot;);</b>
+<b class="nc">&nbsp;        TextField initiativeTextField = new TextField();</b>
+<b class="nc">&nbsp;        Label imageLabel = new Label(&quot;Image:&quot;);</b>
+<b class="nc">&nbsp;        Button selectImage = new Button(&quot;Browse&quot;);</b>
+<b class="nc">&nbsp;        selectImage.setOnAction(actionEvent -&gt; {</b>
+<b class="nc">&nbsp;            FileChooser fileChooser = new FileChooser();</b>
+<b class="nc">&nbsp;            fileChooser.setTitle(&quot;Open Image File&quot;);</b>
+<b class="nc">&nbsp;            fileChooser.getExtensionFilters().add(</b>
+&nbsp;                    new FileChooser.ExtensionFilter(&quot;Image Files&quot;, &quot;*.png&quot;, &quot;*.jpg&quot;, &quot;*.gif&quot;)
+&nbsp;            );
+<b class="nc">&nbsp;            files[0] = fileChooser.showOpenDialog(dialog.getOwner());</b>
+&nbsp;        });
+&nbsp;
+<b class="nc">&nbsp;        ChoiceBox&lt;String&gt; creatureTypeChoiceBox = new ChoiceBox&lt;&gt;();</b>
+<b class="nc">&nbsp;        creatureTypeChoiceBox.getItems().addAll(&quot;ALLY&quot;, &quot;NEUTRAL&quot;, &quot;ENEMY&quot;);</b>
+<b class="nc">&nbsp;        creatureTypeChoiceBox.setValue(&quot;ALLY&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;        VBox dialogContent = new VBox();</b>
+<b class="nc">&nbsp;        dialogContent.getChildren().addAll(</b>
+&nbsp;                nameLabel, nameTextField,
+&nbsp;                imageLabel, selectImage,
+&nbsp;                healthLabel, healthTextField,
+&nbsp;                initiativeLabel, initiativeTextField,
+&nbsp;                creatureTypeChoiceBox
+&nbsp;        );
+<b class="nc">&nbsp;        dialogContent.setAlignment(Pos.CENTER);</b>
+&nbsp;
+<b class="nc">&nbsp;        dialog.getDialogPane().setContent(dialogContent);</b>
+&nbsp;
+<b class="nc">&nbsp;        ButtonType addButton = new ButtonType(&quot;Add&quot;, ButtonBar.ButtonData.OK_DONE);</b>
+<b class="nc">&nbsp;        dialog.getDialogPane().getButtonTypes().addAll(addButton, ButtonType.CANCEL);</b>
+&nbsp;
+<b class="nc">&nbsp;        dialog.setResultConverter(buttonType -&gt; {</b>
+<b class="nc">&nbsp;            if (buttonType == addButton) {</b>
+&nbsp;                try {
+<b class="nc">&nbsp;                    String name = nameTextField.getText();</b>
+<b class="nc">&nbsp;                    int health = Integer.parseInt(healthTextField.getText());</b>
+<b class="nc">&nbsp;                    int initiative = Integer.parseInt(initiativeTextField.getText());</b>
+<b class="nc">&nbsp;                    String selectedCreatureType = creatureTypeChoiceBox.getValue();</b>
+<b class="nc">&nbsp;                    File selectedFile = files[0];</b>
+&nbsp;
+&nbsp;                    // Add creature to inventory
+<b class="nc">&nbsp;                    creatureDao.createCreature(selectedCreatureType, name, health, initiative, selectedFile);</b>
+&nbsp;                    // Sort the inventory
+<b class="nc">&nbsp;                    creatureDao.sortByInitiative();</b>
+&nbsp;                    // Update the display
+<b class="nc">&nbsp;                    updateCreatureDisplay();</b>
+&nbsp;
+<b class="nc">&nbsp;                } catch (NumberFormatException e) {</b>
+<b class="nc">&nbsp;                    Alert alert = new Alert(Alert.AlertType.ERROR);</b>
+<b class="nc">&nbsp;                    alert.setTitle(&quot;Error&quot;);</b>
+<b class="nc">&nbsp;                    alert.setHeaderText(&quot;Invalid Input&quot;);</b>
+<b class="nc">&nbsp;                    alert.setContentText(&quot;Please enter valid initiative and health values.&quot;);</b>
+<b class="nc">&nbsp;                    alert.showAndWait();</b>
+<b class="nc">&nbsp;                }</b>
+&nbsp;            }
+<b class="nc">&nbsp;            return null;</b>
+&nbsp;        });
+&nbsp;
+<b class="nc">&nbsp;        dialog.showAndWait();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private void showLoadDialog() {
+<b class="nc">&nbsp;        Dialog&lt;Creature&gt; dialog = new Dialog&lt;&gt;();</b>
+<b class="nc">&nbsp;        dialog.setTitle(&quot;Load Old Save&quot;);</b>
+<b class="nc">&nbsp;        dialog.setHeaderText(&quot;Select file to upload from.&quot;);</b>
+<b class="nc">&nbsp;        final File[] files = new File[1];</b>
+&nbsp;
+<b class="nc">&nbsp;        Label fileLabel = new Label(&quot;File:&quot;);</b>
+<b class="nc">&nbsp;        Button selectFile = new Button(&quot;Browse&quot;);</b>
+<b class="nc">&nbsp;        selectFile.setOnAction(actionEvent -&gt; {</b>
+<b class="nc">&nbsp;            FileChooser fileChooser = new FileChooser();</b>
+<b class="nc">&nbsp;            fileChooser.setTitle(&quot;Open Save File&quot;);</b>
+<b class="nc">&nbsp;            fileChooser.getExtensionFilters().add(</b>
+&nbsp;                    new FileChooser.ExtensionFilter(&quot;Load File&quot;, &quot;*.ser&quot;)
+&nbsp;            );
+<b class="nc">&nbsp;            files[0] = fileChooser.showOpenDialog(dialog.getOwner());</b>
+<b class="nc">&nbsp;            if (files[0] != null) {</b>
+<b class="nc">&nbsp;                fileLabel.setText(&quot;File: &quot; + files[0].getName());</b>
+&nbsp;                // Process the file immediately after it&#39;s selected
+&nbsp;                try {
+<b class="nc">&nbsp;                    creatureDao.loadCreatures(files[0]);</b>
+<b class="nc">&nbsp;                    creatureDao.sortByInitiative();</b>
+<b class="nc">&nbsp;                } catch (IOException | ClassNotFoundException e) {</b>
+<b class="nc">&nbsp;                    throw new RuntimeException(e);</b>
+<b class="nc">&nbsp;                }</b>
+&nbsp;            }
+&nbsp;        });
+&nbsp;
+&nbsp;
+<b class="nc">&nbsp;        VBox dialogContent = new VBox();</b>
+<b class="nc">&nbsp;        dialogContent.getChildren().addAll(</b>
+&nbsp;                fileLabel, selectFile
+&nbsp;        );
+<b class="nc">&nbsp;        dialogContent.setAlignment(Pos.CENTER);</b>
+&nbsp;
+<b class="nc">&nbsp;        dialog.getDialogPane().setContent(dialogContent);</b>
+&nbsp;
+<b class="nc">&nbsp;        ButtonType loadButton = new ButtonType(&quot;Load&quot;, ButtonBar.ButtonData.OK_DONE);</b>
+<b class="nc">&nbsp;        dialog.getDialogPane().getButtonTypes().addAll(loadButton, ButtonType.CANCEL);</b>
+&nbsp;
+<b class="nc">&nbsp;        dialog.setResultConverter(buttonType -&gt; {</b>
+<b class="nc">&nbsp;            if (buttonType == loadButton) {</b>
+&nbsp;                try {
+&nbsp;
+<b class="nc">&nbsp;                    File selectedFile = files[0];</b>
+<b class="nc">&nbsp;                    creatureDao.loadCreatures(selectedFile);</b>
+&nbsp;                    // Sort the inventory
+<b class="nc">&nbsp;                    creatureDao.sortByInitiative();</b>
+&nbsp;                    // Update the display
+<b class="nc">&nbsp;                    updateCreatureDisplay();</b>
+&nbsp;
+<b class="nc">&nbsp;                } catch (IOException | ClassNotFoundException e) {</b>
+<b class="nc">&nbsp;                    throw new RuntimeException(e);</b>
+<b class="nc">&nbsp;                }</b>
+&nbsp;            }
+<b class="nc">&nbsp;            return null;</b>
+&nbsp;        });
+&nbsp;
+<b class="nc">&nbsp;        dialog.showAndWait();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private void updateCreatureDisplay(){
+<b class="nc">&nbsp;        creaturePane.getChildren().clear();</b>
+<b class="nc">&nbsp;        this.roundLabel.setText(&quot;Round: &quot; + creatureDao.getRoundNumber());</b>
+<b class="nc">&nbsp;        for (Creature creature : creatureDao.getCreatureInventory()) {</b>
+<b class="nc">&nbsp;            VBox creatureInfoBox = new VBox(10);</b>
+<b class="nc">&nbsp;            creatureInfoBox.setAlignment(Pos.CENTER);</b>
+&nbsp;
+<b class="nc">&nbsp;            Button deleteButton = new Button(&quot;DELETE&quot;);</b>
+<b class="nc">&nbsp;            Button deleteConditionButton = new Button(&quot;DELETE CONDITION&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;            StackPane stackPane = new StackPane();</b>
+&nbsp;
+<b class="nc">&nbsp;            Rectangle portrait = new Rectangle(100, 100);</b>
+&nbsp;
+<b class="nc">&nbsp;            Rectangle turnBorder = new Rectangle(108, 108);</b>
+<b class="nc">&nbsp;            turnBorder.setFill(Color.TRANSPARENT);</b>
+&nbsp;
+<b class="nc">&nbsp;            if (creature.getImage() != null) {</b>
+<b class="nc">&nbsp;                portrait.setFill(new ImagePattern(new Image(&quot;file:&quot; + creature.getImage().getAbsolutePath())));</b>
+&nbsp;            } else {
+<b class="nc">&nbsp;                portrait.setFill(new ImagePattern(new Image(&quot;file:&quot; + new File(&quot;./src/main/resources/com/cs422/fxproject/Default_Image.png&quot;))));</b>
+&nbsp;//                getClass().getResourceAsStream(&quot;&quot;);
+&nbsp;            }
+&nbsp;
+&nbsp;            // Set the border color based on creature type
+<b class="nc">&nbsp;            if (creature instanceof AllyCreature) {</b>
+<b class="nc">&nbsp;                portrait.setStroke(AllyCreature.border);</b>
+<b class="nc">&nbsp;            } else if (creature instanceof NeutralCreature) {</b>
+<b class="nc">&nbsp;                portrait.setStroke(NeutralCreature.border);</b>
+<b class="nc">&nbsp;            } else if (creature instanceof EnemyCreature) {</b>
+<b class="nc">&nbsp;                portrait.setStroke(EnemyCreature.border);</b>
+&nbsp;            }
+<b class="nc">&nbsp;            portrait.setStrokeWidth(5);</b>
+&nbsp;
+&nbsp;            // Set a highlight border color for current turn creatures.
+<b class="nc">&nbsp;            if (creatureDao.getCurrentTurnCreatures().contains(creature)) {</b>
+<b class="nc">&nbsp;                turnBorder.setStroke(Color.YELLOW);</b>
+<b class="nc">&nbsp;                turnBorder.setStrokeWidth(5);</b>
+&nbsp;            }
+&nbsp;
+<b class="nc">&nbsp;            stackPane.getChildren().addAll(turnBorder, portrait);</b>
+&nbsp;
+<b class="nc">&nbsp;            Label nameLabel = new Label(&quot;| &quot; + creature.getName());</b>
+<b class="nc">&nbsp;            Label healthLabel = new Label(&quot;| &quot; + creature.getCurrentHealth());</b>
+<b class="nc">&nbsp;            Label initiativeLabel = new Label(&quot;| &quot; + creature.getInitiative());</b>
+<b class="nc">&nbsp;            Label bonusHealthLabel = new Label(&quot;| &quot; + creature.getBonusHealth());</b>
+&nbsp;
+<b class="nc">&nbsp;            HBox buttonsTopRow = new HBox(10); // Top row for buttons</b>
+<b class="nc">&nbsp;            buttonsTopRow.setAlignment(Pos.CENTER);</b>
+<b class="nc">&nbsp;            Button damageButton = new Button(&quot;DAMAGE&quot;);</b>
+<b class="nc">&nbsp;            Button healButton = new Button(&quot;HEAL&quot;);</b>
+&nbsp;
+&nbsp;            // Add a button for adding conditions
+<b class="nc">&nbsp;            Button addConditionButton = new Button(&quot;ADD CONDITION&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;            buttonsTopRow.getChildren().addAll(addConditionButton, deleteConditionButton);</b>
+&nbsp;
+<b class="nc">&nbsp;            HBox buttonsBottomRow = new HBox(10); // Bottom row for buttons</b>
+<b class="nc">&nbsp;            buttonsBottomRow.setAlignment(Pos.CENTER);</b>
+<b class="nc">&nbsp;            Button bonusHealthButton = new Button(&quot;BONUS HEALTH&quot;);</b>
+<b class="nc">&nbsp;            buttonsBottomRow.getChildren().addAll(deleteButton, damageButton, healButton, bonusHealthButton);</b>
+&nbsp;
+<b class="nc">&nbsp;            GridPane characterInfo = new GridPane();</b>
+<b class="nc">&nbsp;            characterInfo.setAlignment(Pos.CENTER);</b>
+<b class="nc">&nbsp;            characterInfo.setHgap(10);</b>
+<b class="nc">&nbsp;            characterInfo.setVgap(5);</b>
+<b class="nc">&nbsp;            characterInfo.add(new Label(&quot;Name&quot;), 0, 0);</b>
+<b class="nc">&nbsp;            characterInfo.add(nameLabel, 1, 0);</b>
+<b class="nc">&nbsp;            characterInfo.add(new Label(&quot;Health&quot;), 0, 1);</b>
+<b class="nc">&nbsp;            characterInfo.add(healthLabel, 1, 1);</b>
+<b class="nc">&nbsp;            characterInfo.add(new Label(&quot;Initiative&quot;), 0, 2);</b>
+<b class="nc">&nbsp;            characterInfo.add(initiativeLabel, 1, 2);</b>
+<b class="nc">&nbsp;            characterInfo.add(new Label(&quot;Bonus Health&quot;), 0, 3);</b>
+<b class="nc">&nbsp;            characterInfo.add(bonusHealthLabel, 1, 3);</b>
+&nbsp;
+&nbsp;            // Display creature conditions
+<b class="nc">&nbsp;            final List&lt;Condition&gt;[] currentConditions = new List[]{creature.getCurrentConditions()};</b>
+<b class="nc">&nbsp;            if (!currentConditions[0].isEmpty()) {</b>
+<b class="nc">&nbsp;                StringBuilder conditionsText = new StringBuilder(&quot;Conditions   | &quot;);</b>
+<b class="nc">&nbsp;                int conditionCount = 0;</b>
+&nbsp;
+<b class="nc">&nbsp;                for (Condition condition : currentConditions[0]) {</b>
+<b class="nc">&nbsp;                    conditionsText.append(condition).append(&quot;, &quot;);</b>
+<b class="nc">&nbsp;                    conditionCount++;</b>
+&nbsp;
+&nbsp;//                  Check if it&#39;s the second condition, and if so, add a new line
+<b class="nc">&nbsp;                    if (conditionCount % 2 == 0) {</b>
+<b class="nc">&nbsp;                        conditionsText.append(&quot;\n&quot;); // Add a new line</b>
+&nbsp;                    }
+<b class="nc">&nbsp;                }</b>
+&nbsp;
+<b class="nc">&nbsp;                conditionsText.setLength(conditionsText.length() - 2); // Remove the trailing comma and space</b>
+<b class="nc">&nbsp;                Label conditionsLabel = new Label(conditionsText.toString());</b>
+<b class="nc">&nbsp;                characterInfo.add(conditionsLabel, 0, 4, 2, 1); // Span 2 columns</b>
+&nbsp;            }
+&nbsp;
+<b class="nc">&nbsp;            damageButton.setOnAction(event -&gt; {</b>
+<b class="nc">&nbsp;                VBox damageContent = new VBox();</b>
+<b class="nc">&nbsp;                TextInputDialog damageDialog = new TextInputDialog();</b>
+<b class="nc">&nbsp;                damageDialog.setTitle(&quot;Damage Creature&quot;);</b>
+<b class="nc">&nbsp;                damageDialog.setHeaderText(&quot;Enter the damage amount:&quot;);</b>
+<b class="nc">&nbsp;                damageDialog.setContentText(&quot;Amount:&quot;);</b>
+<b class="nc">&nbsp;                CheckBox critBox = new CheckBox(&quot;Crit&quot;);</b>
+<b class="nc">&nbsp;                damageContent.getChildren().addAll(damageDialog.getDialogPane().getContent(), critBox);</b>
+<b class="nc">&nbsp;                damageDialog.getDialogPane().setContent(damageContent);</b>
+&nbsp;
+<b class="nc">&nbsp;                Optional&lt;String&gt; damageResult = damageDialog.showAndWait();</b>
+<b class="nc">&nbsp;                damageResult.ifPresent(damage -&gt; {</b>
+<b class="nc">&nbsp;                    int damageAmount = Integer.parseInt(damage);</b>
+&nbsp;                    // Subtract from current health
+<b class="nc">&nbsp;                    creature.removeHealth(damageAmount, critBox.isSelected());</b>
+<b class="nc">&nbsp;                    healthLabel.setText(&quot;| &quot; + creature.getCurrentHealth() + &quot;/&quot; + creature.getMaxHealth());</b>
+&nbsp;
+&nbsp;                    // Recalculate and update bonus health label
+<b class="nc">&nbsp;                    bonusHealthLabel.setText(&quot;| &quot; + creature.getBonusHealth());</b>
+&nbsp;                });
+&nbsp;            });
+&nbsp;
+<b class="nc">&nbsp;            healButton.setOnAction(event -&gt; {</b>
+<b class="nc">&nbsp;                TextInputDialog healDialog = new TextInputDialog();</b>
+<b class="nc">&nbsp;                healDialog.setTitle(&quot;Heal Creature&quot;);</b>
+<b class="nc">&nbsp;                healDialog.setHeaderText(&quot;Enter the healing amount:&quot;);</b>
+<b class="nc">&nbsp;                healDialog.setContentText(&quot;Amount:&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;                Optional&lt;String&gt; healResult = healDialog.showAndWait();</b>
+<b class="nc">&nbsp;                healResult.ifPresent(heal -&gt; {</b>
+<b class="nc">&nbsp;                    int healAmount = Integer.parseInt(heal);</b>
+&nbsp;                    // Add to current health (up to maximum health)
+<b class="nc">&nbsp;                    creature.addHealth(healAmount);</b>
+<b class="nc">&nbsp;                    healthLabel.setText(&quot;| &quot; + creature.getCurrentHealth());</b>
+&nbsp;
+&nbsp;                    // Recalculate and update bonus health label
+<b class="nc">&nbsp;                    bonusHealthLabel.setText(&quot;| &quot; + creature.getBonusHealth());</b>
+&nbsp;                });
+&nbsp;            });
+&nbsp;
+&nbsp;            // Add condition handling
+<b class="nc">&nbsp;            addConditionButton.setOnAction(event -&gt; {</b>
+&nbsp;                // Create the custom dialog
+<b class="nc">&nbsp;                Dialog&lt;Pair&lt;String, Integer&gt;&gt; dialog = new Dialog&lt;&gt;();</b>
+<b class="nc">&nbsp;                dialog.setTitle(&quot;Add Condition&quot;);</b>
+&nbsp;
+&nbsp;                // Set up the buttons
+<b class="nc">&nbsp;                ButtonType addButton = new ButtonType(&quot;Add&quot;, ButtonBar.ButtonData.OK_DONE);</b>
+<b class="nc">&nbsp;                dialog.getDialogPane().getButtonTypes().addAll(addButton, ButtonType.CANCEL);</b>
+&nbsp;
+&nbsp;                // Create the choice box and text field
+<b class="nc">&nbsp;                ChoiceBox&lt;String&gt; conditionChoiceBox = new ChoiceBox&lt;&gt;(FXCollections.observableArrayList(creature.getAllConditions()));</b>
+<b class="nc">&nbsp;                conditionChoiceBox.setValue(creature.getAllConditions().get(0));</b>
+<b class="nc">&nbsp;                TextField durationTextField = new TextField();</b>
+&nbsp;
+<b class="nc">&nbsp;                VBox content = new VBox();</b>
+<b class="nc">&nbsp;                content.getChildren().addAll(new Label(&quot;Condition:&quot;), conditionChoiceBox, new Label(&quot;Rounds:&quot;), durationTextField);</b>
+<b class="nc">&nbsp;                dialog.getDialogPane().setContent(content);</b>
+&nbsp;
+&nbsp;                // Convert the result to a pair
+<b class="nc">&nbsp;                dialog.setResultConverter(dialogButton -&gt; {</b>
+<b class="nc">&nbsp;                    if (dialogButton == addButton) {</b>
+&nbsp;                        int duration;
+&nbsp;                        try {
+<b class="nc">&nbsp;                            duration = Integer.parseInt(durationTextField.getText());</b>
+<b class="nc">&nbsp;                        } catch (NumberFormatException e) {</b>
+<b class="nc">&nbsp;                            duration = 99;</b>
+<b class="nc">&nbsp;                        }</b>
+<b class="nc">&nbsp;                        return new Pair&lt;&gt;(conditionChoiceBox.getValue(), duration);</b>
+&nbsp;                    }
+<b class="nc">&nbsp;                    return null;</b>
+&nbsp;                });
+&nbsp;
+&nbsp;                // Get the result and use it
+<b class="nc">&nbsp;                Optional&lt;Pair&lt;String, Integer&gt;&gt; result = dialog.showAndWait();</b>
+&nbsp;
+<b class="nc">&nbsp;                result.ifPresent(conditionDurationPair -&gt; {</b>
+<b class="nc">&nbsp;                    String condition = conditionDurationPair.getKey();</b>
+<b class="nc">&nbsp;                        int duration = conditionDurationPair.getValue();</b>
+<b class="nc">&nbsp;                        creature.addCondition(condition, duration);</b>
+&nbsp;
+<b class="nc">&nbsp;                    updateCreatureDisplay(); // Update the display to show the new condition</b>
+&nbsp;                });
+&nbsp;            });
+&nbsp;
+&nbsp;            // Delete condition handling
+<b class="nc">&nbsp;            deleteConditionButton.setOnAction(event -&gt; {</b>
+<b class="nc">&nbsp;                currentConditions[0] = creature.getCurrentConditions();</b>
+<b class="nc">&nbsp;                if (!currentConditions[0].isEmpty()) {</b>
+<b class="nc">&nbsp;                    ChoiceDialog&lt;Condition&gt; deleteConditionDialog = new ChoiceDialog&lt;&gt;(currentConditions[0].get(0), currentConditions[0]);</b>
+<b class="nc">&nbsp;                    deleteConditionDialog.setTitle(&quot;DELETE CONDITION&quot;);</b>
+<b class="nc">&nbsp;                    deleteConditionDialog.setHeaderText(&quot;Select a condition to delete:&quot;);</b>
+<b class="nc">&nbsp;                    deleteConditionDialog.setContentText(&quot;Condition:&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;                    Optional&lt;Condition&gt; selectedCondition = deleteConditionDialog.showAndWait();</b>
+<b class="nc">&nbsp;                    selectedCondition.ifPresent(condition -&gt; {</b>
+<b class="nc">&nbsp;                        creature.removeCondition(condition);</b>
+<b class="nc">&nbsp;                        updateCreatureDisplay(); // Update the display to remove the deleted condition</b>
+&nbsp;                    });
+&nbsp;                }
+&nbsp;            });
+&nbsp;
+<b class="nc">&nbsp;            bonusHealthButton.setOnAction(event -&gt; {</b>
+<b class="nc">&nbsp;                TextInputDialog bonusHealthDialog = new TextInputDialog();</b>
+<b class="nc">&nbsp;                bonusHealthDialog.setTitle(&quot;Bonus Health&quot;);</b>
+<b class="nc">&nbsp;                bonusHealthDialog.setHeaderText(&quot;Enter the bonus health amount:&quot;);</b>
+<b class="nc">&nbsp;                bonusHealthDialog.setContentText(&quot;Amount:&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;                Optional&lt;String&gt; bonusHealthResult = bonusHealthDialog.showAndWait();</b>
+<b class="nc">&nbsp;                bonusHealthResult.ifPresent(bonusHealth -&gt; {</b>
+<b class="nc">&nbsp;                    int bonusHealthAmount = Integer.parseInt(bonusHealth);</b>
+&nbsp;                    // Set bonus health using the addBonusHealth function
+<b class="nc">&nbsp;                    creature.addBonusHealth(bonusHealthAmount);</b>
+<b class="nc">&nbsp;                    bonusHealthLabel.setText(&quot;| &quot; + creature.getBonusHealth());</b>
+&nbsp;                });
+&nbsp;            });
+&nbsp;
+<b class="nc">&nbsp;            creatureInfoBox.getChildren().addAll(buttonsTopRow, buttonsBottomRow, stackPane, characterInfo);</b>
+<b class="nc">&nbsp;            creaturePane.getChildren().add(creatureInfoBox);</b>
+&nbsp;
+<b class="nc">&nbsp;            deleteButton.setOnAction(event -&gt; {</b>
+<b class="nc">&nbsp;                boolean deleteConfirmed = showDeleteConfirmationDialog();</b>
+<b class="nc">&nbsp;                if (deleteConfirmed) {</b>
+<b class="nc">&nbsp;                    creatureDao.deleteCreature(creature);</b>
+<b class="nc">&nbsp;                    updateCreatureDisplay();</b>
+&nbsp;                }
+&nbsp;            });
+<b class="nc">&nbsp;        }</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private boolean showDeleteConfirmationDialog() {
+<b class="nc">&nbsp;        Alert confirmationDialog = new Alert(Alert.AlertType.CONFIRMATION);</b>
+<b class="nc">&nbsp;        confirmationDialog.setTitle(&quot;Confirmation&quot;);</b>
+<b class="nc">&nbsp;        confirmationDialog.setHeaderText(&quot;Are you sure you want to delete this creature?&quot;);</b>
+<b class="nc">&nbsp;        confirmationDialog.setContentText(&quot;Choose your option.&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;        ButtonType yesButton = new ButtonType(&quot;Yes&quot;);</b>
+<b class="nc">&nbsp;        ButtonType noButton = new ButtonType(&quot;No&quot;, ButtonBar.ButtonData.CANCEL_CLOSE);</b>
+<b class="nc">&nbsp;        confirmationDialog.getButtonTypes().setAll(yesButton, noButton);</b>
+&nbsp;
+<b class="nc">&nbsp;        Optional&lt;ButtonType&gt; result = confirmationDialog.showAndWait();</b>
+&nbsp;
+<b class="nc">&nbsp;        return result.isPresent() &amp;&amp; result.get() == yesButton;</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-10-30 01:25</div>
+</div>
+</body>
+</html>

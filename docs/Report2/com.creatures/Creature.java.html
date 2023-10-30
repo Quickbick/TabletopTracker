@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Creature.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com in tabletopTracker Coverage Results</a> &gt; <a href="index.source.html" class="el_package">com.creatures</a> &gt; <span class="el_source">Creature.java</span></div><h1>Creature.java</h1><pre class="source lang-java linenums">package com.creatures;
+
+import com.condition_manager.*;
+
+import java.io.File;
+import java.io.Serial;
+import java.io.Serializable;
+import java.util.List;
+
+abstract class Creature implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+    private final String name;
+    private final File image;
+    private final int maxHealth;
+    private int currentHealth;
+    private int bonusHealth;
+    private final int initiative;
+<span class="fc" id="L19">    private final ConditionDao conditionDao = new ConditionDaoImpl();</span>
+
+    /**
+     * Creates a new Creature with name, health, and initiative.
+     *
+     * @param name        Name of Creature
+     * @param maxHealth   Max Health of Creature
+     * @param initiative  Initiative Number
+     * @param image       Creature Image
+     */
+<span class="fc" id="L29">    Creature(String name, int maxHealth, int initiative, File image) {</span>
+<span class="fc" id="L30">        this.name = name;</span>
+<span class="fc" id="L31">        this.maxHealth = maxHealth;</span>
+<span class="fc" id="L32">        this.initiative = initiative;</span>
+<span class="fc" id="L33">        this.currentHealth = this.maxHealth;</span>
+<span class="fc" id="L34">        this.bonusHealth = 0;</span>
+<span class="fc" id="L35">        this.image = image;</span>
+<span class="fc" id="L36">    }</span>
+
+    /**
+     * This function adds health to the creature.
+     *
+     * @param healthPoints Points to heal
+     */
+    public void addHealth(int healthPoints) {
+<span class="fc bfc" id="L44" title="All 2 branches covered.">        if (this.currentHealth + healthPoints &gt; this.maxHealth) {</span>
+<span class="fc" id="L45">            this.currentHealth = this.maxHealth;</span>
+        } else {
+<span class="fc" id="L47">            this.currentHealth += healthPoints;</span>
+        }
+<span class="fc" id="L49">    }</span>
+
+    /**
+     * This function removes health from the creature. Sets the creature to Unconscious if HP goes to 0.
+     *
+     * @param healthPoints Damage to take
+     */
+    public void removeHealth(int healthPoints, boolean crit) {
+        //Adjust damage to take based on crit
+<span class="fc" id="L58">        int dmg = healthPoints;</span>
+<span class="fc" id="L59">        boolean autoCrit1 = this.getCurrentConditions().stream().anyMatch(existingCondition -&gt; existingCondition.getClass()</span>
+<span class="fc" id="L60">                .equals(Paralyzed.class));</span>
+<span class="fc" id="L61">        boolean autoCrit2 = this.getCurrentConditions().stream().anyMatch(existingCondition -&gt; existingCondition.getClass()</span>
+<span class="fc" id="L62">                .equals(Unconscious.class));</span>
+<span class="fc" id="L63">        boolean autoCrit3 = this.getCurrentConditions().stream().anyMatch(existingCondition -&gt; existingCondition.getClass()</span>
+<span class="fc" id="L64">                .equals(Incapacitated.class));</span>
+<span class="fc bfc" id="L65" title="All 8 branches covered.">        if (crit || autoCrit1 || autoCrit2 || autoCrit3){</span>
+<span class="fc" id="L66">            dmg = healthPoints * 2;</span>
+        }
+        // Remove health from bonus health first.
+<span class="fc bfc" id="L69" title="All 2 branches covered.">        if (this.bonusHealth - dmg &gt; 0) {</span>
+<span class="fc" id="L70">            this.bonusHealth -= dmg;</span>
+        } else {
+<span class="fc" id="L72">            dmg = dmg - this.bonusHealth;</span>
+<span class="fc" id="L73">            this.bonusHealth = 0;</span>
+<span class="fc" id="L74">            this.currentHealth -= dmg;</span>
+        }
+        //reset HP to zero if it passes and add unconscious condition
+<span class="fc bfc" id="L77" title="All 2 branches covered.">        if (this.currentHealth &lt;= 0) {</span>
+            // Creature has died.
+<span class="fc" id="L79">            this.currentHealth = 0;</span>
+<span class="fc" id="L80">            this.addCondition(&quot;Unconscious&quot;, 99);</span>
+
+        }
+<span class="fc" id="L83">    }</span>
+
+    /**
+     * This function sets the bonus health of a creature.
+     * If the new bonus health is lower than the old, we do not update it.
+     *
+     * @param newBonusHealth new Max Bonus health
+     */
+    public void addBonusHealth(int newBonusHealth) {
+        // If the new bonus health is greater than the current bonus health,
+        // replace the bonus health with the new value. Otherwise, do not replace it
+<span class="fc bfc" id="L94" title="All 2 branches covered.">        if (newBonusHealth &gt; this.bonusHealth) {</span>
+<span class="fc" id="L95">            this.bonusHealth = newBonusHealth;</span>
+        }
+<span class="fc" id="L97">    }</span>
+
+
+    /**
+     * Adds a condition to the condition Dao.
+     * @param conditionType Type of condition to create.
+     * @param duration Round duration of c
+     */
+    public void addCondition(String conditionType, int duration) {
+<span class="fc" id="L106">        Condition newCondition = this.conditionDao.createCondition(conditionType, duration);</span>
+
+        // Check if an object of the same class type as newCondition already exists
+<span class="fc" id="L109">        boolean exists = this.conditionDao.getCurrentConditions().stream()</span>
+<span class="fc" id="L110">                .anyMatch(existingCondition -&gt; existingCondition.getClass().equals(newCondition.getClass()));</span>
+
+<span class="fc bfc" id="L112" title="All 2 branches covered.">        if (!exists) {</span>
+<span class="fc" id="L113">            this.conditionDao.addCurrentCondition(newCondition);</span>
+        }
+<span class="fc" id="L115">    }</span>
+
+    /**
+     * Remove the condition from the creature.
+     *
+     * @param condition Health Condition to remove.
+     */
+    public void removeCondition(Condition condition) {
+<span class="fc" id="L123">        conditionDao.removeCurrentCondition(condition);</span>
+<span class="fc" id="L124">    }</span>
+
+    /**
+     * Lower condition count by 1 round.
+     */
+    public void decrementConditions() {
+<span class="fc" id="L130">        this.conditionDao.decreaseAllConditionDurations();</span>
+<span class="fc" id="L131">    }</span>
+
+<span class="fc" id="L133">    public String getName() { return this.name; }</span>
+<span class="fc" id="L134">    public File getImage(){ return this.image; }</span>
+<span class="fc" id="L135">    public int getMaxHealth(){ return this.maxHealth; }</span>
+<span class="fc" id="L136">    public int getCurrentHealth() { return this.currentHealth; }</span>
+<span class="fc" id="L137">    protected void setCurrentHealth(int health) { this.currentHealth = health; }</span>
+<span class="fc" id="L138">    public int getBonusHealth(){ return this.bonusHealth; }</span>
+<span class="fc" id="L139">    protected void setBonusHealth(int bonusHealth){ this.bonusHealth = bonusHealth; }</span>
+<span class="fc" id="L140">    public int getInitiative() { return initiative; }</span>
+<span class="fc" id="L141">    public List&lt;Condition&gt; getCurrentConditions() { return conditionDao.getCurrentConditions(); }</span>
+<span class="nc" id="L142">    public List&lt;String&gt; getAllConditions() { return conditionDao.getAllConditions(); }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

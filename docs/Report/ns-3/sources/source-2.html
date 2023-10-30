@@ -1,0 +1,259 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
+  <title>Coverage Report > Creature</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.creatures</a>
+</div>
+
+<h1>Coverage Summary for Class: Creature (com.creatures)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Creature</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    95%
+  </span>
+  <span class="absValue">
+    (19/20)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (18/18)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    97.9%
+  </span>
+  <span class="absValue">
+    (46/47)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.creatures;
+&nbsp;
+&nbsp;import com.condition_manager.*;
+&nbsp;
+&nbsp;import java.io.File;
+&nbsp;import java.io.Serial;
+&nbsp;import java.io.Serializable;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;abstract class Creature implements Serializable {
+&nbsp;    @Serial
+&nbsp;    private static final long serialVersionUID = 1L;
+&nbsp;    private final String name;
+&nbsp;    private final File image;
+&nbsp;    private final int maxHealth;
+&nbsp;    private int currentHealth;
+&nbsp;    private int bonusHealth;
+&nbsp;    private final int initiative;
+<b class="fc">&nbsp;    private final ConditionDao conditionDao = new ConditionDaoImpl();</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Creates a new Creature with name, health, and initiative.
+&nbsp;     *
+&nbsp;     * @param name        Name of Creature
+&nbsp;     * @param maxHealth   Max Health of Creature
+&nbsp;     * @param initiative  Initiative Number
+&nbsp;     * @param image       Creature Image
+&nbsp;     */
+<b class="fc">&nbsp;    Creature(String name, int maxHealth, int initiative, File image) {</b>
+<b class="fc">&nbsp;        this.name = name;</b>
+<b class="fc">&nbsp;        this.maxHealth = maxHealth;</b>
+<b class="fc">&nbsp;        this.initiative = initiative;</b>
+<b class="fc">&nbsp;        this.currentHealth = this.maxHealth;</b>
+<b class="fc">&nbsp;        this.bonusHealth = 0;</b>
+<b class="fc">&nbsp;        this.image = image;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * This function adds health to the creature.
+&nbsp;     *
+&nbsp;     * @param healthPoints Points to heal
+&nbsp;     */
+&nbsp;    public void addHealth(int healthPoints) {
+<b class="fc">&nbsp;        if (this.currentHealth + healthPoints &gt; this.maxHealth) {</b>
+<b class="fc">&nbsp;            this.currentHealth = this.maxHealth;</b>
+&nbsp;        } else {
+<b class="fc">&nbsp;            this.currentHealth += healthPoints;</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * This function removes health from the creature. Sets the creature to Unconscious if HP goes to 0.
+&nbsp;     *
+&nbsp;     * @param healthPoints Damage to take
+&nbsp;     */
+&nbsp;    public void removeHealth(int healthPoints, boolean crit) {
+&nbsp;        //Adjust damage to take based on crit
+<b class="fc">&nbsp;        int dmg = healthPoints;</b>
+<b class="fc">&nbsp;        boolean autoCrit1 = this.getCurrentConditions().stream().anyMatch(existingCondition -&gt; existingCondition.getClass()</b>
+<b class="fc">&nbsp;                .equals(Paralyzed.class));</b>
+<b class="fc">&nbsp;        boolean autoCrit2 = this.getCurrentConditions().stream().anyMatch(existingCondition -&gt; existingCondition.getClass()</b>
+<b class="fc">&nbsp;                .equals(Unconscious.class));</b>
+<b class="fc">&nbsp;        boolean autoCrit3 = this.getCurrentConditions().stream().anyMatch(existingCondition -&gt; existingCondition.getClass()</b>
+<b class="fc">&nbsp;                .equals(Incapacitated.class));</b>
+<b class="fc">&nbsp;        if (crit || autoCrit1 || autoCrit2 || autoCrit3){</b>
+<b class="fc">&nbsp;            dmg = healthPoints * 2;</b>
+&nbsp;        }
+&nbsp;        // Remove health from bonus health first.
+<b class="fc">&nbsp;        if (this.bonusHealth - dmg &gt; 0) {</b>
+<b class="fc">&nbsp;            this.bonusHealth -= dmg;</b>
+&nbsp;        } else {
+<b class="fc">&nbsp;            dmg = dmg - this.bonusHealth;</b>
+<b class="fc">&nbsp;            this.bonusHealth = 0;</b>
+<b class="fc">&nbsp;            this.currentHealth -= dmg;</b>
+&nbsp;        }
+&nbsp;        //reset HP to zero if it passes and add unconscious condition
+<b class="fc">&nbsp;        if (this.currentHealth &lt;= 0) {</b>
+&nbsp;            // Creature has died.
+<b class="fc">&nbsp;            this.currentHealth = 0;</b>
+<b class="fc">&nbsp;            this.addCondition(&quot;Unconscious&quot;, 99);</b>
+&nbsp;
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * This function sets the bonus health of a creature.
+&nbsp;     * If the new bonus health is lower than the old, we do not update it.
+&nbsp;     *
+&nbsp;     * @param newBonusHealth new Max Bonus health
+&nbsp;     */
+&nbsp;    public void addBonusHealth(int newBonusHealth) {
+&nbsp;        // If the new bonus health is greater than the current bonus health,
+&nbsp;        // replace the bonus health with the new value. Otherwise, do not replace it
+<b class="fc">&nbsp;        if (newBonusHealth &gt; this.bonusHealth) {</b>
+<b class="fc">&nbsp;            this.bonusHealth = newBonusHealth;</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Adds a condition to the condition Dao.
+&nbsp;     * @param conditionType Type of condition to create.
+&nbsp;     * @param duration Round duration of c
+&nbsp;     */
+&nbsp;    public void addCondition(String conditionType, int duration) {
+<b class="fc">&nbsp;        Condition newCondition = this.conditionDao.createCondition(conditionType, duration);</b>
+&nbsp;
+&nbsp;        // Check if an object of the same class type as newCondition already exists
+<b class="fc">&nbsp;        boolean exists = this.conditionDao.getCurrentConditions().stream()</b>
+<b class="fc">&nbsp;                .anyMatch(existingCondition -&gt; existingCondition.getClass().equals(newCondition.getClass()));</b>
+&nbsp;
+<b class="fc">&nbsp;        if (!exists) {</b>
+<b class="fc">&nbsp;            this.conditionDao.addCurrentCondition(newCondition);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Remove the condition from the creature.
+&nbsp;     *
+&nbsp;     * @param condition Health Condition to remove.
+&nbsp;     */
+&nbsp;    public void removeCondition(Condition condition) {
+<b class="fc">&nbsp;        conditionDao.removeCurrentCondition(condition);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Lower condition count by 1 round.
+&nbsp;     */
+&nbsp;    public void decrementConditions() {
+<b class="fc">&nbsp;        this.conditionDao.decreaseAllConditionDurations();</b>
+&nbsp;    }
+&nbsp;
+<b class="fc">&nbsp;    public String getName() { return this.name; }</b>
+<b class="fc">&nbsp;    public File getImage(){ return this.image; }</b>
+<b class="fc">&nbsp;    public int getMaxHealth(){ return this.maxHealth; }</b>
+<b class="fc">&nbsp;    public int getCurrentHealth() { return this.currentHealth; }</b>
+<b class="fc">&nbsp;    protected void setCurrentHealth(int health) { this.currentHealth = health; }</b>
+<b class="fc">&nbsp;    public int getBonusHealth(){ return this.bonusHealth; }</b>
+<b class="fc">&nbsp;    protected void setBonusHealth(int bonusHealth){ this.bonusHealth = bonusHealth; }</b>
+<b class="fc">&nbsp;    public int getInitiative() { return initiative; }</b>
+<b class="fc">&nbsp;    public List&lt;Condition&gt; getCurrentConditions() { return conditionDao.getCurrentConditions(); }</b>
+<b class="nc">&nbsp;    public List&lt;String&gt; getAllConditions() { return conditionDao.getAllConditions(); }</b>
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-10-30 01:25</div>
+</div>
+</body>
+</html>

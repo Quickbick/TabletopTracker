@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Prone.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com in tabletopTracker Coverage Results</a> &gt; <a href="index.source.html" class="el_package">com.condition_manager</a> &gt; <span class="el_source">Prone.java</span></div><h1>Prone.java</h1><pre class="source lang-java linenums">package com.condition_manager;
+
+/**
+ * Attacks from creature are Disadvantaged, Attacks against creature are Advantaged if the attacker is within 5 feet and Disadvantaged if the attacker is farther than 5 feet.
+ */
+public class Prone extends Condition {
+    @Override
+    public rollModifierEnum getAttacksFrom() {
+<span class="nc" id="L9">        return rollModifierEnum.Disadvantage;</span>
+    }
+
+    @Override
+    public rollModifierEnum getAttacksAgainst() {
+<span class="nc" id="L14">        return rollModifierEnum.Advantage;</span>
+    }
+
+    @Override
+    public boolean getSkipTurn() {
+<span class="nc" id="L19">        return false;</span>
+    }
+
+    protected Prone(int duration) {
+<span class="fc" id="L23">        super(duration);</span>
+<span class="fc" id="L24">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

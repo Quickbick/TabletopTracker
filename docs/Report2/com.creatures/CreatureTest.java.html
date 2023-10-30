@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CreatureTest.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com in tabletopTracker Coverage Results</a> &gt; <a href="index.source.html" class="el_package">com.creatures</a> &gt; <span class="el_source">CreatureTest.java</span></div><h1>CreatureTest.java</h1><pre class="source lang-java linenums">package com.creatures;
+
+import com.condition_manager.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+
+import java.io.File;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+<span class="fc" id="L15">class CreatureTest {</span>
+
+<span class="fc" id="L17">    final int FULL_HEALTH = 25;</span>
+<span class="fc" id="L18">    final int MIN_DURATION = 1;</span>
+
+    @BeforeEach
+    public void init(){
+<span class="fc" id="L22">        Creature creature = new AllyCreature(&quot;John Creature&quot;, 25, 5, new File(&quot;./src/main/resources/com/cs422/fxproject/Default_Image.png&quot;));</span>
+<span class="fc" id="L23">        Creature spyCreature = spy(creature);</span>
+<span class="fc" id="L24">    }</span>
+
+    private ConditionDao getCritConditions() {
+<span class="fc" id="L27">        ConditionDao critConditions = new ConditionDaoImpl();</span>
+<span class="fc" id="L28">        Condition paralyzed = critConditions.createCondition(&quot;Paralyzed&quot;, MIN_DURATION);</span>
+<span class="fc" id="L29">        critConditions.addCurrentCondition(paralyzed);</span>
+<span class="fc" id="L30">        Condition unconscious = critConditions.createCondition(&quot;Unconscious&quot;, MIN_DURATION);</span>
+<span class="fc" id="L31">        critConditions.addCurrentCondition(unconscious);</span>
+<span class="fc" id="L32">        Condition incapacitated = critConditions.createCondition(&quot;Incapacitated&quot;, MIN_DURATION);</span>
+<span class="fc" id="L33">        critConditions.addCurrentCondition(incapacitated);</span>
+<span class="fc" id="L34">        return critConditions;</span>
+    }
+
+    @Test
+    void addHealth_to_full() {
+<span class="fc" id="L39">        int input = 15;</span>
+<span class="fc" id="L40">        Creature creature = new AllyCreature(&quot;John Creature&quot;, 25, 5, new File(&quot;./src/main/resources/com/cs422/fxproject/Default_Image.png&quot;));</span>
+<span class="fc" id="L41">        creature.setCurrentHealth(20);</span>
+<span class="fc" id="L42">        creature.addHealth(input);</span>
+<span class="fc" id="L43">        assertEquals(FULL_HEALTH, creature.getCurrentHealth());</span>
+<span class="fc" id="L44">    }</span>
+
+    @Test
+    void addHealth_not_full() {
+<span class="fc" id="L48">        int input = 3;</span>
+<span class="fc" id="L49">        int expected = 23;</span>
+<span class="fc" id="L50">        Creature creature = new AllyCreature(&quot;John Creature&quot;, 25, 5, new File(&quot;./src/main/resources/com/cs422/fxproject/Default_Image.png&quot;));</span>
+<span class="fc" id="L51">        creature.setCurrentHealth(20);</span>
+<span class="fc" id="L52">        creature.addHealth(input);</span>
+<span class="fc" id="L53">        assertEquals(expected, creature.getCurrentHealth());</span>
+<span class="fc" id="L54">    }</span>
+
+    @Test
+    void removeHealth_with_auto_crits(){
+<span class="fc" id="L58">        int inputHealthPoints = 10;</span>
+<span class="fc" id="L59">        boolean inputCrit = false;</span>
+<span class="fc" id="L60">        int expected = 5;</span>
+<span class="fc" id="L61">        Creature creature = new AllyCreature(&quot;John Creature&quot;, 25, 5, new File(&quot;./src/main/resources/com/cs422/fxproject/Default_Image.png&quot;));</span>
+<span class="fc" id="L62">        Creature spyCreature = spy(creature);</span>
+<span class="fc" id="L63">        ConditionDao critConditions = getCritConditions();</span>
+<span class="fc" id="L64">        Mockito.when(spyCreature.getCurrentConditions()).thenReturn(critConditions.getCurrentConditions());</span>
+<span class="fc" id="L65">        spyCreature.removeHealth(inputHealthPoints, inputCrit);</span>
+<span class="fc" id="L66">        assertEquals(expected, spyCreature.getCurrentHealth());</span>
+<span class="fc" id="L67">    }</span>
+
+    @Test
+    void removeHealth_with_more_bonus_health(){
+<span class="fc" id="L71">        int inputHealthPoints = 10;</span>
+<span class="fc" id="L72">        boolean inputCrit = false;</span>
+<span class="fc" id="L73">        int expectedHealth = 25;</span>
+<span class="fc" id="L74">        int expectedBonusHealth = 5;</span>
+<span class="fc" id="L75">        Creature creature = new AllyCreature(&quot;John Creature&quot;, 25, 5, new File(&quot;./src/main/resources/com/cs422/fxproject/Default_Image.png&quot;));</span>
+<span class="fc" id="L76">        creature.setBonusHealth(15);</span>
+<span class="fc" id="L77">        creature.removeHealth(inputHealthPoints, inputCrit);</span>
+<span class="fc" id="L78">        assertEquals(expectedHealth, creature.getCurrentHealth());</span>
+<span class="fc" id="L79">        assertEquals(expectedBonusHealth, creature.getBonusHealth());</span>
+<span class="fc" id="L80">    }</span>
+
+    @Test
+    void removeHealth_kill(){
+<span class="fc" id="L84">        int inputHealthPoints = 30;</span>
+<span class="fc" id="L85">        boolean inputCrit = true;</span>
+<span class="fc" id="L86">        int expected = 0;</span>
+<span class="fc" id="L87">        Creature creature = new AllyCreature(&quot;John Creature&quot;, 25, 5, new File(&quot;./src/main/resources/com/cs422/fxproject/Default_Image.png&quot;));</span>
+<span class="fc" id="L88">        creature.removeHealth(inputHealthPoints, inputCrit);</span>
+<span class="fc" id="L89">        assertEquals(expected, creature.getCurrentHealth());</span>
+<span class="fc" id="L90">        assertEquals(Unconscious.class, creature.getCurrentConditions().get(0).getClass());</span>
+<span class="fc" id="L91">    }</span>
+
+    @Test
+    void removeHealth_just_paralyzed(){
+<span class="fc" id="L95">        int inputHealthPoints = 10;</span>
+<span class="fc" id="L96">        boolean inputCrit = false;</span>
+<span class="fc" id="L97">        int expected = 5;</span>
+<span class="fc" id="L98">        Creature creature = new AllyCreature(&quot;John Creature&quot;, 25, 5, new File(&quot;./src/main/resources/com/cs422/fxproject/Default_Image.png&quot;));</span>
+<span class="fc" id="L99">        Creature spyCreature = spy(creature);</span>
+<span class="fc" id="L100">        ConditionDao critConditions = new ConditionDaoImpl();</span>
+<span class="fc" id="L101">        Condition paralyzed = critConditions.createCondition(&quot;Paralyzed&quot;, MIN_DURATION);</span>
+<span class="fc" id="L102">        critConditions.addCurrentCondition(paralyzed);</span>
+<span class="fc" id="L103">        Mockito.when(spyCreature.getCurrentConditions()).thenReturn(critConditions.getCurrentConditions());</span>
+<span class="fc" id="L104">        spyCreature.removeHealth(inputHealthPoints, inputCrit);</span>
+<span class="fc" id="L105">        assertEquals(expected, spyCreature.getCurrentHealth());</span>
+<span class="fc" id="L106">    }</span>
+
+    @Test
+    void removeHealth_just_incapacitated(){
+<span class="fc" id="L110">        int inputHealthPoints = 10;</span>
+<span class="fc" id="L111">        boolean inputCrit = false;</span>
+<span class="fc" id="L112">        int expected = 5;</span>
+<span class="fc" id="L113">        Creature creature = new AllyCreature(&quot;John Creature&quot;, 25, 5, new File(&quot;./src/main/resources/com/cs422/fxproject/Default_Image.png&quot;));</span>
+<span class="fc" id="L114">        Creature spyCreature = spy(creature);</span>
+<span class="fc" id="L115">        ConditionDao critConditions = new ConditionDaoImpl();</span>
+<span class="fc" id="L116">        Condition paralyzed = critConditions.createCondition(&quot;Incapacitated&quot;, MIN_DURATION);</span>
+<span class="fc" id="L117">        critConditions.addCurrentCondition(paralyzed);</span>
+<span class="fc" id="L118">        Mockito.when(spyCreature.getCurrentConditions()).thenReturn(critConditions.getCurrentConditions());</span>
+<span class="fc" id="L119">        spyCreature.removeHealth(inputHealthPoints, inputCrit);</span>
+<span class="fc" id="L120">        assertEquals(expected, spyCreature.getCurrentHealth());</span>
+<span class="fc" id="L121">    }</span>
+
+    @Test
+    void removeHealth_just_unconscious(){
+<span class="fc" id="L125">        int inputHealthPoints = 10;</span>
+<span class="fc" id="L126">        boolean inputCrit = false;</span>
+<span class="fc" id="L127">        int expected = 5;</span>
+<span class="fc" id="L128">        Creature creature = new AllyCreature(&quot;John Creature&quot;, 25, 5, new File(&quot;./src/main/resources/com/cs422/fxproject/Default_Image.png&quot;));</span>
+<span class="fc" id="L129">        Creature spyCreature = spy(creature);</span>
+<span class="fc" id="L130">        ConditionDao critConditions = new ConditionDaoImpl();</span>
+<span class="fc" id="L131">        Condition paralyzed = critConditions.createCondition(&quot;Unconscious&quot;, MIN_DURATION);</span>
+<span class="fc" id="L132">        critConditions.addCurrentCondition(paralyzed);</span>
+<span class="fc" id="L133">        Mockito.when(spyCreature.getCurrentConditions()).thenReturn(critConditions.getCurrentConditions());</span>
+<span class="fc" id="L134">        spyCreature.removeHealth(inputHealthPoints, inputCrit);</span>
+<span class="fc" id="L135">        assertEquals(expected, spyCreature.getCurrentHealth());</span>
+<span class="fc" id="L136">    }</span>
+
+    @Test
+    void addBonusHealth() {
+<span class="fc" id="L140">        int input = 5;</span>
+<span class="fc" id="L141">        int expected = 5;</span>
+<span class="fc" id="L142">        Creature creature = new AllyCreature(&quot;John Creature&quot;, 25, 5, new File(&quot;./src/main/resources/com/cs422/fxproject/Default_Image.png&quot;));</span>
+<span class="fc" id="L143">        creature.addBonusHealth(input);</span>
+<span class="fc" id="L144">        assertEquals(expected, creature.getBonusHealth());</span>
+<span class="fc" id="L145">    }</span>
+
+    @Test
+    void addBonusHealth_no_change() {
+<span class="fc" id="L149">        int input = 3;</span>
+<span class="fc" id="L150">        int expected = 5;</span>
+<span class="fc" id="L151">        Creature creature = new AllyCreature(&quot;John Creature&quot;, 25, 5, new File(&quot;./src/main/resources/com/cs422/fxproject/Default_Image.png&quot;));</span>
+<span class="fc" id="L152">        creature.setBonusHealth(5);</span>
+<span class="fc" id="L153">        creature.addBonusHealth(input);</span>
+<span class="fc" id="L154">        assertEquals(expected, creature.getBonusHealth());</span>
+<span class="fc" id="L155">    }</span>
+
+    @Test
+    void addCondition() {
+<span class="fc" id="L159">        String inputType = &quot;Charmed&quot;;</span>
+<span class="fc" id="L160">        Creature creature = new AllyCreature(&quot;John Creature&quot;, 25, 5, new File(&quot;./src/main/resources/com/cs422/fxproject/Default_Image.png&quot;));</span>
+<span class="fc" id="L161">        creature.addCondition(inputType, MIN_DURATION);</span>
+<span class="fc" id="L162">        assertEquals(Charmed.class, creature.getCurrentConditions().get(0).getClass());</span>
+<span class="fc" id="L163">    }</span>
+
+    @Test
+    void addCondition_more_than_once() {
+<span class="fc" id="L167">        String inputType = &quot;Charmed&quot;;</span>
+<span class="fc" id="L168">        int expected = 1;</span>
+<span class="fc" id="L169">        Creature creature = new AllyCreature(&quot;John Creature&quot;, 25, 5, new File(&quot;./src/main/resources/com/cs422/fxproject/Default_Image.png&quot;));</span>
+<span class="fc" id="L170">        creature.addCondition(inputType, MIN_DURATION);</span>
+<span class="fc" id="L171">        creature.addCondition(inputType, MIN_DURATION);</span>
+<span class="fc" id="L172">        assertEquals(1, creature.getCurrentConditions().size());</span>
+<span class="fc" id="L173">    }</span>
+
+    @Test
+    void removeCondition() {
+        // Create a test creature instance
+<span class="fc" id="L178">        Creature creature = new AllyCreature(&quot;John Creature&quot;, 25, 5, new File(&quot;/path/to/image.png&quot;));</span>
+
+        // Add a condition to the creature
+<span class="fc" id="L181">        String conditionType = &quot;Frightened&quot;;</span>
+<span class="fc" id="L182">        creature.addCondition(conditionType, 3); // Replace the duration with an appropriate value</span>
+
+        // Get the initial count of conditions
+<span class="fc" id="L185">        int initialConditionsCount = creature.getCurrentConditions().size();</span>
+
+        // Remove the condition
+<span class="fc" id="L188">        creature.removeCondition(creature.getCurrentConditions().get(0)); // Pass the condition to be removed</span>
+
+        // Get the count of conditions after removal
+<span class="fc" id="L191">        int conditionsCountAfterRemoval = creature.getCurrentConditions().size();</span>
+
+        // Verify that the count is decreased by 1 after the removal
+<span class="fc" id="L194">        assertEquals(initialConditionsCount - 1, conditionsCountAfterRemoval);</span>
+<span class="fc" id="L195">    }</span>
+
+    @Test
+    void decrementConditions() {
+<span class="fc" id="L199">        Creature creature = new AllyCreature(&quot;John Creature&quot;, 25, 5, new File(&quot;/path/to/image.png&quot;));</span>
+
+        // Add a few conditions to the creature
+<span class="fc" id="L202">        creature.addCondition(&quot;Frightened&quot;, 3);</span>
+<span class="fc" id="L203">        creature.addCondition(&quot;Poisoned&quot;, 2);</span>
+
+        // Capture the base durations
+<span class="fc" id="L206">        List&lt;Integer&gt; baseDurations = creature.getCurrentConditions().stream()</span>
+<span class="fc" id="L207">                .map(Condition::getDuration)</span>
+<span class="fc" id="L208">                .collect(Collectors.toList());</span>
+
+        // Decrement the conditions
+<span class="fc" id="L211">        creature.decrementConditions();</span>
+
+        // Get the updated conditions list
+<span class="fc" id="L214">        List&lt;Condition&gt; updatedConditions = creature.getCurrentConditions();</span>
+
+        // Check the duration of each condition in the updated list
+<span class="fc bfc" id="L217" title="All 2 branches covered.">        for (int i = 0; i &lt; updatedConditions.size(); i++) {</span>
+<span class="fc" id="L218">            Condition updatedCondition = updatedConditions.get(i);</span>
+<span class="fc" id="L219">            Integer baseDuration = baseDurations.get(i);</span>
+
+            // Compare the updated condition duration with the base condition - 1
+<span class="fc" id="L222">            assertEquals(baseDuration - 1, updatedCondition.getDuration());</span>
+        }
+<span class="fc" id="L224">    }</span>
+
+    @Test
+    void getName() {
+<span class="fc" id="L228">        String expectedName = &quot;John Creature&quot;;</span>
+<span class="fc" id="L229">        Creature creature = new AllyCreature(expectedName, 25, 5, new File(&quot;./path/to/image.png&quot;));</span>
+
+        // Get the name from the creature object
+<span class="fc" id="L232">        String actualName = creature.getName();</span>
+
+        // Verify if the retrieved name matches the expected name
+<span class="fc" id="L235">        assertEquals(expectedName, actualName);</span>
+<span class="fc" id="L236">    }</span>
+
+    @Test
+    void getImage() {
+        // Create a test file
+<span class="fc" id="L241">        File testImage = new File(&quot;/path/to/test_image.png&quot;);</span>
+
+<span class="fc" id="L243">        Creature creature = new AllyCreature(&quot;John Creature&quot;, 25, 5, testImage);</span>
+
+        // Retrieve the image file using the method
+<span class="fc" id="L246">        File retrievedImage = creature.getImage();</span>
+
+        // Assert that the retrieved image matches the expected image
+<span class="fc" id="L249">        assertEquals(testImage, retrievedImage);</span>
+<span class="fc" id="L250">    }</span>
+
+    @Test
+    void getMaxHealth() {
+<span class="fc" id="L254">        int expectedMaxHealth = 25; // Change to your expected maximum health value</span>
+<span class="fc" id="L255">        Creature creature = new AllyCreature(&quot;John Creature&quot;, expectedMaxHealth, 5, new File(&quot;/path/to/image.png&quot;));</span>
+
+        // Retrieve the maximum health using the method
+<span class="fc" id="L258">        int actualMaxHealth = creature.getMaxHealth();</span>
+
+        // Validate the retrieved maximum health
+<span class="fc" id="L261">        assertEquals(expectedMaxHealth, actualMaxHealth);</span>
+<span class="fc" id="L262">    }</span>
+
+    @Test
+    void getCurrentHealth() {
+<span class="fc" id="L266">        int expectedCurrentHealth = 20; // Change to your expected current health value</span>
+<span class="fc" id="L267">        Creature creature = new AllyCreature(&quot;John Creature&quot;, 25, 5, new File(&quot;/path/to/image.png&quot;));</span>
+<span class="fc" id="L268">        creature.setCurrentHealth(expectedCurrentHealth);</span>
+
+        // Retrieve the current health using the method
+<span class="fc" id="L271">        int actualCurrentHealth = creature.getCurrentHealth();</span>
+
+        // Validate the retrieved current health
+<span class="fc" id="L274">        assertEquals(expectedCurrentHealth, actualCurrentHealth);</span>
+<span class="fc" id="L275">    }</span>
+
+    @Test
+    void getBonusHealth() {
+<span class="fc" id="L279">        int expectedBonusHealth = 10; // Change to your expected bonus health value</span>
+<span class="fc" id="L280">        Creature creature = new AllyCreature(&quot;John Creature&quot;, 25, 5, new File(&quot;/path/to/image.png&quot;));</span>
+<span class="fc" id="L281">        creature.setBonusHealth(expectedBonusHealth);</span>
+
+        // Retrieve the bonus health using the method
+<span class="fc" id="L284">        int actualBonusHealth = creature.getBonusHealth();</span>
+
+        // Validate the retrieved bonus health
+<span class="fc" id="L287">        assertEquals(expectedBonusHealth, actualBonusHealth);</span>
+<span class="fc" id="L288">    }</span>
+
+    @Test
+    void getInitiative() {
+<span class="fc" id="L292">        int expectedInitiative = 5; // Change to your expected initiative value</span>
+<span class="fc" id="L293">        Creature creature = new AllyCreature(&quot;John Creature&quot;, 25, expectedInitiative, new File(&quot;/path/to/image.png&quot;));</span>
+
+        // Retrieve the initiative using the method
+<span class="fc" id="L296">        int actualInitiative = creature.getInitiative();</span>
+
+        // Validate the retrieved initiative
+<span class="fc" id="L299">        assertEquals(expectedInitiative, actualInitiative);</span>
+<span class="fc" id="L300">    }</span>
+
+    @Test
+    void getCurrentConditions() {
+<span class="fc" id="L304">        Creature creature = new AllyCreature(&quot;John Creature&quot;, 25, 5, new File(&quot;/path/to/image.png&quot;));</span>
+
+        // Add a few conditions to the creature
+<span class="fc" id="L307">        creature.addCondition(&quot;Frightened&quot;, 3);</span>
+<span class="fc" id="L308">        creature.addCondition(&quot;Poisoned&quot;, 2);</span>
+
+        // Get the current conditions of the creature
+<span class="fc" id="L311">        List&lt;Condition&gt; currentConditions = creature.getCurrentConditions();</span>
+
+        // Assert that the current conditions match the added conditions
+<span class="fc" id="L314">        assertEquals(2, currentConditions.size());</span>
+<span class="fc" id="L315">        assertTrue(currentConditions.get(0).toString().contains(&quot;Frightened&quot;));</span>
+<span class="fc" id="L316">        assertTrue(currentConditions.get(1).toString().contains(&quot;Poisoned&quot;));</span>
+<span class="fc" id="L317">    }</span>
+
+    @Test
+    void getAvailableConditions() {
+
+<span class="fc" id="L322">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

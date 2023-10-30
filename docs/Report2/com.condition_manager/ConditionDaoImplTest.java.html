@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ConditionDaoImplTest.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">com in tabletopTracker Coverage Results</a> &gt; <a href="index.source.html" class="el_package">com.condition_manager</a> &gt; <span class="el_source">ConditionDaoImplTest.java</span></div><h1>ConditionDaoImplTest.java</h1><pre class="source lang-java linenums">package com.condition_manager;
+
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+<span class="fc" id="L7">class ConditionDaoImplTest {</span>
+
+    @Test
+    void createCondition() {
+<span class="fc" id="L11">        ConditionDaoImpl conditionDao = new ConditionDaoImpl();</span>
+
+<span class="fc" id="L13">        String[] conditionTypes = {</span>
+                &quot;Blinded&quot;, &quot;Charmed&quot;, &quot;Deafened&quot;, &quot;Frightened&quot;, &quot;Grappled&quot;, &quot;Incapacitated&quot;,
+                &quot;Invisible&quot;, &quot;Paralyzed&quot;, &quot;Petrified&quot;, &quot;Poisoned&quot;, &quot;Prone&quot;, &quot;Restrained&quot;,
+                &quot;Stunned&quot;, &quot;Unconscious&quot;, &quot;UnknownCondition&quot;
+        };
+
+<span class="fc" id="L19">        int[] testDurations = { 3, 5, 2, 4, 3, 5, 2, 4, 3, 5, 2, 4, 3, 5, 10 };</span>
+
+<span class="fc bfc" id="L21" title="All 2 branches covered.">        for (int i = 0; i &lt; conditionTypes.length; i++) {</span>
+<span class="fc" id="L22">            String conditionType = conditionTypes[i];</span>
+<span class="fc" id="L23">            int duration = testDurations[i];</span>
+
+<span class="fc" id="L25">            System.out.println(&quot;Testing for &quot; + conditionType + &quot; with duration &quot; + duration);</span>
+
+            Condition condition;
+<span class="fc" id="L28">            boolean isUnknownCondition = false;</span>
+
+            try {
+<span class="fc" id="L31">                condition = conditionDao.createCondition(conditionType, duration);</span>
+<span class="fc" id="L32">            } catch (IllegalStateException e) {</span>
+<span class="fc" id="L33">                isUnknownCondition = true;</span>
+<span class="fc" id="L34">            }</span>
+
+<span class="fc bfc" id="L36" title="All 2 branches covered.">            if (conditionType.equals(&quot;UnknownCondition&quot;)) {</span>
+<span class="fc" id="L37">                assertTrue(isUnknownCondition);</span>
+            } else {
+<span class="fc" id="L39">                assertNotNull(conditionDao);</span>
+            }
+        }
+<span class="fc" id="L42">    }</span>
+
+    @Test
+    void addCurrentCondition() {
+<span class="fc" id="L46">        ConditionDaoImpl conditionDao = new ConditionDaoImpl();</span>
+
+<span class="fc" id="L48">        Condition blinded = conditionDao.createCondition(&quot;Blinded&quot;, 3);</span>
+<span class="fc" id="L49">        conditionDao.addCurrentCondition(blinded);</span>
+<span class="fc" id="L50">        assertEquals(1, conditionDao.getCurrentConditions().size());</span>
+
+<span class="fc" id="L52">        Condition charmed = conditionDao.createCondition(&quot;Charmed&quot;, 5);</span>
+<span class="fc" id="L53">        conditionDao.addCurrentCondition(charmed);</span>
+<span class="fc" id="L54">        assertEquals(2, conditionDao.getCurrentConditions().size());</span>
+<span class="fc" id="L55">    }</span>
+
+    @Test
+    void removeCurrentCondition() {
+<span class="fc" id="L59">        ConditionDaoImpl conditionDao = new ConditionDaoImpl();</span>
+
+<span class="fc" id="L61">        Condition blinded = conditionDao.createCondition(&quot;Blinded&quot;, 3);</span>
+<span class="fc" id="L62">        conditionDao.addCurrentCondition(blinded);</span>
+<span class="fc" id="L63">        assertEquals(1, conditionDao.getCurrentConditions().size());</span>
+
+<span class="fc" id="L65">        conditionDao.removeCurrentCondition(blinded);</span>
+<span class="fc" id="L66">        assertEquals(0, conditionDao.getCurrentConditions().size());</span>
+<span class="fc" id="L67">    }</span>
+
+    @Test
+    void addAndRemoveCurrentCondition() {
+<span class="fc" id="L71">        ConditionDaoImpl conditionDao = new ConditionDaoImpl();</span>
+
+<span class="fc" id="L73">        Condition blinded = conditionDao.createCondition(&quot;Blinded&quot;, 3);</span>
+<span class="fc" id="L74">        conditionDao.addCurrentCondition(blinded);</span>
+<span class="fc" id="L75">        assertEquals(1, conditionDao.getCurrentConditions().size());</span>
+
+<span class="fc" id="L77">        conditionDao.removeCurrentCondition(blinded);</span>
+<span class="fc" id="L78">        assertEquals(0, conditionDao.getCurrentConditions().size());</span>
+<span class="fc" id="L79">    }</span>
+
+    @Test
+    void decreaseAllConditionDurations_RemoveConditionWhenDurationIsOne() {
+<span class="fc" id="L83">        ConditionDaoImpl conditionDao = new ConditionDaoImpl();</span>
+
+        // Add a condition with duration 1
+<span class="fc" id="L86">        Condition stunned = conditionDao.createCondition(&quot;Stunned&quot;, 1);</span>
+<span class="fc" id="L87">        conditionDao.addCurrentCondition(stunned);</span>
+
+        // Add a condition with duration &gt; 1
+<span class="fc" id="L90">        Condition blinded = conditionDao.createCondition(&quot;Blinded&quot;, 3);</span>
+<span class="fc" id="L91">        conditionDao.addCurrentCondition(blinded);</span>
+
+<span class="fc" id="L93">        conditionDao.decreaseAllConditionDurations();</span>
+
+        // Validate that the condition with duration 1 is removed
+<span class="fc" id="L96">        assertEquals(1, conditionDao.getCurrentConditions().size());</span>
+<span class="fc" id="L97">        assertTrue(conditionDao.getCurrentConditions().contains(blinded));</span>
+<span class="fc" id="L98">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>
