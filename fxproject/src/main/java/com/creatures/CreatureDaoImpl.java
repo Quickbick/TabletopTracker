@@ -80,8 +80,9 @@ public class CreatureDaoImpl implements CreatureDao {
         if (this.groupedByTurnCreatures == null) {
             return;
         }
-        if (this.currentTurnCreatures == null) {
+        if (this.currentTurnCreatures.isEmpty()) {
             this.currentTurnCreatures = this.groupedByTurnCreatures.get(0);
+            return;
         }
         // If the current turn creatures are the last to go, update round # and set current creatures to beginning.
         // Otherwise, just set current creatures to next in turn list.

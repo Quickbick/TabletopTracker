@@ -66,6 +66,23 @@ class CreatureDaoImplTest {
 
     @Test
     void advanceTurn() {
+        String firstExpected = "creatureName1";
+        String secondExpected = "creatureName2";
+        String thirdExpected = "creatureName3";
+        final File mockFile = mock(File.class);
+        final CreatureDao creatureDao = new CreatureDaoImpl();
+        creatureDao.createCreature("ALLY", firstExpected, 100, 100, mockFile);
+        creatureDao.createCreature("ENEMY", secondExpected, 100, 50, mockFile);
+        creatureDao.createCreature("NEUTRAL", thirdExpected, 100, 10, mockFile);
+        creatureDao.sortByInitiative();
+        creatureDao.advanceTurn();
+        assertEquals(creatureDao.getCurrentTurnCreatures().get(0).getName(), firstExpected);
+        creatureDao.advanceTurn();
+        assertEquals(creatureDao.getCurrentTurnCreatures().get(0).getName(), secondExpected);
+        creatureDao.advanceTurn();
+        assertEquals(creatureDao.getCurrentTurnCreatures().get(0).getName(), thirdExpected);
+        creatureDao.advanceTurn();
+        assertEquals(creatureDao.getCurrentTurnCreatures().get(0).getName(), firstExpected);
     }
 
     @Test
