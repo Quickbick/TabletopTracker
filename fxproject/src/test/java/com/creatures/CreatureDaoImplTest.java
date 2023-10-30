@@ -1,13 +1,17 @@
 package com.creatures;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+import static org.mockito.internal.util.io.IOUtil.readLines;
 
 class CreatureDaoImplTest {
 
@@ -86,19 +90,32 @@ class CreatureDaoImplTest {
     }
 
     @Test
-    void getCreatureInventory() {
+    void advanceTurn_no_creatures() {
+        final CreatureDao creatureDao = new CreatureDaoImpl();
+        creatureDao.advanceTurn();
+        assertTrue(creatureDao.getCurrentTurnCreatures().isEmpty());
     }
 
     @Test
-    void getCurrentTurnCreatures() {
+    void saveCreatures() throws IOException {
+        final File mockFile = mock(File.class);
+        final CreatureDao creatureDao = new CreatureDaoImpl();
+        creatureDao.createCreature("ALLY", "creatureName1", 100, 10, mockFile);
+        creatureDao.createCreature("ENEMY", "creatureName2", 100, 100, mockFile);
+        creatureDao.createCreature("NEUTRAL", "creatureName3", 100, 50, mockFile);
+        final File file = new File("path");
+        creatureDao.saveCreatures(file);
+        assertTrue(file.length() > 0);
     }
 
     @Test
-    void saveCreatures() {
-    }
-
-    @Test
-    void loadCreatures() {
+    void loadCreatures() throws IOException, ClassNotFoundException {
+        final CreatureDao creatureDao = new CreatureDaoImpl();
+        CreatureDao loadedDao = new CreatureDaoImpl();
+        final File file = new File("path");
+        creatureDao.saveCreatures(file);
+        loadedDao.loadCreatures(file);
+        assertEquals(creatureDao.getCreatureInventory(), loadedDao.getCreatureInventory());
     }
 
     @Test
