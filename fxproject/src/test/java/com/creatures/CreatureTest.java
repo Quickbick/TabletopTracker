@@ -17,12 +17,6 @@ class CreatureTest {
     final int FULL_HEALTH = 25;
     final int MIN_DURATION = 1;
 
-    @BeforeEach
-    public void init(){
-        Creature creature = new AllyCreature("John Creature", 25, 5, new File("./src/main/resources/com/cs422/fxproject/Default_Image.png"));
-        Creature spyCreature = spy(creature);
-    }
-
     private ConditionDao getCritConditions() {
         ConditionDao critConditions = new ConditionDaoImpl();
         Condition paralyzed = critConditions.createCondition("Paralyzed", MIN_DURATION);
