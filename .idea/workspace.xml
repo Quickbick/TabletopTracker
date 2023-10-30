@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="4b036e67-78cd-4b77-ba43-327d92764c57" name="Changes" comment="Added ConditionDaoImplTest.java" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="JUnit5 Test Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHome" value="Use Maven wrapper" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 2
+}</component>
+  <component name="ProjectId" id="2XRnjKmyo1hrvfs8MFzd9doeXCV" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary&quot;: &quot;JUnit5&quot;,
+    &quot;com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5&quot;: &quot;&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/darin/Documents/Winter 2023/CPT_S 422/Project Repo&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="CreateTestDialog.Recents.Supers">
+      <recent name="" />
+    </key>
+    <key name="CreateTestDialog.RecentsKey">
+      <recent name="com.condition_manager" />
+    </key>
+  </component>
+  <component name="RunManager" selected="JUnit.com in tabletopTracker">
+    <configuration name="ConditionDaoImplTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="tabletopTracker" />
+      <extension name="coverage" sample_coverage="false">
+        <pattern>
+          <option name="PATTERN" value="com.condition_manager.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.condition_manager" />
+      <option name="MAIN_CLASS_NAME" value="com.condition_manager.ConditionDaoImplTest" />
+      <option name="METHOD_NAME" value="" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ConditionDaoImplTest.createCondition" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="tabletopTracker" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.condition_manager.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.condition_manager" />
+      <option name="MAIN_CLASS_NAME" value="com.condition_manager.ConditionDaoImplTest" />
+      <option name="METHOD_NAME" value="createCondition" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ConditionDaoImplTest.decreaseAllConditionDurations_RemoveConditionWhenDurationIsOne" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="tabletopTracker" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.condition_manager.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.condition_manager" />
+      <option name="MAIN_CLASS_NAME" value="com.condition_manager.ConditionDaoImplTest" />
+      <option name="METHOD_NAME" value="decreaseAllConditionDurations_RemoveConditionWhenDurationIsOne" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="com in tabletopTracker" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="tabletopTracker" />
+      <extension name="coverage" sample_coverage="false" />
+      <option name="MAIN_CLASS_NAME" value="" />
+      <option name="METHOD_NAME" value="" />
+      <option name="TEST_OBJECT" value="directory" />
+      <dir value="$PROJECT_DIR$/fxproject/src/test/java/com" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="creatures in tabletopTracker" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="tabletopTracker" />
+      <option name="TEST_OBJECT" value="directory" />
+      <dir value="$PROJECT_DIR$/fxproject/src/test/java/com/creatures" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="Project Repo" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="Project Repo" />
+      <option name="filePath" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="JUnit.ConditionDaoImplTest.createCondition" />
+      <item itemvalue="JUnit.ConditionDaoImplTest.decreaseAllConditionDurations_RemoveConditionWhenDurationIsOne" />
+      <item itemvalue="JUnit.com in tabletopTracker" />
+      <item itemvalue="JUnit.ConditionDaoImplTest" />
+      <item itemvalue="JUnit.creatures in tabletopTracker" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JUnit.com in tabletopTracker" />
+        <item itemvalue="JUnit.ConditionDaoImplTest.createCondition" />
+        <item itemvalue="JUnit.ConditionDaoImplTest" />
+        <item itemvalue="JUnit.ConditionDaoImplTest.decreaseAllConditionDurations_RemoveConditionWhenDurationIsOne" />
+        <item itemvalue="JUnit.creatures in tabletopTracker" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="4b036e67-78cd-4b77-ba43-327d92764c57" name="Changes" comment="" />
+      <created>1698600893334</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1698600893334</updated>
+      <workItem from="1698600894408" duration="3354000" />
+      <workItem from="1698606710952" duration="1447000" />
+      <workItem from="1698608657708" duration="1347000" />
+      <workItem from="1698649694407" duration="2637000" />
+    </task>
+    <task id="LOCAL-00001" summary="Completed the getCurrentConditions test">
+      <option name="closed" value="true" />
+      <created>1698607008604</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1698607008604</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Updated Milestone Report, added ConditionDaoImplTest.java">
+      <option name="closed" value="true" />
+      <created>1698651791436</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1698651791436</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Completed the getCurrentConditions test" />
+    <MESSAGE value="Updated Milestone Report, added getAvailableConditions tests" />
+    <MESSAGE value="Updated Milestone Report, added ConditionDaoImplTest.java" />
+    <MESSAGE value="Added ConditionDaoImplTest.java" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added ConditionDaoImplTest.java" />
+  </component>
+  <component name="XDebuggerManager">
+    <pin-to-top-manager>
+      <pinned-members>
+        <PinnedItemInfo parentTag="com.creatures.AllyCreature" memberName="conditionDao" />
+      </pinned-members>
+    </pin-to-top-manager>
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/Project_Repo$com_in_tabletopTracker.ic" NAME="com in tabletopTracker Coverage Results" MODIFIED="1698651497510" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="true" />
+    <SUITE FILE_PATH="coverage/Project_Repo$CreatureTest.ic" NAME="CreatureTest Coverage Results" MODIFIED="1698608854729" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="true">
+      <FILTER>com.creatures.*</FILTER>
+    </SUITE>
+    <SUITE FILE_PATH="coverage/Project_Repo$creatures_in_tabletopTracker.ic" NAME="creatures in tabletopTracker Coverage Results" MODIFIED="1698649814877" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/Project_Repo$ConditionDaoImplTest_decreaseAllConditionDurations_RemoveConditionWhenDurationIsOne.ic" NAME="ConditionDaoImplTest.decreaseAllConditionDurations_RemoveConditionWhenDurationIsOne Coverage Results" MODIFIED="1698650863343" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
+      <FILTER>com.condition_manager.*</FILTER>
+    </SUITE>
+    <SUITE FILE_PATH="coverage/Project_Repo$ConditionDaoImplTest_createCondition.ic" NAME="ConditionDaoImplTest.createCondition Coverage Results" MODIFIED="1698651461985" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
+      <FILTER>com.condition_manager.*</FILTER>
+    </SUITE>
+    <SUITE FILE_PATH="coverage/Project_Repo$ConditionDaoImplTest.ic" NAME="ConditionDaoImplTest Coverage Results" MODIFIED="1698651186675" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="true">
+      <FILTER>com.condition_manager.*</FILTER>
+    </SUITE>
+  </component>
+</project>
