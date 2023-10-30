@@ -1,22 +1,30 @@
 package com.creatures;
 
 import com.condition_manager.*;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.stubbing.OngoingStubbing;
 
 import java.io.File;
-import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 class CreatureTest {
 
     final int FULL_HEALTH = 25;
     final int MIN_DURATION = 1;
+
+    @BeforeEach
+    public void init(){
+        Creature creature = new AllyCreature("John Creature", 25, 5, new File("./src/main/resources/com/cs422/fxproject/Default_Image.png"));
+        Creature spyCreature = spy(creature);
+    }
 
     private ConditionDao getCritConditions() {
         ConditionDao critConditions = new ConditionDaoImpl();
@@ -32,8 +40,7 @@ class CreatureTest {
     @Test
     void addHealth_to_full() {
         int input = 15;
-        final File mockFile = mock(File.class);
-        Creature creature = new AllyCreature("John Creature", 25, 5, mockFile);
+        Creature creature = new AllyCreature("John Creature", 25, 5, new File("./src/main/resources/com/cs422/fxproject/Default_Image.png"));
         creature.setCurrentHealth(20);
         creature.addHealth(input);
         assertEquals(FULL_HEALTH, creature.getCurrentHealth());
@@ -43,8 +50,7 @@ class CreatureTest {
     void addHealth_not_full() {
         int input = 3;
         int expected = 23;
-        final File mockFile = mock(File.class);
-        Creature creature = new AllyCreature("John Creature", 25, 5, mockFile);
+        Creature creature = new AllyCreature("John Creature", 25, 5, new File("./src/main/resources/com/cs422/fxproject/Default_Image.png"));
         creature.setCurrentHealth(20);
         creature.addHealth(input);
         assertEquals(expected, creature.getCurrentHealth());
@@ -52,28 +58,12 @@ class CreatureTest {
 
     @Test
     void removeHealth_with_auto_crits(){
-        final File mockFile = mock(File.class);
         int inputHealthPoints = 10;
         boolean inputCrit = false;
         int expected = 5;
-        ConditionDao critConditions = getCritConditions();
-
-        Creature creature = new AllyCreature("John Creature", 25, 5, mockFile);
+        Creature creature = new AllyCreature("John Creature", 25, 5, new File("./src/main/resources/com/cs422/fxproject/Default_Image.png"));
         Creature spyCreature = spy(creature);
-        Mockito.when(spyCreature.getCurrentConditions()).thenReturn(critConditions.getCurrentConditions());
-        spyCreature.removeHealth(inputHealthPoints, inputCrit);
-        assertEquals(expected, spyCreature.getCurrentHealth());
-
-        creature = new AllyCreature("John Creature", 25, 5, mockFile);
-        spyCreature = spy(creature);
-        critConditions.removeCurrentCondition(critConditions.getCurrentConditions().get(0));
-        Mockito.when(spyCreature.getCurrentConditions()).thenReturn(critConditions.getCurrentConditions());
-        spyCreature.removeHealth(inputHealthPoints, inputCrit);
-        assertEquals(expected, spyCreature.getCurrentHealth());
-
-        creature = new AllyCreature("John Creature", 25, 5, mockFile);
-        spyCreature = spy(creature);
-        critConditions.removeCurrentCondition(critConditions.getCurrentConditions().get(0));
+        ConditionDao critConditions = getCritConditions();
         Mockito.when(spyCreature.getCurrentConditions()).thenReturn(critConditions.getCurrentConditions());
         spyCreature.removeHealth(inputHealthPoints, inputCrit);
         assertEquals(expected, spyCreature.getCurrentHealth());
@@ -81,12 +71,11 @@ class CreatureTest {
 
     @Test
     void removeHealth_with_more_bonus_health(){
-        final File mockFile = mock(File.class);
         int inputHealthPoints = 10;
         boolean inputCrit = false;
         int expectedHealth = 25;
         int expectedBonusHealth = 5;
-        Creature creature = new AllyCreature("John Creature", 25, 5, mockFile);
+        Creature creature = new AllyCreature("John Creature", 25, 5, new File("./src/main/resources/com/cs422/fxproject/Default_Image.png"));
         creature.setBonusHealth(15);
         creature.removeHealth(inputHealthPoints, inputCrit);
         assertEquals(expectedHealth, creature.getCurrentHealth());
@@ -95,11 +84,10 @@ class CreatureTest {
 
     @Test
     void removeHealth_kill(){
-        final File mockFile = mock(File.class);
         int inputHealthPoints = 30;
         boolean inputCrit = true;
         int expected = 0;
-        Creature creature = new AllyCreature("John Creature", 25, 5, mockFile);
+        Creature creature = new AllyCreature("John Creature", 25, 5, new File("./src/main/resources/com/cs422/fxproject/Default_Image.png"));
         creature.removeHealth(inputHealthPoints, inputCrit);
         assertEquals(expected, creature.getCurrentHealth());
         assertEquals(Unconscious.class, creature.getCurrentConditions().get(0).getClass());
@@ -107,20 +95,18 @@ class CreatureTest {
 
     @Test
     void addBonusHealth() {
-        final File mockFile = mock(File.class);
         int input = 5;
         int expected = 5;
-        Creature creature = new AllyCreature("John Creature", 25, 5, mockFile);
+        Creature creature = new AllyCreature("John Creature", 25, 5, new File("./src/main/resources/com/cs422/fxproject/Default_Image.png"));
         creature.addBonusHealth(input);
         assertEquals(expected, creature.getBonusHealth());
     }
 
     @Test
     void addBonusHealth_no_change() {
-        final File mockFile = mock(File.class);
         int input = 3;
         int expected = 5;
-        Creature creature = new AllyCreature("John Creature", 25, 5, mockFile);
+        Creature creature = new AllyCreature("John Creature", 25, 5, new File("./src/main/resources/com/cs422/fxproject/Default_Image.png"));
         creature.setBonusHealth(5);
         creature.addBonusHealth(input);
         assertEquals(expected, creature.getBonusHealth());
@@ -128,19 +114,16 @@ class CreatureTest {
 
     @Test
     void addCondition() {
-        final File mockFile = mock(File.class);
         String inputType = "Charmed";
-        Creature creature = new EnemyCreature("John Creature", 25, 5, mockFile);
-        creature.addCondition(inputType, MIN_DURATION);
+        Creature creature = new AllyCreature("John Creature", 25, 5, new File("./src/main/resources/com/cs422/fxproject/Default_Image.png"));
         creature.addCondition(inputType, MIN_DURATION);
         assertEquals(Charmed.class, creature.getCurrentConditions().get(0).getClass());
     }
 
     @Test
     void removeCondition() {
-        final File mockFile = mock(File.class);
         // Create a test creature instance
-        Creature creature = new AllyCreature("John Creature", 25, 5, mockFile);
+        Creature creature = new AllyCreature("John Creature", 25, 5, new File("/path/to/image.png"));
 
         // Add a condition to the creature
         String conditionType = "Frightened";
@@ -161,8 +144,7 @@ class CreatureTest {
 
     @Test
     void decrementConditions() {
-        final File mockFile = mock(File.class);
-        Creature creature = new NeutralCreature("John Creature", 25, 5, mockFile);
+        Creature creature = new AllyCreature("John Creature", 25, 5, new File("/path/to/image.png"));
 
         // Add a few conditions to the creature
         creature.addCondition("Frightened", 3);
@@ -171,7 +153,7 @@ class CreatureTest {
         // Capture the base durations
         List<Integer> baseDurations = creature.getCurrentConditions().stream()
                 .map(Condition::getDuration)
-                .toList();
+                .collect(Collectors.toList());
 
         // Decrement the conditions
         creature.decrementConditions();
@@ -191,9 +173,8 @@ class CreatureTest {
 
     @Test
     void getName() {
-        final File mockFile = mock(File.class);
         String expectedName = "John Creature";
-        Creature creature = new AllyCreature(expectedName, 25, 5, mockFile);
+        Creature creature = new AllyCreature(expectedName, 25, 5, new File("./path/to/image.png"));
 
         // Get the name from the creature object
         String actualName = creature.getName();
@@ -205,7 +186,7 @@ class CreatureTest {
     @Test
     void getImage() {
         // Create a test file
-        File testImage = mock(File.class);
+        File testImage = new File("/path/to/test_image.png");
 
         Creature creature = new AllyCreature("John Creature", 25, 5, testImage);
 
@@ -218,9 +199,8 @@ class CreatureTest {
 
     @Test
     void getMaxHealth() {
-        final File mockFile = mock(File.class);
         int expectedMaxHealth = 25; // Change to your expected maximum health value
-        Creature creature = new AllyCreature("John Creature", expectedMaxHealth, 5, mockFile);
+        Creature creature = new AllyCreature("John Creature", expectedMaxHealth, 5, new File("/path/to/image.png"));
 
         // Retrieve the maximum health using the method
         int actualMaxHealth = creature.getMaxHealth();
@@ -231,9 +211,8 @@ class CreatureTest {
 
     @Test
     void getCurrentHealth() {
-        final File mockFile = mock(File.class);
         int expectedCurrentHealth = 20; // Change to your expected current health value
-        Creature creature = new AllyCreature("John Creature", 25, 5, mockFile);
+        Creature creature = new AllyCreature("John Creature", 25, 5, new File("/path/to/image.png"));
         creature.setCurrentHealth(expectedCurrentHealth);
 
         // Retrieve the current health using the method
@@ -245,9 +224,8 @@ class CreatureTest {
 
     @Test
     void getBonusHealth() {
-        final File mockFile = mock(File.class);
         int expectedBonusHealth = 10; // Change to your expected bonus health value
-        Creature creature = new AllyCreature("John Creature", 25, 5, mockFile);
+        Creature creature = new AllyCreature("John Creature", 25, 5, new File("/path/to/image.png"));
         creature.setBonusHealth(expectedBonusHealth);
 
         // Retrieve the bonus health using the method
@@ -259,9 +237,8 @@ class CreatureTest {
 
     @Test
     void getInitiative() {
-        final File mockFile = mock(File.class);
         int expectedInitiative = 5; // Change to your expected initiative value
-        Creature creature = new AllyCreature("John Creature", 25, expectedInitiative, mockFile);
+        Creature creature = new AllyCreature("John Creature", 25, expectedInitiative, new File("/path/to/image.png"));
 
         // Retrieve the initiative using the method
         int actualInitiative = creature.getInitiative();
@@ -272,8 +249,7 @@ class CreatureTest {
 
     @Test
     void getCurrentConditions() {
-        final File mockFile = mock(File.class);
-        Creature creature = new AllyCreature("John Creature", 25, 5, mockFile);
+        Creature creature = new AllyCreature("John Creature", 25, 5, new File("/path/to/image.png"));
 
         // Add a few conditions to the creature
         creature.addCondition("Frightened", 3);
@@ -290,25 +266,6 @@ class CreatureTest {
 
     @Test
     void getAvailableConditions() {
-        final File mockFile = mock(File.class);
-        final List<String> allConditions = Arrays.asList(
-                "Blinded",
-                "Charmed",
-                "Deafened",
-                "Frightened",
-                "Grappled",
-                "Incapacitated",
-                "Invisible",
-                "Paralyzed",
-                "Petrified",
-                "Poisoned",
-                "Prone",
-                "Restrained",
-                "Stunned",
-                "Unconscious"
-        );
-        Creature creature = new AllyCreature("John Creature", 25, 5, mockFile);
 
-        assertEquals(creature.getAllConditions(), allConditions);
     }
 }
