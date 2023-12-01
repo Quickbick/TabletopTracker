@@ -195,3 +195,30 @@
     * Expected: Current Condition Count  = 2
     * Expected: Current Conditions Contains Condition 1
     * Expected: Current Conditions Contains Condition 2
+
+## S4 Pairwise Integration Tests
+* C36 AdvanceTurn - Empty groupedByTurnCreatures
+  * Do not add any creatures to creatureDao.
+  * Call creatureDao.advanceTurn().
+  * Expected: getCurrentTurnCreatures() should be empty.
+  * Expected: getRoundNumber() should be 0.
+* C37 AdvanceTurn - Single Group with Condition
+  * Add a single creature with a condition to creatureDao.
+  * Call creatureDao.advanceTurn() twice to simulate advancing to a new round.
+  * Expected: Condition duration on the creature should be decremented.
+  * Expected: getRoundNumber() should increment.
+  * Expected: The single group remains as the current turn creatures.
+* C38 AdvancedTurn - Multiple Groups, Middle Group Without Condition
+  * Add multiple creatures to form at least three groups in creatureDao.
+  * Set the current turn to a middle group.
+  * Call creatureDao.advanceTurn().
+  * Expected: getCurrentTurnCreatures() should update to the next group.
+  * Expected: getRoundNumber() should not increment.
+  * Expected: No conditions are decremented as no creature has conditions.
+* C39 AdvancedTurn - Multiple Groups, Last Group With Condition
+  * Add multiple creatures to form at least two groups, with the last group having conditions.
+  * Set the current turn to the last group.
+  * Call creatureDao.advanceTurn().
+  * Expected: getCurrentTurnCreatures() should wrap around to the first group.
+  * Expected: getRoundNumber() should increment.
+  * Expected: Conditions on creatures in the last group should be decremented.
