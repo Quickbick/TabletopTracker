@@ -309,9 +309,4 @@ class CreatureTest {
         assertTrue(currentConditions.get(0).toString().contains("Frightened"));
         assertTrue(currentConditions.get(1).toString().contains("Poisoned"));
     }
-
-    @Test
-    void getAvailableConditions() {
-
-    }
 }
