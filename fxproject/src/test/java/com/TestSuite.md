@@ -234,3 +234,32 @@
   * Add three ally creatures
   * SortByInitiative
   * Expected: The list in groupedTurnCreatures has length = 3
+
+## S6 Pairwise Integration Test 3
+* C42 RemoveHealth - Add Condition
+  * Create new creature
+  * RemoveHealth for more than creature max health
+  * Expected: CurrentConditions contains unconscious condition
+
+## S7 Pairwise Integration Test 4
+* C43 Add Condition - Actually Add
+  * Create new creature
+  * Add a condition to creature
+  * Expected: condition was added and is in currentConditions list
+
+## S8 Neighborhood Integration Test
+* C44 Test Create Ally Creature
+  * Create new ally creature from CreatureDao
+  * Expected: creatureDao inventory size = 1
+  * Expected: creature created is an AllyCreature
+  * Expected: creature values match inputs
+* C45 Test Create Neutral Creature
+  * Create new neutral creature from CreatureDao
+  * Expected: creatureDao inventory size = 1
+  * Expected: creature created is an NeutralCreature
+  * Expected: creature values match inputs
+* C46 Test Create Enemy Creature
+  * Create new enemy creature from CreatureDao
+  * Expected: creatureDao inventory size = 1
+  * Expected: creature created is an EnemyCreature
+  * Expected: creature values match inputs
