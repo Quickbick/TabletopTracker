@@ -263,3 +263,77 @@
   * Expected: creatureDao inventory size = 1
   * Expected: creature created is an EnemyCreature
   * Expected: creature values match inputs
+
+## S9 System Tests
+* C47 Test Add Creature
+  * Create new creature using the "Add Creature" dialog.
+  * Expected: CreatureDao inventory size should increase to 1.
+  * Assert the creature's name is "Test Creature".
+  * Assert the creature's max health is 100.
+  * Assert the creature's initiative is 10.
+
+* C48 Test Add and Delete Creature
+  * Add a new creature using the "Add Creature" dialog.
+  * Verify the creature is added (inventory size is 1).
+  * Assert the creature's name is "Test Creature".
+  * Assert the creature's max health is 100.
+  * Assert the creature's initiative is 10.
+  * Delete the added creature.
+  * Confirm the deletion if required.
+  * Expected: CreatureDao inventory size should return to 0.
+
+* C49 Test Create Multiple Creatures
+  * Add multiple creatures (at least 4) of different types (Ally, Neutral, Enemy) with random attributes.
+  * For each addition, check the incremented size of CreatureDao inventory.
+  * Expected: CreatureDao inventory size should match the number of creatures added.
+
+* C50 Test Advance Turn with Multiple Creatures
+  * Populate CreatureDao inventory with multiple creatures (at least 4) of different types.
+  * Use the "Next Turn" button to advance turns.
+  * Advance turns multiple times (e.g., 10 times).
+  * Expected: The round number or turn order should update appropriately with each turn advancement.
+  * Assert that the round number changes after advancing turns.
+
+* C51 Test Add Creature with Conditions
+  * Add a new creature.
+  * Use the "Add Condition" button to add a condition to the creature.
+  * Submit the condition details.
+  * Expected: The specified condition should be successfully added to the creature.
+  * Assert the number of conditions on the creature is 1.
+  * Assert the duration of the added condition is 20.
+
+* C52 Test Add Creature with Multiple Conditions
+  * Add a new creature.
+  * Repeatedly add different conditions to the creature.
+  * Expected: All specified conditions should be successfully added to the creature.
+  * Assert the number of conditions on the creature is equal to the number of added conditions (6).
+  * Assert the duration of each added condition is 20.
+
+* C53 Test Damage Creature without Critical Hit
+  * Add a new creature.
+  * Use the "Damage" button to apply damage to the creature.
+  * Enter the damage amount without marking it as a critical hit.
+  * Expected: The creature's health is reduced by the specified damage amount.
+  * Assert the creature's health is reduced to 50.
+
+* C54 Test Damage Creature with Critical Hit
+  * Add a new creature.
+  * Apply damage to the creature and mark it as a critical hit.
+  * Expected: The creature's health is reduced accordingly, considering the critical hit.
+  * Assert the creature's health is reduced to 0 (100 - 50*2).
+
+* C55 Test Damage and Heal Creature
+  * Add a new creature.
+  * Apply damage to the creature.
+  * Heal the creature.
+  * Expected: The creature's health reflects the damage and subsequent healing.
+  * Assert the creature's health after healing is 30.
+
+* C56 Test Damage Creature with Bonus Health and Heal
+  * Add a new creature.
+  * Apply bonus health to the creature.
+  * Damage the creature.
+  * Heal the creature.
+  * Expected: The creature's health should reflect the combined effect of bonus health, damage, and healing.
+  * Assert the creature's health after healing is 100.
+  * Assert healing does not apply to bonus health.
