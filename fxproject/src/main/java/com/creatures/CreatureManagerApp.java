@@ -441,10 +441,15 @@ public class CreatureManagerApp extends Application {
         ButtonType addButton = new ButtonType("Add", ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(addButton, ButtonType.CANCEL);
 
+        Node addButtonNode = dialog.getDialogPane().lookupButton(addButton);
+        addButtonNode.setId("confirmConditionYesButton");
+
         // Create the choice box and text field
         ChoiceBox<String> conditionChoiceBox = new ChoiceBox<>(FXCollections.observableArrayList(creature.getAllConditions()));
         conditionChoiceBox.setValue(creature.getAllConditions().get(0));
+        conditionChoiceBox.setId("conditionChoiceBox");
         TextField durationTextField = new TextField();
+        durationTextField.setId("durationTextField");
 
         //Add content to dialog
         VBox content = new VBox();

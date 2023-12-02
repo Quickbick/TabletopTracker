@@ -120,12 +120,12 @@ public class CreatureDaoImpl implements CreatureDao {
 
     @Override
     public void loadCreatures(File file) throws IOException, ClassNotFoundException {
-        FileInputStream fileInputStream = new FileInputStream(file);
-        ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
-        List<Creature> e2 = (List<Creature>) objectInputStream.readObject();
-        objectInputStream.close();
-        this.roundNumber = 0;
-        this.creatureInventory = e2;
+            FileInputStream fileInputStream = new FileInputStream(file);
+            ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+            List<Creature> e2 = (List<Creature>) objectInputStream.readObject();
+            objectInputStream.close();
+            this.roundNumber = 0;
+            this.creatureInventory = e2;
     }
 
     @Override
