@@ -2,7 +2,6 @@ package system_tests;
 
 import com.creatures.CreatureDao;
 import com.creatures.CreatureManagerApp;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -10,15 +9,10 @@ import org.testfx.api.FxRobot;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
 
-import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(ApplicationExtension.class)
 class CreatureManagerAppTest extends FxRobot {
@@ -171,5 +165,166 @@ class CreatureManagerAppTest extends FxRobot {
             // Submit the condition dialog
             clickOn("#confirmConditionYesButton");
         }
+    }
+
+    @Test
+    void testDamageCreatureNoCrit() throws NoSuchFieldException, IllegalAccessException {
+        // Click on "Add Creature" button to open the dialog
+        clickOn("#addCreatureButton");
+
+        // Now interact with the dialog's contents
+        clickOn("#nameTextField").write("Test Creature");
+        clickOn("#healthTextField").write("100");
+        clickOn("#initiativeTextField").write("10");
+        // Handle other fields as needed
+
+        // Submit the dialog to add the creature
+        clickOn("#confirmAddCreatureButton");
+
+        CreatureDao creatureDao =  getCreatureDaoViaReflection(creatureManagerApp);
+        assertEquals(creatureDao.getCreatureInventory().size(), 1);
+
+        clickOn("#damageButton_TestCreature");
+
+        clickOn("#damageDialog").write("50");
+
+        clickOn("OK");
+    }
+
+    @Test
+    void testDamageCreatureWithCrit() throws NoSuchFieldException, IllegalAccessException {
+        // Click on "Add Creature" button to open the dialog
+        clickOn("#addCreatureButton");
+
+        // Now interact with the dialog's contents
+        clickOn("#nameTextField").write("Test Creature");
+        clickOn("#healthTextField").write("100");
+        clickOn("#initiativeTextField").write("10");
+        // Handle other fields as needed
+
+        // Submit the dialog to add the creature
+        clickOn("#confirmAddCreatureButton");
+
+        CreatureDao creatureDao =  getCreatureDaoViaReflection(creatureManagerApp);
+        assertEquals(creatureDao.getCreatureInventory().size(), 1);
+
+        clickOn("#damageButton_TestCreature");
+
+        clickOn("#damageDialog").write("50");
+
+        clickOn("#critBox");
+
+        clickOn("OK");
+    }
+
+    @Test
+    void testDamageHealCreature() throws NoSuchFieldException, IllegalAccessException {
+        // Click on "Add Creature" button to open the dialog
+        clickOn("#addCreatureButton");
+
+        // Now interact with the dialog's contents
+        clickOn("#nameTextField").write("Test Creature");
+        clickOn("#healthTextField").write("100");
+        clickOn("#initiativeTextField").write("10");
+        // Handle other fields as needed
+
+        // Submit the dialog to add the creature
+        clickOn("#confirmAddCreatureButton");
+
+        CreatureDao creatureDao =  getCreatureDaoViaReflection(creatureManagerApp);
+        assertEquals(creatureDao.getCreatureInventory().size(), 1);
+
+        // Damage Creature
+        clickOn("#damageButton_TestCreature");
+
+        clickOn("#damageDialog").write("50");
+
+        clickOn("#critBox");
+
+        clickOn("OK");
+
+        // Heal Creature
+        clickOn("#healButton_TestCreature");
+
+        write("30");
+
+        clickOn("OK");
+    }
+
+    @Test
+    void testDamageCreatureWithBonusHealth() throws NoSuchFieldException, IllegalAccessException {
+        // Click on "Add Creature" button to open the dialog
+        clickOn("#addCreatureButton");
+
+        // Now interact with the dialog's contents
+        clickOn("#nameTextField").write("Test Creature");
+        clickOn("#healthTextField").write("100");
+        clickOn("#initiativeTextField").write("10");
+        // Handle other fields as needed
+
+        // Submit the dialog to add the creature
+        clickOn("#confirmAddCreatureButton");
+
+        CreatureDao creatureDao =  getCreatureDaoViaReflection(creatureManagerApp);
+        assertEquals(creatureDao.getCreatureInventory().size(), 1);
+
+        // Give Creature Bonus Health
+
+        clickOn("#bonusHealthButton_TestCreature");
+
+        write("50");
+
+        clickOn("OK");
+
+        // Damage the Creature
+        clickOn("#damageButton_TestCreature");
+
+        clickOn("#damageDialog").write("50");
+
+        clickOn("#critBox");
+
+        clickOn("OK");
+    }
+
+    @Test
+    void testDamageCreatureWithBonusHealthAndHeal() throws NoSuchFieldException, IllegalAccessException {
+        // Click on "Add Creature" button to open the dialog
+        clickOn("#addCreatureButton");
+
+        // Now interact with the dialog's contents
+        clickOn("#nameTextField").write("Test Creature");
+        clickOn("#healthTextField").write("100");
+        clickOn("#initiativeTextField").write("10");
+        // Handle other fields as needed
+
+        // Submit the dialog to add the creature
+        clickOn("#confirmAddCreatureButton");
+
+        CreatureDao creatureDao =  getCreatureDaoViaReflection(creatureManagerApp);
+        assertEquals(creatureDao.getCreatureInventory().size(), 1);
+
+        // Give Creature Bonus Health
+
+        clickOn("#bonusHealthButton_TestCreature");
+
+        write("50");
+
+        clickOn("OK");
+
+        // Damage the Creature
+        clickOn("#damageButton_TestCreature");
+
+        clickOn("#damageDialog").write("50");
+
+        clickOn("#critBox");
+
+        clickOn("OK");
+
+        // Heal the Creature
+        clickOn("#healButton_TestCreature");
+
+        write("150");
+
+        clickOn("OK");
     }
 }

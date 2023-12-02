@@ -489,8 +489,10 @@ public class CreatureManagerApp extends Application {
         damageDialog.setHeaderText("Enter the damage amount:");
         damageDialog.setContentText("Amount:");
         CheckBox critBox = new CheckBox("Crit");
+        critBox.setId("critBox");
         damageContent.getChildren().addAll(damageDialog.getDialogPane().getContent(), critBox);
         damageDialog.getDialogPane().setContent(damageContent);
+        damageDialog.getDialogPane().setId("damageDialog");
 
         Optional<String> damageResult = damageDialog.showAndWait();
         damageResult.ifPresent(damage -> doDamage(damage, creature, critBox, healthLabel, bonusHealthLabel));
