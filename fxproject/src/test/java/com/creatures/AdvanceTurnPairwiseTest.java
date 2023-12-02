@@ -8,13 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-/*
-    Justification:
-    Advancing to the next round is very important for our application as it
-    makes users able to track whose turn it is as well as how long their conditions will last for.
-    The advance turn button has different functionality depending on if the creatures group is the first/middle, or last.
-    I wanted to make sure that conditions, a member of the creature class, decremented correctly when advancing a turn.
-*/
 
 public class AdvanceTurnPairwiseTest {
     private CreatureDaoImpl creatureDao;
