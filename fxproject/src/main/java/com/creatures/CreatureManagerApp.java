@@ -5,6 +5,7 @@ import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -79,30 +80,42 @@ public class CreatureManagerApp extends Application {
         Scene scene = new Scene(root, 800, 600);
         primaryStage.setScene(scene);
         primaryStage.show();
+
+        // Set ID's for testing purposes
+        roundLabel.setId("roundLabel");
+        addButton.setId("addCreatureButton");
+        saveButton.setId("saveButton");
+        loadButton.setId("loadButton");
+        nextTurnButton.setId("nextTurnButton");
     }
 
     private void showCreatureDialog() {
-        //Basic Dialog Setup
+        // Basic Dialog Setup
         Dialog<Creature> dialog = new Dialog<>();
         dialog.setTitle("Add Creature");
         dialog.setHeaderText("Enter Creature Details");
         final File[] files = new File[1];
 
-        //Add Fields and Labels
+        // Add Fields and Labels
         Label nameLabel = new Label("Name:");
         TextField nameTextField = new TextField();
+        nameTextField.setId("nameTextField"); // Set ID for nameTextField
         Label healthLabel = new Label("Health:");
         TextField healthTextField = new TextField();
+        healthTextField.setId("healthTextField"); // Set ID for healthTextField
         Label initiativeLabel = new Label("Initiative:");
         TextField initiativeTextField = new TextField();
+        initiativeTextField.setId("initiativeTextField"); // Set ID for initiativeTextField
         Label imageLabel = new Label("Image:");
         Button selectImage = new Button("Browse");
         selectImage.setOnAction(actionEvent -> selectImageAction(files, dialog));
+        selectImage.setId("selectImageButton"); // Set ID for selectImage
         ChoiceBox<String> creatureTypeChoiceBox = new ChoiceBox<>();
         creatureTypeChoiceBox.getItems().addAll("ALLY", "NEUTRAL", "ENEMY");
         creatureTypeChoiceBox.setValue("ALLY");
+        creatureTypeChoiceBox.setId("creatureTypeChoiceBox"); // Set ID for creatureTypeChoiceBox
 
-        //Add Content to Dialog
+        // Add Content to Dialog
         VBox dialogContent = new VBox();
         dialogContent.getChildren().addAll(
                 nameLabel, nameTextField,
@@ -114,13 +127,22 @@ public class CreatureManagerApp extends Application {
         dialogContent.setAlignment(Pos.CENTER);
         dialog.getDialogPane().setContent(dialogContent);
 
-        //Add Cancel and Add Buttons
-        ButtonType addButton = new ButtonType("Add", ButtonBar.ButtonData.OK_DONE);
-        dialog.getDialogPane().getButtonTypes().addAll(addButton, ButtonType.CANCEL);
-        dialog.setResultConverter(buttonType -> addButtonAction(buttonType, addButton, nameTextField, healthTextField, initiativeTextField, creatureTypeChoiceBox, files));
+        // Add Cancel and Add Buttons
+        ButtonType addButtonType = new ButtonType("Add", ButtonBar.ButtonData.OK_DONE);
+        ButtonType cancelButtonType = ButtonType.CANCEL;
+        dialog.getDialogPane().getButtonTypes().addAll(addButtonType, cancelButtonType);
+
+        Node addButton = dialog.getDialogPane().lookupButton(addButtonType);
+        addButton.setId("confirmAddCreatureButton");
+
+        Node cancelButton = dialog.getDialogPane().lookupButton(cancelButtonType);
+        cancelButton.setId("cancelButton");  // Set ID for Cancel button
+
+        dialog.setResultConverter(buttonType -> addButtonAction(buttonType, addButtonType, nameTextField, healthTextField, initiativeTextField, creatureTypeChoiceBox, files));
 
         dialog.showAndWait();
     }
+
     private void showLoadDialog() {
         //Basic Dialog Setup
         Dialog<Creature> dialog = new Dialog<>();
@@ -344,6 +366,13 @@ public class CreatureManagerApp extends Application {
             //Add Buttons to Frame
             buttonsBottomRow.getChildren().addAll(deleteButton, damageButton, healButton, bonusHealthButton);
 
+            deleteButton.setId("deleteButton_" + creature.getName().replace(" ", ""));
+            deleteConditionButton.setId("deleteConditionButton_" + creature.getName().replace(" ", ""));
+            damageButton.setId("damageButton_" + creature.getName().replace(" ", ""));
+            healButton.setId("healButton_" + creature.getName().replace(" ", ""));
+            addConditionButton.setId("addConditionButton_" + creature.getName().replace(" ", ""));
+            bonusHealthButton.setId("bonusHealthButton_" + creature.getName().replace(" ", ""));
+
             //Styling and Labels
             GridPane characterInfo = new GridPane();
             characterInfo.setAlignment(Pos.CENTER);
@@ -412,10 +441,15 @@ public class CreatureManagerApp extends Application {
         ButtonType addButton = new ButtonType("Add", ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(addButton, ButtonType.CANCEL);
 
+        Node addButtonNode = dialog.getDialogPane().lookupButton(addButton);
+        addButtonNode.setId("confirmConditionYesButton");
+
         // Create the choice box and text field
         ChoiceBox<String> conditionChoiceBox = new ChoiceBox<>(FXCollections.observableArrayList(creature.getAllConditions()));
         conditionChoiceBox.setValue(creature.getAllConditions().get(0));
+        conditionChoiceBox.setId("conditionChoiceBox");
         TextField durationTextField = new TextField();
+        durationTextField.setId("durationTextField");
 
         //Add content to dialog
         VBox content = new VBox();
@@ -455,8 +489,10 @@ public class CreatureManagerApp extends Application {
         damageDialog.setHeaderText("Enter the damage amount:");
         damageDialog.setContentText("Amount:");
         CheckBox critBox = new CheckBox("Crit");
+        critBox.setId("critBox");
         damageContent.getChildren().addAll(damageDialog.getDialogPane().getContent(), critBox);
         damageDialog.getDialogPane().setContent(damageContent);
+        damageDialog.getDialogPane().setId("damageDialog");
 
         Optional<String> damageResult = damageDialog.showAndWait();
         damageResult.ifPresent(damage -> doDamage(damage, creature, critBox, healthLabel, bonusHealthLabel));
@@ -535,6 +571,12 @@ public class CreatureManagerApp extends Application {
         ButtonType yesButton = new ButtonType("Yes");
         ButtonType noButton = new ButtonType("No", ButtonBar.ButtonData.CANCEL_CLOSE);
         confirmationDialog.getButtonTypes().setAll(yesButton, noButton);
+
+        Node yesButtonNode = confirmationDialog.getDialogPane().lookupButton(yesButton);
+        yesButtonNode.setId("confirmDeleteYesButton");
+
+        Node noButtonNode = confirmationDialog.getDialogPane().lookupButton(noButton);
+        noButtonNode.setId("confirmDeleteNoButton");
 
         Optional<ButtonType> result = confirmationDialog.showAndWait();
 
