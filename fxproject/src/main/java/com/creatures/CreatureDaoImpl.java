@@ -132,4 +132,9 @@ public class CreatureDaoImpl implements CreatureDao {
     public int getRoundNumber() {
         return roundNumber;
     }
+
+    @Override
+    public void clearInventory() {
+        this.creatureInventory.clear();
+    }
 }

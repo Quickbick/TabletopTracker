@@ -23,4 +23,6 @@ public interface CreatureDao {
     void saveCreatures(File file) throws IOException;
 
     void loadCreatures(File file) throws IOException, ClassNotFoundException;
+
+    void clearInventory();
 }

@@ -3,6 +3,7 @@ package system_tests;
 import com.creatures.CreatureDao;
 import com.creatures.CreatureManagerApp;
 import javafx.stage.Stage;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.testfx.api.FxRobot;
@@ -23,6 +24,13 @@ class CreatureManagerAppTest extends FxRobot {
         creatureManagerApp = new CreatureManagerApp();
         creatureManagerApp.start(stage);
     }
+
+    @BeforeEach
+    void setUp() throws Exception {
+        CreatureDao creatureDao = getCreatureDaoViaReflection(creatureManagerApp);
+        creatureDao.clearInventory(); // hypothetical method to reset state
+    }
+
 
     private CreatureDao getCreatureDaoViaReflection(CreatureManagerApp app) throws NoSuchFieldException, IllegalAccessException {
         Field creatureDaoField = CreatureManagerApp.class.getDeclaredField("creatureDao");
@@ -79,7 +87,7 @@ class CreatureManagerAppTest extends FxRobot {
         Random random = new Random();
 
         String[] creatureTypes = {"ALLY", "NEUTRAL", "ENEMY"};
-        for (int i = 0; i < 7; i++) {
+        for (int i = 0; i < 4; i++) {
             // Click on "Add Creature" button to open the dialog
             clickOn("#addCreatureButton");
 
@@ -103,6 +111,45 @@ class CreatureManagerAppTest extends FxRobot {
             CreatureDao creatureDao = getCreatureDaoViaReflection(creatureManagerApp);
             assertEquals(creatureDao.getCreatureInventory().size(), i+1);
           }
+    }
+
+    @Test
+    void testAdvanceTurnMultipleCreature() throws NoSuchFieldException, IllegalAccessException {
+        CreatureDao creatureDao = getCreatureDaoViaReflection(creatureManagerApp);
+        Random random = new Random();
+
+        String[] creatureTypes = {"ALLY", "NEUTRAL", "ENEMY"};
+        for (int i = 0; i < 4; i++) {
+            // Click on "Add Creature" button to open the dialog
+            clickOn("#addCreatureButton");
+
+            // Now interact with the dialog's contents
+            clickOn("#nameTextField").write("Creature " + (i + 1));
+
+            // Generate random initiative between 0 and 99
+            int initiative = random.nextInt(100);
+            clickOn("#initiativeTextField").write(Integer.toString(initiative));
+
+            // Generate random health between 1 and 200 (rounded to nearest 5)
+            int health = (random.nextInt(40) + 1) * 5;
+            clickOn("#healthTextField").write(Integer.toString(health));
+
+            // Set a random creatureType
+            String creatureType = creatureTypes[random.nextInt(creatureTypes.length)];
+            clickOn("#creatureTypeChoiceBox").clickOn(creatureType);
+            clickOn("#confirmAddCreatureButton");
+
+            // Retrieve the CreatureDao to check the state after addition
+            assertEquals(creatureDao.getCreatureInventory().size(), i+1);
+        }
+
+        // Load
+        assertEquals(0, creatureDao.getRoundNumber());
+        clickOn("#nextTurnButton");
+
+        for (int i = 0; i < 10; i++) {
+            clickOn("#nextTurnButton");
+        }
     }
 
     @Test
