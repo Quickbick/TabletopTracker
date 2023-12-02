@@ -49,6 +49,7 @@ public class CreatureDaoImpl implements CreatureDao {
                 if (creatureInventory.get(i).getClass() == creatureInventory.get(i+j).getClass()) {
                     groupedList.add(creatureInventory.get(i+j));
                     i = i+j;
+                    j = 0;
                 } else {
                     break;
                 }

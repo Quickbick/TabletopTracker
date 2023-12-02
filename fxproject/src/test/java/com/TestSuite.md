@@ -196,7 +196,7 @@
     * Expected: Current Conditions Contains Condition 1
     * Expected: Current Conditions Contains Condition 2
 
-## S4 Pairwise Integration Tests
+## S4 Pairwise Integration Test 1
 * C36 AdvanceTurn - Empty groupedByTurnCreatures
   * Do not add any creatures to creatureDao.
   * Call creatureDao.advanceTurn().
@@ -222,3 +222,15 @@
   * Expected: getCurrentTurnCreatures() should wrap around to the first group.
   * Expected: getRoundNumber() should increment.
   * Expected: Conditions on creatures in the last group should be decremented.
+
+## S5 Pairwise Integration Test 2
+* C40 SortByInitiative - No Groups
+  * Create new CreatureDao
+  * Add three creatures with different types
+  * SortByInitiative
+  * Expected: Each list in groupedTurnCreatures has a length = 1
+* C41 SortByInitiative - Groups
+  * Create new CreatureDao
+  * Add three ally creatures
+  * SortByInitiative
+  * Expected: The list in groupedTurnCreatures has length = 3
