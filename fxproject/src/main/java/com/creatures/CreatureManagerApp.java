@@ -366,12 +366,12 @@ public class CreatureManagerApp extends Application {
             //Add Buttons to Frame
             buttonsBottomRow.getChildren().addAll(deleteButton, damageButton, healButton, bonusHealthButton);
 
-            deleteButton.setId("deleteButton_" + creature.getName());
-            deleteConditionButton.setId("deleteConditionButton_" + creature.getName());
-            damageButton.setId("damageButton_" + creature.getName());
-            healButton.setId("healButton_" + creature.getName());
-            addConditionButton.setId("addConditionButton_" + creature.getName());
-            bonusHealthButton.setId("bonusHealthButton_" + creature.getName());
+            deleteButton.setId("deleteButton_" + creature.getName().replace(" ", ""));
+            deleteConditionButton.setId("deleteConditionButton_" + creature.getName().replace(" ", ""));
+            damageButton.setId("damageButton_" + creature.getName().replace(" ", ""));
+            healButton.setId("healButton_" + creature.getName().replace(" ", ""));
+            addConditionButton.setId("addConditionButton_" + creature.getName().replace(" ", ""));
+            bonusHealthButton.setId("bonusHealthButton_" + creature.getName().replace(" ", ""));
 
             //Styling and Labels
             GridPane characterInfo = new GridPane();
@@ -564,6 +564,12 @@ public class CreatureManagerApp extends Application {
         ButtonType yesButton = new ButtonType("Yes");
         ButtonType noButton = new ButtonType("No", ButtonBar.ButtonData.CANCEL_CLOSE);
         confirmationDialog.getButtonTypes().setAll(yesButton, noButton);
+
+        Node yesButtonNode = confirmationDialog.getDialogPane().lookupButton(yesButton);
+        yesButtonNode.setId("confirmDeleteYesButton");
+
+        Node noButtonNode = confirmationDialog.getDialogPane().lookupButton(noButton);
+        noButtonNode.setId("confirmDeleteNoButton");
 
         Optional<ButtonType> result = confirmationDialog.showAndWait();
 
